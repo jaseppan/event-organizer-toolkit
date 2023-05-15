@@ -35,16 +35,7 @@ class Event_Organizer_Toolkit_Activator {
         global $jal_db_version;
         $charset_collate = $wpdb->get_charset_collate();
 
-        $sql = self::create_particitants_table();
-        $sql .= self::create_events_table();
-        $sql .= self::create_event_types_table();
-        $sql .= self::create_particitant_roles_table();
-        $sql .= self::create_eot_fields_table();
-        $sql .= self::create_eot_field_values_table();
-        $sql .= self::create_eot_meals_table();
-        $sql .= self::create_eot_accommodation_table();
-        $sql .= self::create_eot_participants_meals_table();
-        $sql .= self::create_eot_participants_accommodation_table();
+        $sql = self::create_tables_sql();
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
@@ -56,6 +47,23 @@ class Event_Organizer_Toolkit_Activator {
 		if (!file_exists(ABSPATH . 'event-organizer-toolkit-files')) {
 			mkdir(ABSPATH . 'wp-content/event-organizer-toolkit-files', 0755, true);
 		}
+
+	}
+
+	public function create_tables_sql() {
+		
+		$sql = self::create_events_table();
+        $sql .= self::create_particitants_table();
+        $sql .= self::create_event_types_table();
+        $sql .= self::create_particitant_roles_table();
+        $sql .= self::create_eot_fields_table();
+        $sql .= self::create_eot_field_values_table();
+        $sql .= self::create_eot_meals_table();
+        $sql .= self::create_eot_accommodation_table();
+        $sql .= self::create_eot_participants_meals_table();
+        $sql .= self::create_eot_participants_accommodation_table();
+
+		return $sql;
 
 	}
 

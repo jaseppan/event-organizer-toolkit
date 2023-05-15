@@ -122,6 +122,11 @@ class Event_Organizer_Toolkit {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-event-organizer-toolkit-public.php';
 
+		/**
+		 * The class responsible for defining all REST-API routes
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'rest-api/class-event-organizer-toolkit-rest-api.php';
+
 		$this->loader = new Event_Organizer_Toolkit_Loader();
 
 	}

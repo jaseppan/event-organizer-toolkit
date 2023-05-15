@@ -1,16 +1,6 @@
 <?php
 
 /**
- * Fired during plugin activation
- *
- * @link       https://janneseppanen.site/
- * @since      1.0.0
- *
- * @package    Event_Organizer_Toolkit
- * @subpackage Event_Organizer_Toolkit/includes
- */
-
-/**
  * Fired during plugin activation.
  *
  * This class defines all code necessary to run during the plugin's activation.
@@ -23,9 +13,7 @@
 class Event_Organizer_Toolkit_Activator {
 
 	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
+	 * This method executes database and directory creations 
 	 *
 	 * @since    1.0.0
 	 */
@@ -69,9 +57,11 @@ class Event_Organizer_Toolkit_Activator {
 
 	public function create_events_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_EVENTS_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_EVENTS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
-			event_name varchar(50) NOT NULL,
+			title varchar(50) NOT NULL,
 			event_type_id INT NOT NULL,
 			post_id INT NULL,
 			archive INT NULL,
@@ -83,7 +73,9 @@ class Event_Organizer_Toolkit_Activator {
 	
 	public function create_event_types_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_EVENT_TYPES_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_EVENT_TYPES_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			event_type varchar(50) NOT NULL,
 			PRIMARY KEY (id) );";
@@ -95,7 +87,9 @@ class Event_Organizer_Toolkit_Activator {
 
 	public function create_particitants_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_PARTICIPANTS_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_PARTICIPANTS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			user_id INT NOT NULL,
 			first_name varchar(50) NOT NULL,
@@ -110,7 +104,9 @@ class Event_Organizer_Toolkit_Activator {
 	
 	public function create_particitant_roles_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ROLES_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ROLES_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			role_name varchar(50) NOT NULL,
 			role_type varchar(50) NOT NULL,
@@ -122,7 +118,9 @@ class Event_Organizer_Toolkit_Activator {
 	
 	public function create_eot_fields_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_FIELDS_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_FIELDS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			participant_id int NOT NULL,
 			type varchar(20) NOT NULL DEFAULT '',
@@ -149,7 +147,9 @@ class Event_Organizer_Toolkit_Activator {
 	
 	public function create_eot_field_values_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_FIELD_VALUES_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_FIELD_VALUES_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			participant_id int NOT NULL,
 			field_id int NOT NULL,
@@ -162,9 +162,11 @@ class Event_Organizer_Toolkit_Activator {
 	
 	public function create_eot_meals_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
-			name varchar(255) NOT NULL,
+			title varchar(255) NOT NULL,
 			date date NOT NULL,
 			time varchar(15) NOT NULL,
 			PRIMARY KEY (id) );";
@@ -175,7 +177,9 @@ class Event_Organizer_Toolkit_Activator {
 
 	public function create_eot_accommodation_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			accommodation varchar(255) NOT NULL,
 			PRIMARY KEY (id) );";
@@ -186,7 +190,9 @@ class Event_Organizer_Toolkit_Activator {
 
 	public function create_eot_participants_meals_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_MEALS_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_MEALS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			customer_id int NOT NULL,
 			meal_id int NOT NULL,
@@ -197,7 +203,9 @@ class Event_Organizer_Toolkit_Activator {
 	
 	public function create_eot_participants_accommodation_table() {
 
-		$sql =  "CREATE TABLE " . EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ACCOMMODATIONS_TABLE . " (
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ACCOMMODATIONS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			customer_id int NOT NULL,
 			meal_id int NOT NULL,

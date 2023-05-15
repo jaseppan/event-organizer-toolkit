@@ -31,11 +31,47 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * Currently plugin version.
+ * Current plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
  */
+
 define( 'EVENT_ORGANIZER_TOOLKIT_VERSION', '1.0.0' );
+
+/**
+ * Current plugin root directory.
+ */
+define( 'EVENT_ORGANIZER_TOOLKIT_DIR', plugin_dir_path(__FILE__) );
+
+/**
+ * Current plugin root URL.
+ */
+define( 'EVENT_ORGANIZER_TOOLKIT_URL', plugin_dir_url( __FILE__ ) );
+
+/**
+ * Configure tables and columns
+ * Custom tables can be defined in wp-config.init
+ */
+
+if( !defined('EVENT_ORGANIZER_TOOLKIT_EVENTS_TABLE') )
+	define( 'EVENT_ORGANIZER_TOOLKIT_EVENTS_TABLE', 'eot_events' );
+if( !defined('EVENT_ORGANIZER_TOOLKIT_EVENT_TYPES_TABLE') )
+	define( 'EVENT_ORGANIZER_TOOLKIT_EVENT_TYPES_TABLE', 'eot_events' );
+if( !defined('EVENT_ORGANIZER_TOOLKIT_PARTICIPANTS_TABLE') )
+	define( 'EVENT_ORGANIZER_TOOLKIT_PARTICIPANTS_TABLE', 'eot_particitants' );
+if( !defined('EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ROLES_TABLE') ) 
+	define( 'EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ROLES_TABLE', 'eot_particitants_roles' );
+if( !defined('EVENT_ORGANIZER_TOOLKIT_FIELDS_TABLE') ) 
+	define( 'EVENT_ORGANIZER_TOOLKIT_FIELDS_TABLE', 'eot_fields' );
+if( !defined('EVENT_ORGANIZER_TOOLKIT_FIELD_VALUES_TABLE') ) 
+	define( 'EVENT_ORGANIZER_TOOLKIT_FIELD_VALUES_TABLE', 'eot_field_values' );
+if( !defined('EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE') ) 
+	define( 'EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE', 'eot_meals' );
+if( !defined('EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_MEALS_TABLE') ) 
+	define( 'EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_MEALS_TABLE', 'eot_participants_meals' );
+if( !defined('EVENT_ORGANIZER_TOOLKIT_ACCOMMODATION_TABLE') ) 
+	define( 'EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE', 'eot_meals' );
+if( !defined('EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ACCOMMODATIONS_TABLE') ) 
+	define( 'EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ACCOMMODATIONS_TABLE', 'eot_participant_accommodations' );
 
 /**
  * The code that runs during plugin activation.
@@ -79,4 +115,5 @@ function run_event_organizer_toolkit() {
 	$plugin->run();
 
 }
+
 run_event_organizer_toolkit();

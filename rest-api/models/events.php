@@ -27,6 +27,7 @@
             'state' => 'test add',
         ];
 
+        wp_send_json_success( $response );
         return $response;       
 
     }
@@ -39,11 +40,15 @@
 
      public function list( WP_REST_Request $request ) {
 
+        wp_send_json_success( ['test'] );
+        return ['test'];
+
         $json_params = apply_filters( 'eot_json_params', $request->get_json_params() );
 
         $response = [
             'state' => 'test list',
         ];
+
 
         return $response;       
 

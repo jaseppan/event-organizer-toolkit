@@ -75,7 +75,7 @@ class Event_Organizer_Toolkit_Rest_Api {
     
     public function list_events() {
         register_rest_route( 'event-organizer-toolkit/v1', '/list-events',array(
-                 'methods' => 'POST',
+                 'methods' => 'GET',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/events.php' );
                      $handler = NEW vent_Organizer_Toolkit_Events_Handler();
@@ -93,7 +93,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function edit_event() {
         register_rest_route( 'event-organizer-toolkit/v1', '/edit-event',array(
-                 'methods' => 'POST',
+                 'methods' => 'PATCH',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/events.php' );
                      $handler = NEW Event_Organizer_Toolkit_Events_Handler();
@@ -113,7 +113,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function delete_event() {
         register_rest_route( 'event-organizer-toolkit/v1', '/delete-event',array(
-                 'methods' => 'POST',
+                 'methods' => 'DELETE',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/events.php' );
                      $handler = NEW Event_Organizer_Toolkit_Events_Handler();
@@ -155,7 +155,7 @@ class Event_Organizer_Toolkit_Rest_Api {
     
     public function list_participants() {
         register_rest_route( 'event-organizer-toolkit/v1', '/list-participants',array(
-                 'methods' => 'POST',
+                 'methods' => 'GET',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/participants.php' );
                      $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
@@ -175,7 +175,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function edit_participant() {
         register_rest_route( 'event-organizer-toolkit/v1', '/edit-participant',array(
-                 'methods' => 'POST',
+                 'methods' => 'PATCH',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/participants.php' );
                      $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
@@ -195,7 +195,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function delete_participant() {
         register_rest_route( 'event-organizer-toolkit/v1', '/delete-participant',array(
-                 'methods' => 'POST',
+                 'methods' => 'DELETE',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/participants.php' );
                      $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
@@ -239,7 +239,7 @@ class Event_Organizer_Toolkit_Rest_Api {
     
     public function list_meals() {
         register_rest_route( 'event-organizer-toolkit/v1', '/list-meals',array(
-                 'methods' => 'POST',
+                 'methods' => 'GET',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meals.php' );
                      $handler = NEW Event_Organizer_Toolkit_Meals_Handler();
@@ -257,7 +257,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function edit_meal() {
         register_rest_route( 'event-organizer-toolkit/v1', '/edit-meal',array(
-                 'methods' => 'POST',
+                 'methods' => 'PATCH',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meals.php' );
                      $handler = NEW Event_Organizer_Toolkit_Meals_Handler();
@@ -277,7 +277,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function delete_meal() {
         register_rest_route( 'event-organizer-toolkit/v1', '/delete-meal',array(
-                 'methods' => 'POST',
+                 'methods' => 'DELETE',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meals.php' );
                      $handler = NEW Event_Organizer_Toolkit_Meals_Handler();
@@ -321,7 +321,7 @@ class Event_Organizer_Toolkit_Rest_Api {
     
     public function list_accommodations() {
         register_rest_route( 'event-organizer-toolkit/v1', '/list-accommodations',array(
-                 'methods' => 'POST',
+                 'methods' => 'GET',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/accommodations.php' );
                      $handler = NEW Event_Organizer_Toolkit_Accommodations_Handler();
@@ -339,7 +339,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function edit_accommodation() {
         register_rest_route( 'event-organizer-toolkit/v1', '/edit-accommodation',array(
-                 'methods' => 'POST',
+                 'methods' => 'PATCH',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/accommodations.php' );
                      $handler = NEW Event_Organizer_Toolkit_Accommodations_Handler();
@@ -359,7 +359,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function delete_accommodation() {
         register_rest_route( 'event-organizer-toolkit/v1', '/delete-accommodation',array(
-                 'methods' => 'POST',
+                 'methods' => 'DELETE',
                  'callback' => function() {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/accommodations.php' );
                      $handler = NEW Event_Organizer_Toolkit_Accommodations_Handler();
@@ -405,3 +405,5 @@ class Event_Organizer_Toolkit_Rest_Api {
 
 
 }
+
+$rest_api = new Event_Organizer_Toolkit_Rest_Api();

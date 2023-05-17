@@ -77,7 +77,14 @@ class Event_Organizer_Toolkit_Activator {
 
 		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_EVENT_TYPES_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
-			event_type varchar(50) NOT NULL,
+			title varchar(50) NOT NULL,
+			plural_title varchar(50) NOT NULL,
+			name varchar(50) NOT NULL,
+			plural_name varchar(50) NOT NULL,
+			primary_title varchar(50) NOT NULL,
+			primary_name varchar(50) NOT NULL,
+			description varchar(255),
+			taxonomies varchar(1000),
 			PRIMARY KEY (id) );";
 
 		return $sql;
@@ -94,8 +101,8 @@ class Event_Organizer_Toolkit_Activator {
 			user_id INT NOT NULL,
 			first_name varchar(50) NOT NULL,
 			last_name varchar(50) NOT NULL,
-			role_id INT NOT NULL,
-			diet varchar(255) NOT NULL,
+			role_id INT,
+			diet varchar(255),
 			PRIMARY KEY (id) );";
 
 		return $sql;

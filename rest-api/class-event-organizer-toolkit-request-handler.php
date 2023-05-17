@@ -43,4 +43,14 @@ class Event_Organizer_Toolkit_Request_Handler {
 
     }
 
+    /**
+     * Handle errors
+     */
+
+     public function check_errors($errors) {
+        
+        if (count($errors->errors) > 0)
+            wp_send_json_error( ((array)$errors) );
+
+     }
 }

@@ -19,100 +19,133 @@
      * @since 1.0.0
      */   
 
+    private $table;
+
+    public function __construct() {
+
+        global $wpdb;
+
+        $this->table = $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_EVENT_TYPES_TABLE;
+
+    }
+
      public function update( WP_REST_Request $request ) {
 
         global $wpdb;
-        $table = $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_EVENT_TYPES_TABLE;
 
         $params = apply_filters( 'eot_json_params', $request->get_json_params() );
         $errors = new WP_Error();
 
         // validate parameters
         
-        if( !isset( $params['title'] ) || empty( $params['title'] ) )
-            $errors->add( 'title', __('Parameter title is required') );
-        
-        if( !isset( $params['plural_title'] ) || empty( $params['plural_title'] ) )
-            $errors->add( 'title', __('Parameter plural_title is required') );
-
-        if( !isset( $params['name'] ) || empty( $params['name'] ) )
-            $errors->add( 'name', __('Parameter name is required') );
-
-        if( !isset( $params['plural_name'] ) || empty( $params['plural_name'] ) )
-            $errors->add( 'plural_name', __('Parameter plural_name is required') );
-        
-        if( !isset( $params['primary_title'] ) || empty( $params['primary_title'] ) )
-            $errors->add( 'primary_title', __('Parameter primary_title is required') );
-
-        if( !isset( $params['primary_name'] ) || empty( $params['primary_name'] ) )
-            $errors->add( 'primary_name', __('Parameter primary_name is required') );
+        $required_params = array(
+            'title' => __('Parameter title is required'),
+            'plural_title' => __('Parameter plural_title is required'),
+            'name' => __('Parameter name is required'),
+            'plural_name' => __('Parameter plural_name is required'),
+            'primary_title' => __('Parameter primary_title is required'),
+            'primary_name' => __('Parameter primary_name is required')
+        );
+    
+        foreach ($required_params as $param => $error_message) {
+            if (!isset($params[$param]) || empty($params[$param])) {
+                $errors->add($param, $error_message);
+            }
+        }
         
         parent::check_errors($errors);
         
-        // Sanitize parameters
+        // Collect data
+
         if( isset( $params['id'] ) )
-            $id = intval($params['id']);
+            $id = $params['id'];
 
         foreach( $params['taxonomies'] as $taxonomy ) {
-            $taxonomies[] = sanitize_text_field( $taxonomy );
+            $taxonomies[] =  $taxonomy;
         }
-        $taxonomies_s = serialize($taxonomies);
+        $taxonomies_s = $taxonomies;
 
-        $data['title'] = sanitize_text_field( $params['title'] );
-        $data['plural_title'] = sanitize_text_field( $params['plural_title'] );
-        $data['name'] = sanitize_text_field( $params['name'] );
-        $data['plural_name'] = sanitize_text_field( $params['plural_name'] );
-        $data['primary_title'] = sanitize_text_field( $params['primary_title'] );
-        $data['primary_name'] = sanitize_text_field( $params['primary_name'] );
-        $data['description'] = (isset($params['description'])) ? sanitize_text_field( $params['description'] ) : '';
-        $data['taxonomies'] = $taxonomies_s;
+        // Sanitize and collect data
+        $data = array(
+            'title' => sanitize_text_field($params['title']),
+            'plural_title' => sanitize_text_field($params['plural_title']),
+            'name' => sanitize_text_field($params['name']),
+            'plural_name' => sanitize_text_field($params['plural_name']),
+            'primary_title' => sanitize_text_field($params['primary_title']),
+            'primary_name' => sanitize_text_field($params['primary_name']),
+            'description' => isset($params['description']) ? wp_kses_post($params['description']) : '',
+            'taxonomies' => isset($params['taxonomies']) ? serialize(array_map('sanitize_text_field', $params['taxonomies'])) : '',
+        );
 
-        // Update if id exists
-        if( isset( $id ) ) {
- 
-            $result = $wpdb->update($table, $data, [
-                'id' => $id
-            ]);
+        // Update if ID exists
+        if (isset($params['id'])) {
+            $id = (int) $params['id'];
+
+            // Check that id exists
+            $existingId = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM $table WHERE id = %d",
+                $id
+                )
+            );
+            
+            if ( !parent::id_exists( $id, $this->table ) ) {
+                $message = sprintf(__('The provided ID does not correspond to an existing record.', 'event-organizer-toolkit'), $data['title']);
+                $response['message'] = $message;
+                wp_send_json_error( $response );
+            }
+
+            $result = $wpdb->update(
+                $this->table,
+                $data,
+                array('id' => $id),
+                array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'),
+                array('%d')
+            );
 
             if( $result ) {
                 $message = sprintf( __('Event type %1$s updated.', 'event-organizer-toolkit'), $data['title'] );
-                $status  ='success';
+                $status = 'success';
             } else {
-                $message = sprintf( __('Error updating event type %1$s.', 'event-organizer-toolkit'), $data['title'] );
-                $status  ='error';
+                $message = sprintf(__('Accommodation not updated. No changes were made to the data.', 'event-organizer-toolkit'), $data['title']);
+                $status = 'error';
             }
 
         } else {
 
-            $result = $wpdb->insert($table, $data);
+            // Check if similar title exists
+            if ( parent::similar_title_exists( $data['title'], $this->table ) ) {
+                $message = sprintf(__('An event type with similar title already exists: %1$s.', 'event-organizer-toolkit'), $data['title']);
+                $response['message'] = $message;
+                wp_send_json_error($response);
+            }
 
-            if( $result ) {
-                $message = sprintf( __('Event type %1$s inserted.', 'event-organizer-toolkit'), $data['title'] );
-                $status  ='success';
+            $result = $wpdb->insert($this->table, $data);
+
+            if ($result !== false) {
+                $message = sprintf(__('Event type %1$s inserted.', 'event-organizer-toolkit'), $data['title']);
+                $status = 'success';
                 $id = $wpdb->insert_id;
             } else {
-                $message = sprintf( __('Error inserting event type %1$s.', 'event-organizer-toolkit'), $data['title'] );
-                $status  ='error';
+                $message = sprintf(__('Error inserting event type %1$s.', 'event-organizer-toolkit'), $data['title']);
+                $status = 'error';
+            }
+        }
+
+        if ($status === 'success') {
+            if (!isset($data['id'])) {
+                $data = array_merge(['id' => $id], $data);
             }
 
-        }
-
-        if( $status == 'success' ) {
-            if( !isset($data['id']) )
-                $data = array_merge( ['id' => $id], $data );
-            
             $response['message'] = $message;
             $response['data'] = $data;
-    
-            wp_send_json_success( $response );
 
+            wp_send_json_success($response);
         } else {
-
             $response['message'] = $message;
-            wp_send_json_error( $response );
-
+            wp_send_json_error($response);
         }
-                  
+        
     }
     
     
@@ -173,6 +206,5 @@
         return $response;       
 
     }
-
 
 }

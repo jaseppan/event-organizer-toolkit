@@ -29,7 +29,7 @@
 
     }
 
-     public function update( WP_REST_Request $request ) {
+    public function update( WP_REST_Request $request ) {
 
         global $wpdb;
 
@@ -38,19 +38,30 @@
 
         // validate parameters
         
+        // Validate that parameter values are text
         $required_params = array(
-            'title' => __('Parameter title is required'),
-            'plural_title' => __('Parameter plural_title is required'),
-            'name' => __('Parameter name is required'),
-            'plural_name' => __('Parameter plural_name is required'),
-            'primary_title' => __('Parameter primary_title is required'),
-            'primary_name' => __('Parameter primary_name is required')
+            'title' => __('Parameter "title" is required and must be text'),
+            'plural_title' => __('Parameter "plural_title" is required and must be text'),
+            'name' => __('Parameter "name" is required and must be text'),
+            'plural_name' => __('Parameter "plural_name" is required and must be text'),
+            'primary_title' => __('Parameter "primary_title" is required and must be text'),
+            'primary_name' => __('Parameter "primary_name" is required and must be text'),
         );
     
         foreach ($required_params as $param => $error_message) {
-            if (!isset($params[$param]) || empty($params[$param])) {
+            if (!isset($params[$param]) || empty($params[$param]) || !is_string($params[$param])) {
                 $errors->add($param, $error_message);
             }
+        }
+
+        // Check if description is a text
+        if (isset($params['description']) && !is_string($params['description'])) {
+            $errors->add('description', 'Parameter "description" must be text');
+        }
+
+        // Check if taxonomies is an array
+        if ( isset($params['taxonomies']) && !is_array($params['taxonomies']) ) {
+            $errors->add('taxonomies', __('Parameter taxonomies must be an array'));
         }
         
         parent::check_errors($errors);
@@ -60,10 +71,6 @@
         if( isset( $params['id'] ) )
             $id = $params['id'];
 
-        foreach( $params['taxonomies'] as $taxonomy ) {
-            $taxonomies[] =  $taxonomy;
-        }
-        $taxonomies_s = $taxonomies;
 
         // Sanitize and collect data
         $data = array(
@@ -79,16 +86,17 @@
 
         // Update if ID exists
         if (isset($params['id'])) {
+
+            // Check if id is numeric
+            if ( !is_numeric($params['id']) || $params['id'] == 0) {
+                $message = sprintf(__('The parameter "id" must be numeric.', 'event-organizer-toolkit'), $data['title']);
+                $response['message'] = $message;
+                wp_send_json_error( $response );
+            }
+
             $id = (int) $params['id'];
 
             // Check that id exists
-            $existingId = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT id FROM $table WHERE id = %d",
-                $id
-                )
-            );
-            
             if ( !parent::id_exists( $id, $this->table ) ) {
                 $message = sprintf(__('The provided ID does not correspond to an existing record.', 'event-organizer-toolkit'), $data['title']);
                 $response['message'] = $message;
@@ -145,7 +153,7 @@
             $response['message'] = $message;
             wp_send_json_error($response);
         }
-        
+
     }
     
     

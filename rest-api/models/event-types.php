@@ -53,6 +53,11 @@
         if( isset( $params['id'] ) )
             $id = intval($params['id']);
 
+        foreach( $params['taxonomies'] as $taxonomy ) {
+            $taxonomies[] = sanitize_text_field( $taxonomy );
+        }
+        $taxonomies_s = serialize($taxonomies);
+
         $data['title'] = sanitize_text_field( $params['title'] );
         $data['plural_title'] = sanitize_text_field( $params['plural_title'] );
         $data['name'] = sanitize_text_field( $params['name'] );
@@ -60,17 +65,11 @@
         $data['primary_title'] = sanitize_text_field( $params['primary_title'] );
         $data['primary_name'] = sanitize_text_field( $params['primary_name'] );
         $data['description'] = (isset($params['description'])) ? sanitize_text_field( $params['description'] ) : '';
-        $data['taxonomies'] = [];
-        foreach( $params['taxonomies'] as $taxonomy ) {
-            $data['taxonomies'] = sanitize_text_field( $taxonomy );
-        }
-        
-        // wp_send_json_success( $taxonomies );
+        $data['taxonomies'] = $taxonomies_s;
 
         // Update if id exists
         if( isset( $id ) ) {
  
-
             $result = $wpdb->update($table, $data, [
                 'id' => $id
             ]);
@@ -99,10 +98,12 @@
         }
 
         if( $status == 'success' ) {
-            if( isset($id) )
-                $response['id'] = $id;
-
+            if( !isset($data['id']) )
+                $data = array_merge( ['id' => $id], $data );
+            
             $response['message'] = $message;
+            $response['data'] = $data;
+    
             wp_send_json_success( $response );
 
         } else {
@@ -111,11 +112,7 @@
             wp_send_json_error( $response );
 
         }
-
-
-
-        parent::success( $response );
-           
+                  
     }
     
     

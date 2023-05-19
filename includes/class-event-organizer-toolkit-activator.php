@@ -171,12 +171,15 @@ class Event_Organizer_Toolkit_Activator {
 
 		global $wpdb;
 
-		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE . " (
+		$sql = "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			title varchar(255) NOT NULL,
 			date date NOT NULL,
-			time varchar(15) NOT NULL,
-			PRIMARY KEY (id) );";
+			time time NOT NULL,
+			venue varchar(50) NOT NULL,
+			menu varchar(50) NOT NULL,
+			PRIMARY KEY (id)
+		);";
 
 		return $sql;
 

@@ -182,13 +182,15 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 
-	public function create_eot_accommodation_table() {
+	public function create_eot_accommodations_table() {
 
 		global $wpdb;
 
-		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE . " (
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_ACCOMMODATIONS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
-			accommodation varchar(255) NOT NULL,
+			title varchar(50) NOT NULL,
+			description varchar(255),
+			rooms varchar(255),
 			PRIMARY KEY (id) );";
 
 		return $sql;

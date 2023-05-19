@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Events handler of the plugin.
+ * Class contains handling CRUD related to event types
  *
  * @link       https://janneseppanen.site
  * @since      1.0.0
@@ -13,13 +13,23 @@
 
  class Event_Organizer_Toolkit_Event_Types_Handler extends Event_Organizer_Toolkit_Request_Handler {
 
+     
     /**
-     * Handler for both wp-json/event-organizer-toolkit/v1/add-event-type and ../update-event-type endpoints
-     * 
-     * @since 1.0.0
-     */   
+	 * The database table for event types.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @var      string    $table    The database table for event types.
+	 */
 
-    private $table;
+    public $table;
+
+    /**
+	 * Initialize the class and set its properties.
+	 *
+	 * @since    1.0.0
+	 * @param      string    $table       The database table for event types.
+	 */
 
     public function __construct() {
 
@@ -29,48 +39,37 @@
 
     }
 
+    /**
+     * Handler for both wp-json/event-organizer-toolkit/v1/add-event-type and ../update-event-type endpoints
+     * 
+     * @since 1.0.0
+     */ 
+
     public function update( WP_REST_Request $request ) {
 
         global $wpdb;
+        global $eot_errors;
+        $eot_errors = new WP_Error();
 
         $params = apply_filters( 'eot_json_params', $request->get_json_params() );
-        $errors = new WP_Error();
-
-        // validate parameters
-        
-        // Validate that parameter values are text
-        $required_params = array(
-            'title' => __('Parameter "title" is required and must be text'),
-            'plural_title' => __('Parameter "plural_title" is required and must be text'),
-            'name' => __('Parameter "name" is required and must be text'),
-            'plural_name' => __('Parameter "plural_name" is required and must be text'),
-            'primary_title' => __('Parameter "primary_title" is required and must be text'),
-            'primary_name' => __('Parameter "primary_name" is required and must be text'),
-        );
     
-        foreach ($required_params as $param => $error_message) {
-            if (!isset($params[$param]) || empty($params[$param]) || !is_string($params[$param])) {
-                $errors->add($param, $error_message);
-            }
-        }
-
-        // Check if description is a text
-        if (isset($params['description']) && !is_string($params['description'])) {
-            $errors->add('description', 'Parameter "description" must be text');
-        }
-
-        // Check if taxonomies is an array
-        if ( isset($params['taxonomies']) && !is_array($params['taxonomies']) ) {
-            $errors->add('taxonomies', __('Parameter taxonomies must be an array'));
-        }
+        // Validate parameters
+        parent::validate_required_texts( [
+            'title',
+            'plural_title',
+            'name',
+            'plural_name',
+            'primary_title',
+            'primary_name',
+        ], $params );
+        parent::validate_texts( ['description'], $params );
+        parent::validate_arrays( ['taxonomies'], $params );        
         
-        parent::check_errors($errors);
+        parent::check_errors();
         
         // Collect data
 
-        if( isset( $params['id'] ) )
-            $id = $params['id'];
-
+        $id = isset($params['id']) ? (int)$params['id'] : null;
 
         // Sanitize and collect data
         $data = array(
@@ -85,73 +84,14 @@
         );
 
         // Update if ID exists
-        if (isset($params['id'])) {
+        if ( $id !== null ) {
 
-            // Check if id is numeric
-            if ( !is_numeric($params['id']) || $params['id'] == 0) {
-                $message = sprintf(__('The parameter "id" must be numeric.', 'event-organizer-toolkit'), $data['title']);
-                $response['message'] = $message;
-                wp_send_json_error( $response );
-            }
-
-            $id = (int) $params['id'];
-
-            // Check that id exists
-            if ( !parent::id_exists( $id, $this->table ) ) {
-                $message = sprintf(__('The provided ID does not correspond to an existing record.', 'event-organizer-toolkit'), $data['title']);
-                $response['message'] = $message;
-                wp_send_json_error( $response );
-            }
-
-            $result = $wpdb->update(
-                $this->table,
-                $data,
-                array('id' => $id),
-                array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'),
-                array('%d')
-            );
-
-            if( $result ) {
-                $message = sprintf( __('Event type %1$s updated.', 'event-organizer-toolkit'), $data['title'] );
-                $status = 'success';
-            } else {
-                $message = sprintf(__('Accommodation not updated. No changes were made to the data.', 'event-organizer-toolkit'), $data['title']);
-                $status = 'error';
-            }
+            parent::update_data( $this->table, $params, $data, 'Event type' );
 
         } else {
 
-            // Check if similar title exists
-            if ( parent::similar_title_exists( $data['title'], $this->table ) ) {
-                $message = sprintf(__('An event type with similar title already exists: %1$s.', 'event-organizer-toolkit'), $data['title']);
-                $response['message'] = $message;
-                wp_send_json_error($response);
-            }
+            parent::insert_data( $this->table, $data, 'Event type' );
 
-            $result = $wpdb->insert($this->table, $data);
-
-            if ($result !== false) {
-                $message = sprintf(__('Event type %1$s inserted.', 'event-organizer-toolkit'), $data['title']);
-                $status = 'success';
-                $id = $wpdb->insert_id;
-            } else {
-                $message = sprintf(__('Error inserting event type %1$s.', 'event-organizer-toolkit'), $data['title']);
-                $status = 'error';
-            }
-        }
-
-        if ($status === 'success') {
-            if (!isset($data['id'])) {
-                $data = array_merge(['id' => $id], $data);
-            }
-
-            $response['message'] = $message;
-            $response['data'] = $data;
-
-            wp_send_json_success($response);
-        } else {
-            $response['message'] = $message;
-            wp_send_json_error($response);
         }
 
     }

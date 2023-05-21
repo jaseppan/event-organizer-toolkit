@@ -41,7 +41,9 @@ class Event_Organizer_Toolkit_Activator {
 	public function create_tables_sql() {
 		
 		$sql = self::create_events_table();
-        $sql .= self::create_particitants_table();
+        $sql .= self::create_participants_table();
+		$sql .= self::create_participants_roles_table();
+		$sql .= self::create_participants_parents_table();
         $sql .= self::create_event_types_table();
         $sql .= self::create_particitant_roles_table();
         $sql .= self::create_eot_fields_table();
@@ -92,17 +94,43 @@ class Event_Organizer_Toolkit_Activator {
 	}
 	
 
-	public function create_particitants_table() {
+	public function create_participants_table() {
 
 		global $wpdb;
 
 		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_PARTICIPANTS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
-			user_id INT NOT NULL,
 			first_name varchar(50) NOT NULL,
 			last_name varchar(50) NOT NULL,
+			email varchar(50) NOT NULL,
+			phone varchar(50) NOT NULL,
+			address varchar(50) NOT NULL,
+			zip varchar(50) NOT NULL,
+			city varchar(50) NOT NULL,
 			role_id INT,
+			user_id INT NOT NULL,
+			parent_id INT NOT NULL,
 			diet varchar(255),
+			PRIMARY KEY (id) );";
+
+		return $sql;
+
+	}
+	
+	public function create_participants_parents_table() {
+
+		global $wpdb;
+
+		$sql =  "CREATE TABLE " . $wpdb->prefix . VENT_ORGANIZER_TOOLKIT_PARTICIPANTS_PARENTS_TABLE . " (
+			id INT NOT NULL AUTO_INCREMENT,
+			first_name varchar(50) NOT NULL,
+			last_name varchar(50) NOT NULL,
+			email varchar(50) NOT NULL,
+			phone varchar(50) NOT NULL,
+			address varchar(50) NOT NULL,
+			zip varchar(50) NOT NULL,
+			city varchar(50) NOT NULL,
+			user_id INT NOT NULL,
 			PRIMARY KEY (id) );";
 
 		return $sql;
@@ -115,8 +143,8 @@ class Event_Organizer_Toolkit_Activator {
 
 		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ROLES_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
-			role_name varchar(50) NOT NULL,
-			role_type varchar(50) NOT NULL,
+			title varchar(50) NOT NULL,
+			type varchar(50) NOT NULL,
 			PRIMARY KEY (id) );";
 
 		return $sql;
@@ -175,7 +203,8 @@ class Event_Organizer_Toolkit_Activator {
 			id INT NOT NULL AUTO_INCREMENT,
 			title varchar(255) NOT NULL,
 			date date NOT NULL,
-			time time NOT NULL,
+			start_time time NOT NULL,
+			end_time time NOT NULL,
 			venue varchar(50) NOT NULL,
 			menu varchar(50) NOT NULL,
 			PRIMARY KEY (id)

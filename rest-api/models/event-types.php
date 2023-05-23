@@ -54,7 +54,7 @@
         $params = apply_filters( 'eot_json_params', $request->get_json_params() );
     
         // Validate parameters
-        parent::validate_required_texts( [
+        parent::validate_required_fields( [
             'title',
             'plural_title',
             'name',
@@ -62,8 +62,21 @@
             'primary_title',
             'primary_name',
         ], $params );
-        parent::validate_texts( ['description'], $params );
-        parent::validate_arrays( ['taxonomies'], $params );        
+        parent::validate_texts( [
+            'title',
+            'plural_title',
+            'name',
+            'plural_name',
+            'primary_title',
+            'primary_name',
+            'description'
+        ], $params );
+        parent::validate_arrays( [
+            [
+                'key' => 'taxonomies',
+                'format' => 'string',
+            ]
+        ], $params );        
         
         parent::check_errors();
         

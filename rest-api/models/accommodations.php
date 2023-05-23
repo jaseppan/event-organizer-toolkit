@@ -53,9 +53,14 @@
         $params = apply_filters( 'eot_json_params', $request->get_json_params() );
     
         // Validate parameters
-        parent::validate_required_texts( ['title'], $params );
-        parent::validate_texts( ['description'], $params );
-        parent::validate_arrays( ['rooms'], $params );        
+        parent::validate_required_fields( ['title'], $params );
+        parent::validate_texts( ['title','description'], $params );
+        parent::validate_arrays( [
+            [
+                'key' => 'rooms',
+                'format' => 'string',
+            ]
+        ], $params );        
         
         parent::check_errors();
         

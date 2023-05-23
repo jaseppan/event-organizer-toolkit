@@ -53,12 +53,23 @@
          $params = apply_filters( 'eot_json_params', $request->get_json_params() );
      
          // Validate parameters
-         parent::validate_required_texts( [
+         parent::validate_required_fields( [
              'title',
              'date',
              'time',
          ], $params );
-         parent::validate_texts( ['venue'], $params );       
+         parent::validate_texts( [
+            'title',
+            'venue', 
+            'menu'
+        ], $params );       
+        parent::validate_dates( [
+            'date',
+        ], $params );       
+        parent::validate_times( [
+            'start_time',
+            'end_time',
+        ], $params );       
          
          parent::check_errors();
          
@@ -70,8 +81,10 @@
          $data = array(
             'title' => sanitize_text_field($params['title']),
             'date' => sanitize_text_field($params['date']),
-            'time' => sanitize_text_field($params['time']),
-            'venue' => isset($params['venue']) ? sanitize_text_field($params['venue']) : ''
+            'start_time' => sanitize_text_field($params['start_time']),
+            'end_time' => sanitize_text_field($params['end_time']),
+            'venue' => isset($params['venue']) ? sanitize_text_field($params['venue']) : '',
+            'menu' => isset($params['menu']) ? sanitize_text_field($params['menu']) : ''
         );
  
          // Update if ID exists

@@ -34,7 +34,7 @@
  
          global $wpdb;
  
-         $this->table = $wpdb->prefix . VENT_ORGANIZER_TOOLKIT_PARTICIPANT_ROLES_TABLE;
+         $this->table = $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_PARTICIPANT_ROLES_TABLE;
  
      }
  

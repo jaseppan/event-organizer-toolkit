@@ -4,6 +4,6 @@ This project is under construction. The aim of the project is to develop a WordP
 
 ## Currently in progress
 
-- [x] Backend
-  - [x] Data storage
-  - [x] REST API
+- [] Backend
+  - [] Data storage
+  - [] REST API

@@ -13,6 +13,9 @@ class Event_Organizer_Toolkit_Rest_Api {
 
 	public function __construct() {
 
+        // Endpoint to add both participant and parent
+        add_action('rest_api_init', array($this, 'register_participant'));
+
         // Events
         add_action('rest_api_init', array($this, 'add_event_type'));
         add_action('rest_api_init', array($this, 'update_event_type'));
@@ -29,6 +32,15 @@ class Event_Organizer_Toolkit_Rest_Api {
         add_action('rest_api_init', array($this, 'edit_participant'));
         add_action('rest_api_init', array($this, 'delete_participant'));
         add_action('rest_api_init', array($this, 'delete_participant'));
+        
+        // Participants parent
+        add_action('rest_api_init', array($this, 'add_parent'));
+        add_action('rest_api_init', array($this, 'update_parent'));
+        add_action('rest_api_init', array($this, 'list_parents'));
+        add_action('rest_api_init', array($this, 'get_parent'));
+        add_action('rest_api_init', array($this, 'edit_parent'));
+        add_action('rest_api_init', array($this, 'delete_parent'));
+        add_action('rest_api_init', array($this, 'delete_parent'));
         
         // Meals
         add_action('rest_api_init', array($this, 'add_meal'));
@@ -230,7 +242,7 @@ class Event_Organizer_Toolkit_Rest_Api {
     }
 
     /**
-     * Endpoint to get event
+     * Endpoint to get participant
      * @since 1.0.0
      */
 
@@ -279,6 +291,126 @@ class Event_Organizer_Toolkit_Rest_Api {
                  'methods' => 'DELETE',
                  'callback' => function($request) {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/participants.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
+                     $handler->delete( $request );
+                 },
+                 'permission_callback' => function () {
+                    return $this->validate_cookie();
+                  }
+             )
+         );
+    }
+
+    /**
+     * Routes to for parents handling
+     */
+
+    /**
+     * Endpoint to add new parent
+     * @since 1.0.0
+     */
+
+     public function add_parent() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/add-parent',array(
+                 'methods' => 'POST',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/parents.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
+                     $handler->update( $request );
+                 },
+                 'permission_callback' => '__return_true',
+             )
+         );
+    }
+    
+    /**
+     * Endpoint to update parent
+     * @since 1.0.0
+     */
+
+     public function update_parent() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/update-parent',array(
+                 'methods' => 'POST',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/parents.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
+                     $handler->update( $request );
+                 },
+                 'permission_callback' => '__return_true',
+             )
+         );
+    }
+
+    /**
+     * Endpoint to list parents
+     * @since 1.0.0
+     */
+    
+    public function list_parents() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/list-parents',array(
+                 'methods' => 'GET',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/parents.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
+                     $handler->list( $request );
+                 },
+                 'permission_callback' => function () {
+                    return $this->validate_cookie();
+                  }
+             )
+         );
+    }
+
+    /**
+     * Endpoint to get parent
+     * @since 1.0.0
+     */
+
+     public function get_parent() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/get-parent',array(
+                 'methods' => 'GET',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/parents.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Event_Types_Handler();
+                     $handler->get( $request );
+                 },
+                 'permission_callback' => function () {
+                    return $this->validate_cookie();
+                  }
+             )
+         );
+    }
+
+    /**
+     * Endpoint to edit parent
+     * @since 1.0.0
+     */
+
+    public function edit_parent() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/edit-parent',array(
+                 'methods' => 'PATCH',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/parents.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
+                     $handler->edit( $request );
+                 },
+                 'permission_callback' => function () {
+                    return $this->validate_cookie();
+                  }
+             )
+         );
+    }
+    
+    /**
+     * Endpoint to delete parents
+     * @since 1.0.0
+     */
+
+    public function delete_parent() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/delete-parent',array(
+                 'methods' => 'DELETE',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/parents.php' );
                      $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
                      $handler->delete( $request );
                  },

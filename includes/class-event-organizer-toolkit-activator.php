@@ -38,18 +38,17 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 
-	public function create_tables_sql() {
+	public static function create_tables_sql() {
 		
 		$sql = self::create_events_table();
         $sql .= self::create_participants_table();
 		$sql .= self::create_participants_roles_table();
 		$sql .= self::create_participants_parents_table();
         $sql .= self::create_event_types_table();
-        $sql .= self::create_particitant_roles_table();
         $sql .= self::create_eot_fields_table();
         $sql .= self::create_eot_field_values_table();
         $sql .= self::create_eot_meals_table();
-        $sql .= self::create_eot_accommodation_table();
+        $sql .= self::create_eot_accommodations_table();
         $sql .= self::create_eot_participants_meals_table();
         $sql .= self::create_eot_participants_accommodation_table();
 
@@ -57,7 +56,7 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 
-	public function create_events_table() {
+	public static function create_events_table() {
 
 		global $wpdb;
 
@@ -73,7 +72,7 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 	
-	public function create_event_types_table() {
+	public static function create_event_types_table() {
 
 		global $wpdb;
 
@@ -94,7 +93,7 @@ class Event_Organizer_Toolkit_Activator {
 	}
 	
 
-	public function create_participants_table() {
+	public static function create_participants_table() {
 
 		global $wpdb;
 
@@ -117,11 +116,11 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 	
-	public function create_participants_parents_table() {
+	public static function create_participants_parents_table() {
 
 		global $wpdb;
 
-		$sql =  "CREATE TABLE " . $wpdb->prefix . VENT_ORGANIZER_TOOLKIT_PARTICIPANTS_PARENTS_TABLE . " (
+		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_PARTICIPANTS_PARENTS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			first_name varchar(50) NOT NULL,
 			last_name varchar(50) NOT NULL,
@@ -137,7 +136,7 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 	
-	public function create_particitant_roles_table() {
+	public static function create_participants_roles_table() {
 
 		global $wpdb;
 
@@ -151,7 +150,7 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 	
-	public function create_eot_fields_table() {
+	public static function create_eot_fields_table() {
 
 		global $wpdb;
 
@@ -180,7 +179,7 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 	
-	public function create_eot_field_values_table() {
+	public static function create_eot_field_values_table() {
 
 		global $wpdb;
 
@@ -195,7 +194,7 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 	
-	public function create_eot_meals_table() {
+	public static function create_eot_meals_table() {
 
 		global $wpdb;
 
@@ -214,7 +213,7 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 
-	public function create_eot_accommodations_table() {
+	public static function create_eot_accommodations_table() {
 
 		global $wpdb;
 
@@ -229,7 +228,7 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 
-	public function create_eot_participants_meals_table() {
+	public static function create_eot_participants_meals_table() {
 
 		global $wpdb;
 
@@ -242,7 +241,7 @@ class Event_Organizer_Toolkit_Activator {
 
 	}
 	
-	public function create_eot_participants_accommodation_table() {
+	public static function create_eot_participants_accommodation_table() {
 
 		global $wpdb;
 

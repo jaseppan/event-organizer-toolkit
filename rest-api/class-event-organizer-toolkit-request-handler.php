@@ -285,7 +285,7 @@ class Event_Organizer_Toolkit_Request_Handler {
         
         $result = $wpdb->insert($table, $data);
        
-        wp_send_json_success( $data );
+        // wp_send_json_success( $data );
         
         if ($result !== false) {
             $message = sprintf(__('%1$s %2$s inserted.', 'event-organizer-toolkit'), $property_name, $data['title']);

@@ -64,6 +64,18 @@ class Event_Organizer_Toolkit_Rest_Api {
      * Routes to for events handling
      */
 
+    public function register_participant() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/register-participant',array(
+                'methods' => 'POST',
+                'callback' => function($request) {
+                    require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/event-types.php' );
+                    $handler = NEW Event_Organizer_Toolkit_Event_Types_Handler();
+                    $handler->update( $request ); // Update method is used for both create and update
+                }
+            )
+        );
+    }
+
     /**
      * Endpoint to add new event type
      * @since 1.0.0
@@ -73,7 +85,7 @@ class Event_Organizer_Toolkit_Rest_Api {
         register_rest_route( 'event-organizer-toolkit/v1', '/add-event-type',array(
                  'methods' => 'POST',
                  'callback' => function($request) {
-                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/event-types.php' );
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/class-event-organizer-toolkit-participant-registration.php' );
                      $handler = NEW Event_Organizer_Toolkit_Event_Types_Handler();
                      $handler->update( $request ); // Update method is used for both create and update
                  },

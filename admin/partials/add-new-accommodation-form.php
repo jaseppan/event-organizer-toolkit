@@ -34,6 +34,7 @@
 
 <script>
     jQuery(document).ready(function($) {
+
         // Add Room
         $('#add-room').click(function(e) {
             e.preventDefault();

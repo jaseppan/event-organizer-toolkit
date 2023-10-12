@@ -13,16 +13,8 @@
 		$(formId).on('submit', function(e) {
 			e.preventDefault();
 	
-			// Collect form data
-			var formData = {
-				'title': $('#accommodation-title').val(),
-				'description': $('#accommodation-description').val(),
-				'rooms': []
-			};
-	
-			$('.room-name').each(function() {
-				formData.rooms.push($(this).val());
-			});
+			// Get data of the current form
+			var formData = getFormData(formId);
 	
 			// AJAX request
 			$.ajax({
@@ -47,8 +39,6 @@
 					} else {
 
 						console.log('Success:', response);
-						console.log('data:', response.data);
-						console.log('id:',  response.data.data.id);
 
 						var accommodation_id =  response.data.data.id;
 						var edit_link = eotScriptData.current_url + '&tab=edit&id=' + accommodation_id;
@@ -91,4 +81,29 @@
 
 	});
 
+	const getFormData = (formId) => {
+
+		if (formId === undefined) {
+			throw new Error('No form ID provided');
+		}
+	
+		let formData;
+	
+		if (formId === '#event-organizer-toolkit-accommodations-form') {
+			formData = {
+				'title': $('#accommodation-title').val(),
+				'description': $('#accommodation-description').val(),
+				'rooms': []
+			}
+	
+			$('.room-name').each(function() {
+				formData.rooms.push($(this).val());
+			});
+		}
+	
+		return formData;
+	};
+
 })( jQuery );
+
+

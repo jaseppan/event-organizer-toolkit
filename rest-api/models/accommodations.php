@@ -54,7 +54,10 @@
     
         // Validate parameters
         parent::validate_required_fields( ['title'], $params );
-        parent::validate_texts( ['title','description'], $params );
+        parent::validate_texts( [
+            'title',
+            'description'
+        ], $params );
         parent::validate_arrays( [
             [
                 'key' => 'rooms',

@@ -42,7 +42,7 @@ define( 'EVENT_ORGANIZER_TOOLKIT_URL', plugin_dir_url( __FILE__ ) );
 
 /**
  * Configure tables and columns
- * Custom tables can be defined in wp-config.init
+ * Custom tables can be defined in wp-config.php
  */
 
 if( !defined('EVENT_ORGANIZER_TOOLKIT_EVENTS_TABLE') )

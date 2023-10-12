@@ -2,3 +2,77 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+ /* Style the form container */
+.wrap {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style the form title */
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Style form fields */
+.form-field {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Style the submit button */
+.submit {
+    text-align: center;
+}
+
+.button-primary {
+    background-color: #0073e6;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-primary:hover {
+    background-color: #005cbf;
+}
+
+#form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#form-actions a {
+    margin-left: 10px; /* Add spacing between links */
+    text-decoration: none; /* Remove underline from links */
+    color: #000; /* Set the link color */
+}
+
+#form-actions a:hover {
+    color: #0073e6; /* Set the link color on hover */
+}

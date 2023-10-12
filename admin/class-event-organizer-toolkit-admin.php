@@ -98,6 +98,25 @@ class Event_Organizer_Toolkit_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/event-organizer-toolkit-admin.js', array( 'jquery' ), $this->version, false );
 
+		if( !isset($_GET['page']) )
+			return;
+
+		$page = sanitize_text_field($_GET['page']);
+
+		if( $page == 'event-organizer-toolkit-accommodations' && $_GET['tab'] == 'add' )
+			$url = esc_url_raw(rest_url('event-organizer-toolkit/v1/add-accommodation'));
+
+		if( !isset($url) )
+			return;
+
+		// Pass the REST API URL to the JavaScript file
+		wp_localize_script( $this->plugin_name, 'eotScriptData', array(
+			'url' => esc_url_raw(rest_url('event-organizer-toolkit/v1/add-accommodation')),
+			'nonce' => wp_create_nonce('wp_rest'),
+			'current_url' => esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
+			'page' => $page,
+		));
+
 	}
 
 }

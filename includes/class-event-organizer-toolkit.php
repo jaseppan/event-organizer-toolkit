@@ -110,11 +110,23 @@ class Event_Organizer_Toolkit {
 		 * of the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-event-organizer-toolkit-i18n.php';
+		
+		/**
+		 * The class responsible for defining internationalization functionality
+		 * of the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/helper.php';
 
 		/**
-		 * The class responsible for defining all actions that occur in the admin area.
+		 * The class responsible for defining styles and scripts for Event Organizer Toolkit admin pages
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-event-organizer-toolkit-admin.php';
+		if( is_eot_admin_page() )
+			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-event-organizer-toolkit-admin.php';
+		
+		/**
+		 * The class responsible for defining admin interface.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/event-organizer-toolkit-admin-display.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -162,10 +174,15 @@ class Event_Organizer_Toolkit {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Event_Organizer_Toolkit_Admin( $this->get_plugin_name(), $this->get_version() );
+		if( is_eot_admin_page() ) {
+			
+			$plugin_admin = new Event_Organizer_Toolkit_Admin( $this->get_plugin_name(), $this->get_version() );
+			$plugin_admin = new Event_Organizer_Toolkit_Admin( $this->get_plugin_name(), $this->get_version() );
+	
+			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		}
 
 	}
 

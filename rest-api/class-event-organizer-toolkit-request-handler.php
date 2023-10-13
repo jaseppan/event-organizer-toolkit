@@ -367,23 +367,31 @@ class Event_Organizer_Toolkit_Request_Handler {
      *
      * @param string $table
      * @param array $allowed_params
+     * @param array $keywords_str (optional) default is empty string
      * @return JSON
      * @since 1.0.0
      * @version 1.0.0
      * @author Janne Seppänen
      */
     
-    public function get_data( $table, $allowed_params ) {
+    public function get_data( $table, $allowed_params, $keywords_str = '' ) {
 
         global $wpdb;
 
         $query_params = array();
         $query_parts = array();
 
+        if( isset( $_GET['id'] ) ) {
+            $method = 'get_row';
+        } else {
+            $method = 'get_results';
+        }
+
         foreach ( $allowed_params as $param ) {
             if(isset($_GET[$param['key']])) {
                 // wp_send_json_success( $_GET[$param['key']] );
-                $query_parts[] =  $param['key'] . ' = ' . $param['placeholder'];  
+                $condition = isset( $param['condition'] ) ? $param['condition'] : ' = ';
+                $query_parts[] =  $param['key'] . $condition . $param['placeholder'];  
                 $query_params[] = $_GET[$param['key']];
             }
         }
@@ -393,24 +401,106 @@ class Event_Organizer_Toolkit_Request_Handler {
             $query_values = implode( ',', $query_params );
         }
 
-        $sql = $wpdb->prepare( "SELECT * FROM " . $table . $query_tail, $query_values );
-        $data = $wpdb->get_row( $sql );
+        $sql = $wpdb->prepare( "SELECT * FROM " . $table . $query_tail . $keywords_str, $query_values );
+
+        // wp_send_json_success( $sql ); // For debugging
+
+        if( $method == 'get_row') {
+            $data = $wpdb->get_row( $sql );
+        } else {
+            $data = $wpdb->get_results( $sql );
+        }
+
+        // wp_send_json_success( $data ); // For debugging
 
         if ( ! $data ) {
-            $message = sprintf(__('No accommodation found with given criteria.', 'event-organizer-toolkit'), $data['title']);
+            $message = sprintf(__('No result found with given criteria.', 'event-organizer-toolkit'), $data['title']);
             $response['message'] = $message;
             // wp_send_json_error( $response );
         } else {
             $count = count( $data );
             if( $count > 1 ) {
-                $message = sprintf(__('%s accommodations found', 'event-organizer-toolkit'), $count );
+                $message = sprintf(__('%s results found', 'event-organizer-toolkit'), $count );
                 $response['message'] = $message;
                 // wp_send_json_error( $response );
             } else {
-                $message = __('Accommodation found', 'event-organizer-toolkit');
+                $message = __('Result found', 'event-organizer-toolkit');
             }
             $response['message'] = $message;
             // wp_send_json_error( $response );
+        }
+
+        $response['data'] = $data;
+        wp_send_json_success( $response );
+
+    }
+
+    /**
+     * @param string $table
+     * @param array $allowed_params
+     * @param array $keywords (optional) default is empty array
+     * @return array
+     * @since 1.0.0
+     * @version 1.0.0
+     * @author Janne Seppänen 
+     */
+
+    public function list_data( $table, $allowed_params, $keywords = array() ) {
+
+        $keywords_str = ''; 
+        
+        if( isset($keywords['order_by']) )
+            $keywords_str .= ' ORDER BY ' . $keywords['order_by'];
+
+        if( isset($keywords['order']) )
+            $keywords_str .= ' ' . $keywords['order'];
+
+        // Get page and post per page
+        if( isset($keywords['items_per_page']) ) {
+            if( isset( $keywords['page'] ) ) {
+                $keywords_str .= ' LIMIT ' . ( $keywords['items_per_page'] * ( $keywords['page'] - 1 ) ) . ' , ' . $keywords['items_per_page'];
+            } else {
+                $keywords_str .= ' LIMIT ' . $keywords['items_per_page'];
+            }
+        }
+
+        if( isset( $keywords['search'] ) && !isset($keywords['search-from']) ) {    
+            $this->search( $table, $keywords['search'], array_map( function( $params ) {
+                return $params['key'];
+            }, $allowed_params ) ); // Use search method if should be searched from multiple columns
+        } else {
+            $this->get_data( $table, $allowed_params, $keywords_str );
+        }
+
+    }
+
+    /**
+     * Method to get search data
+     *
+     * @param string $table
+     * @param array $allowed_params
+     * @return JSON
+     * @since 1.0.0
+     * @version 1.0.0
+     * @author Janne Seppänen
+     */
+    
+    public function search( $table, $search_str, $fields_array ) {
+
+        global $wpdb;
+        
+        $fields = implode( ',', $fields_array );
+
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE CONCAT($fields) LIKE '%s'", '%' . $search_str . '%' );
+        $data = $wpdb->get_results( $sql, ARRAY_A );
+
+        if ( ! $data ) {
+            $message = sprintf(__('No result found with given criteria.', 'event-organizer-toolkit'), $data['title']);
+            $response['message'] = $message;
+        } else {
+            $count = count( $data );
+            $message = sprintf(__('%s results found', 'event-organizer-toolkit'), $count );
+            $response['message'] = $message;
         }
 
         $response['data'] = $data;

@@ -96,15 +96,49 @@
      * @since 1.0.0
      */   
 
-     public function list( WP_REST_Request $request ) {
+     public function list() {
 
-        $json_params = apply_filters( 'eot_json_params', $request->get_json_params() );
+        $keywords = array();
 
-        $response = [
-            'state' => 'test list',
-        ];
+        if( isset( $_GET['order_by'] ) )
+            $keywords['order_by'] = sanitize_text_field( $_GET['order_by'] );
 
-        return $response;       
+        if( isset($_GET['order']) )
+            $keywords['order'] = sanitize_text_field( $_GET['order'] );
+
+        if( isset($_GET['search']) ) {
+            $keywords['search'] = sanitize_text_field( $_GET['search'] );
+            if( isset($_GET['search-from']) ) {
+                $allowed_params = array(
+                    array(
+                        'key' => sanitize_key( $_GET['search-from'] ),
+                    )
+                );
+            } else {
+                $allowed_params = array(
+                    array(
+                        'key' => 'id',
+                        'placeholder' => '%d', 
+                    ),
+                    array(
+                        'key' => 'title',
+                        'placeholder' => '%s',
+                    ),
+                    array(
+                        'key' => 'description',
+                        'placeholder' => '%s',
+                    ),
+                );
+            }
+        }
+
+        if( isset($_GET['page']) ) 
+            $keywords['page'] = (int) $_GET['page'];
+
+        if( isset($_GET['items_per_page']) )
+            $keywords['items_per_page'] = (int) $_GET['items_per_page'];
+
+        parent::list_data( $this->table, $allowed_params, $keywords );       
 
     }
     
@@ -122,7 +156,7 @@
                 'placeholder' => '%d', 
             ),
             array(
-                'title' => '%s',
+                'key' => 'title',
                 'placeholder' => '%s',
             )
         );

@@ -117,7 +117,19 @@ class Event_Organizer_Toolkit_Admin {
 
 	}
 
-	public function get_endpoint_url( $page, $tab ) {
+	/**
+	 * Get the endpoint URL for the REST API depending on page and optional tab.
+	 * 
+	 * @param string $page The page name.
+	 * @param string string|false $tab (Optional) The tab name. Default is false.
+	 * @return string The endpoint URL.
+	 * @since 1.0
+	 * @version 1.0
+	 * @access public
+	 * @author Janne Seppänen
+	 */
+
+	public function get_endpoint_url( $page, $tab = false ) {
 
 		$end_points = array(
 			array(

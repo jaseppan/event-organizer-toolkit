@@ -134,6 +134,16 @@
         // Content for the "Add New Accommodation" tab
         require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/accommodation.php');
         // Add your code to create a new accommodation here.
+    } elseif ($active_tab === 'edit') {
+
+        // Get the ID of the accommodation to edit
+        $id = isset( $_GET['id'] ) ? $_GET['id'] : '';
+        // Get title of 
+        $title = get_the_title();
+
+        // Content for the "Add New Accommodation" tab
+        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/accommodation.php');
+        // Add your code to create a new accommodation here.
     }
  }
  

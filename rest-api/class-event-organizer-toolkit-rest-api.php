@@ -627,7 +627,7 @@ class Event_Organizer_Toolkit_Rest_Api {
                  'methods' => 'GET',
                  'callback' => function($request) {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/accommodations.php' );
-                     $handler = NEW Event_Organizer_Toolkit_Event_Types_Handler();
+                     $handler = NEW Event_Organizer_Toolkit_Accommodations_Handler();
                      $handler->get( $request );
                  },
                  'permission_callback' => function () {
@@ -686,7 +686,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function validate_cookie( $cap = false ) {
 
-        // return true; // For debugging
+        return true; // For debugging and developing
 
         $user_id = wp_validate_auth_cookie( '', 'logged_in' );
         $current_user = wp_set_current_user($user_id);

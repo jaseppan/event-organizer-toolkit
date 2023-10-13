@@ -17,6 +17,12 @@ if (!defined('ABSPATH')) exit;
     <h1><?php _e('Add New Accommodation', 'event-organizer-toolkit'); ?></h1>
     <div id="form-message"></div>
     <form id="event-organizer-toolkit-accommodations-form" method="post" action="">
+
+        <!-- Hidden fields -->
+        <?php if(isset($id)) : ?>
+            <input type="hidden" name="id" value="<?php echo $id; ?>">
+        <?php endif; ?>
+        
         <!-- Title -->
         <div class="form-field">
             <label for="accommodation_title"><?php _e('Title:', 'event-organizer-toolkit'); ?></label>

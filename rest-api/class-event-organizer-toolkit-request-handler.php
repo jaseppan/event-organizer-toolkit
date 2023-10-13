@@ -362,7 +362,63 @@ class Event_Organizer_Toolkit_Request_Handler {
 
     }
 
-    function validate_international_zip_code($zipcode, $countryCode) {
+    /**
+     * Method to get search data
+     *
+     * @param string $table
+     * @param array $allowed_params
+     * @return JSON
+     * @since 1.0.0
+     * @version 1.0.0
+     * @author Janne Seppänen
+     */
+    
+    public function get_data( $table, $allowed_params ) {
+
+        global $wpdb;
+
+        $query_params = array();
+        $query_parts = array();
+
+        foreach ( $allowed_params as $param ) {
+            if(isset($_GET[$param['key']])) {
+                // wp_send_json_success( $_GET[$param['key']] );
+                $query_parts[] =  $param['key'] . ' = ' . $param['placeholder'];  
+                $query_params[] = $_GET[$param['key']];
+            }
+        }
+
+        if( !empty($query_parts) ) {
+            $query_tail = ' WHERE ' . implode( ' AND ', $query_parts );
+            $query_values = implode( ',', $query_params );
+        }
+
+        $sql = $wpdb->prepare( "SELECT * FROM " . $table . $query_tail, $query_values );
+        $data = $wpdb->get_row( $sql );
+
+        if ( ! $data ) {
+            $message = sprintf(__('No accommodation found with given criteria.', 'event-organizer-toolkit'), $data['title']);
+            $response['message'] = $message;
+            // wp_send_json_error( $response );
+        } else {
+            $count = count( $data );
+            if( $count > 1 ) {
+                $message = sprintf(__('%s accommodations found', 'event-organizer-toolkit'), $count );
+                $response['message'] = $message;
+                // wp_send_json_error( $response );
+            } else {
+                $message = __('Accommodation found', 'event-organizer-toolkit');
+            }
+            $response['message'] = $message;
+            // wp_send_json_error( $response );
+        }
+
+        $response['data'] = $data;
+        wp_send_json_success( $response );
+
+    }
+
+    public function validate_international_zip_code($zipcode, $countryCode) {
         // Regular expressions for different countries' ZIP code formats
         $patterns = [
             'US' => '/^\d{5}(-\d{4})?$/',
@@ -494,5 +550,7 @@ class Event_Organizer_Toolkit_Request_Handler {
     
         return false; // Country code not supported
     }
+
+    
 
 }

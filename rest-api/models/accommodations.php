@@ -114,15 +114,20 @@
      * @since 1.0.0
      */   
 
-     public function get( WP_REST_Request $request ) {
+     public function get() {
 
-        $json_params = apply_filters( 'eot_json_params', $request->get_json_params() );
+         $allowed_params = array(
+            array(
+                'key' => 'id',
+                'placeholder' => '%d', 
+            ),
+            array(
+                'title' => '%s',
+                'placeholder' => '%s',
+            )
+        );
 
-        $response = [
-            'state' => 'test get',
-        ];
-
-        return $response;       
+        parent::get_data( $this->table, $allowed_params );     
 
     }
     

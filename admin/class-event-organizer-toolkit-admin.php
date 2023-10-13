@@ -131,6 +131,7 @@ class Event_Organizer_Toolkit_Admin {
 
 	public function get_endpoint_url( $page, $tab = false ) {
 
+		// List of end point urls and their pages and tabs
 		$end_points = array(
 			array(
 				'page' => 'event-organizer-toolkit-accommodations',
@@ -152,9 +153,9 @@ class Event_Organizer_Toolkit_Admin {
 				'tab' => 'add',
 				'url' => rest_url('event-organizer-toolkit/v1/add-event'),
 			),
-
 		);
 
+		// Get the endpoint URL depending on page and optional tab.
 		foreach ( $end_points as $end_point ) {
 			if( $tab && isset(end_point['tab']) ) {
 				if( $end_point['page'] == $page && $end_point['tab'] == $tab ) {
@@ -164,7 +165,6 @@ class Event_Organizer_Toolkit_Admin {
 				return $end_point['url'];
 			}
 		}
-
 
 		return false;
 

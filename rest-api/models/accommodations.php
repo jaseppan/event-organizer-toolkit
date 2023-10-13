@@ -173,13 +173,7 @@
 
      public function delete( WP_REST_Request $request ) {
 
-        $json_params = apply_filters( 'eot_json_params', $request->get_json_params() );
-
-        $response = [
-            'state' => 'test delete',
-        ];
-
-        return $response;       
+        parent::delete_item( $this->table, $_GET['id'] );       
 
     }
 

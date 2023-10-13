@@ -511,6 +511,32 @@ class Event_Organizer_Toolkit_Request_Handler {
 
     }
 
+    /**
+     * Method to delete item from database
+     * 
+     * @param string $table
+     * @param int $id
+     */
+
+    public function delete_item( $table, $id ) {
+
+        global $wpdb;
+        $result = $wpdb->delete(
+            $table,
+            [ 'id' => $id ],
+            [ '%d' ]
+        );
+
+        if( $result ) {
+            $response['message'] = __('Item deleted successfully', 'event-organizer-toolkit');
+            wp_send_json_success( $response );
+        } else {
+            $response['message'] = __('Item not found', 'event-organizer-toolkit');
+            wp_send_json_error( $response );
+        }
+
+    }
+
     public function validate_international_zip_code($zipcode, $countryCode) {
         // Regular expressions for different countries' ZIP code formats
         $patterns = [

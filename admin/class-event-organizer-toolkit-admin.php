@@ -102,20 +102,59 @@ class Event_Organizer_Toolkit_Admin {
 			return;
 
 		$page = sanitize_text_field($_GET['page']);
-
-		if( $page == 'event-organizer-toolkit-accommodations' && $_GET['tab'] == 'add' )
-			$url = esc_url_raw(rest_url('event-organizer-toolkit/v1/add-accommodation'));
-
+		$url = $this->get_endpoint_url( $page,  $_GET['tab'] );
+		
 		if( !isset($url) )
 			return;
 
 		// Pass the REST API URL to the JavaScript file
 		wp_localize_script( $this->plugin_name, 'eotScriptData', array(
-			'url' => esc_url_raw(rest_url('event-organizer-toolkit/v1/add-accommodation')),
+			'url' => $url,
 			'nonce' => wp_create_nonce('wp_rest'),
 			'current_url' => esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
 			'page' => $page,
 		));
+
+	}
+
+	public function get_endpoint_url( $page, $tab ) {
+
+		$end_points = array(
+			array(
+				'page' => 'event-organizer-toolkit-accommodations',
+				'tab' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-accommodation'),
+			),
+			array(
+				'page' => 'event-organizer-toolkit-meals',
+				'tab' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-meal'),
+			),
+			array(
+				'page' => 'event-organizer-toolkit-participants',
+				'tab' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-participant'),
+			),
+			array(
+				'page' => 'event-organizer-toolkit-events',
+				'tab' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-event'),
+			),
+
+		);
+
+		foreach ( $end_points as $end_point ) {
+			if( $tab && isset(end_point['tab']) ) {
+				if( $end_point['page'] == $page && $end_point['tab'] == $tab ) {
+					return $end_point['url'];
+				} 
+			} elseif( $end_point['page'] == $page ) {
+				return $end_point['url'];
+			}
+		}
+
+
+		return false;
 
 	}
 

@@ -98,6 +98,16 @@ class Event_Organizer_Toolkit_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/event-organizer-toolkit-admin.js', array( 'jquery' ), $this->version, false );
 
+	}
+
+	/**
+	 * Localize the JavaScript for the admin area.
+	 * 
+	 * @since    1.0.0
+	 */
+
+	public function localize_script() {
+
 		if( !isset($_GET['page']) )
 			return;
 
@@ -114,7 +124,7 @@ class Event_Organizer_Toolkit_Admin {
 			'current_url' => esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
 			'page' => $page,
 		));
-
+	
 	}
 
 	/**

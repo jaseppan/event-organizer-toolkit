@@ -132,7 +132,7 @@
         // Add your code to display the list of accommodations here.
     } elseif ($active_tab === 'add') {
         // Content for the "Add New Accommodation" tab
-        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/add-new-accommodation-form.php');
+        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/accommodation.php');
         // Add your code to create a new accommodation here.
     }
  }

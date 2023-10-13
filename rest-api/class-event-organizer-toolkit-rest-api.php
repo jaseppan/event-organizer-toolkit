@@ -686,8 +686,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function validate_cookie( $cap = false ) {
 
-        // For debugging
-        return true;
+        // return true; // For debugging
 
         $user_id = wp_validate_auth_cookie( '', 'logged_in' );
         $current_user = wp_set_current_user($user_id);

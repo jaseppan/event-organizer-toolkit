@@ -363,7 +363,7 @@ class Event_Organizer_Toolkit_Request_Handler {
     }
 
     /**
-     * Method to get search data
+     * Method to get data
      *
      * @param string $table
      * @param array $allowed_params
@@ -436,6 +436,8 @@ class Event_Organizer_Toolkit_Request_Handler {
     }
 
     /**
+     * Method to list data from database.
+     * 
      * @param string $table
      * @param array $allowed_params
      * @param array $keywords (optional) default is empty array
@@ -464,10 +466,11 @@ class Event_Organizer_Toolkit_Request_Handler {
             }
         }
 
-        if( isset( $keywords['search'] ) && !isset($keywords['search-from']) ) {    
-            $this->search( $table, $keywords['search'], array_map( function( $params ) {
+        if( isset( $keywords['search'] ) && !isset($keywords['search-from']) ) {  
+            $fields = array_map( function( $params ) {
                 return $params['key'];
-            }, $allowed_params ) ); // Use search method if should be searched from multiple columns
+            }, $allowed_params );  
+            $this->search( $table, $keywords['search'], $fields, $keywords_str ); // Use search method if should be searched from multiple columns
         } else {
             $this->get_data( $table, $allowed_params, $keywords_str );
         }
@@ -485,14 +488,14 @@ class Event_Organizer_Toolkit_Request_Handler {
      * @author Janne Seppänen
      */
     
-    public function search( $table, $search_str, $fields_array ) {
+    public function search( $table, $search_str, $fields_array, $keywords_str  ) {
 
         global $wpdb;
         
         $fields = implode( ',', $fields_array );
 
         $sql = $wpdb->prepare("SELECT * FROM $table WHERE CONCAT($fields) LIKE '%s'", '%' . $search_str . '%' );
-        $data = $wpdb->get_results( $sql, ARRAY_A );
+        $data = $wpdb->get_results( $sql . $keywords_str, ARRAY_A );
 
         if ( ! $data ) {
             $message = sprintf(__('No result found with given criteria.', 'event-organizer-toolkit'), $data['title']);

@@ -30,14 +30,15 @@
 					xhr.setRequestHeader('X-WP-Nonce', eotScriptData.nonce);
 				},
 				success: function(response) {
-					// Check if the response indicates failure
-					$('#eot-submit-button').removeClass('hidden');
+					
 					$('#eot-submit-button-loading').addClass('hidden');
 
+					// Check if the response indicates failure
 					if (!response.success) {
 
 						console.log('Backend Error:', response);
 
+						$('#eot-submit-button').removeClass('hidden');
 						// Change message class
 						var actions = '';
 						$('#form-message').removeClass('notice-success').addClass('notice error');
@@ -51,11 +52,21 @@
 
 						// Add add new and edit links if current action is add
 						if( eotScriptData.action == 'add' ) {
+							$('input').attr('disabled', true);
+							$('textarea').attr('disabled', true);
+							$('.remove-item').addClass('hidden');
+							$('.remove-item').addClass('hidden');
+							$('.add-item').addClass('hidden');
+
 							var edit_link = eotScriptData.current_url + '&tab=edit&id=' + accommodation_id;
 							var actions = 
 								'<a href="' + edit_link + '" class="accommodation-edit-button" data-id="' + accommodation_id + '">Edit</a>' +
 								'<a href="#" class="add-new-item">Add New</a>';
 							$('#form-actions').html( actions ).show();
+						}
+
+						if( eotScriptData.action == 'edit' ) {
+							$('#eot-submit-button').removeClass('hidden');
 						}
 						
 					}
@@ -90,6 +101,10 @@
 				// Assuming your form has an ID like 'accommodation-form', you can empty it like this:
 				$(formId).trigger('reset');
 				$('.form-field').removeClass('hidden');
+				$('input').attr('disabled', false);
+				$('textarea').attr('disabled', false);
+				$('.remove-item').removeClass('hidden');
+				$('.add-item').removeClass('hidden');
 			}
 		);
 		

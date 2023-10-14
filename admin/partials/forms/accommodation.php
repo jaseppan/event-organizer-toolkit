@@ -49,7 +49,7 @@ if (!defined('ABSPATH')) exit;
                
             <?php endif; ?>
         </div>
-        <a href="#" id="add-room"><?php _e('Add room', 'event-organizer-toolkit') ?></a>
+        <a href="#" id="add-room" class="add-item"><?php _e('Add room', 'event-organizer-toolkit') ?></a>
 
         <!-- Submit Button -->
         <?php echo eot_submit_button($submit_button_text) ?>

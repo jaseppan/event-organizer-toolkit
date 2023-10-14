@@ -10,23 +10,29 @@
 		const page = eotScriptData.page;
 		const formId = '#' + page + '-form';
 
+		console.log(eotScriptData);
+
 		$(formId).on('submit', function(e) {
 			e.preventDefault();
 	
 			// Get data of the current form
-			var formData = getFormData(formId);
+			var formData = serializeToJSON($(this).serialize());
 	
 			// AJAX request
 			$.ajax({
 				type: 'POST',
 				url: eotScriptData.url,
-				data: JSON.stringify(formData),
+				data: formData,
 				contentType: 'application/json',
 				beforeSend: function(xhr) {
+					$('#eot-submit-button').addClass('hidden');
+					$('#eot-submit-button-loading').removeClass('hidden');
 					xhr.setRequestHeader('X-WP-Nonce', eotScriptData.nonce);
 				},
 				success: function(response) {
 					// Check if the response indicates failure
+					$('#eot-submit-button').removeClass('hidden');
+					$('#eot-submit-button-loading').addClass('hidden');
 
 					if (!response.success) {
 
@@ -38,29 +44,34 @@
 						
 					} else {
 
-						console.log('Success:', response);
-
-						var accommodation_id =  response.data.data.id;
-						var edit_link = eotScriptData.current_url + '&tab=edit&id=' + accommodation_id;
-						var actions = 
-							'<a href="' + edit_link + '" class="accommodation-edit-button" data-id="' + accommodation_id + '">Edit</a>' +
-							'<a href="#" class="add-new-item">Add New</a>';
+						var accommodation_id = response.data.data.id;
+						
 						// Change message class
 						$('#form-message').removeClass('error').addClass('notice notice-success');
-						$(formId).trigger('reset');
-						$('.form-field').addClass('hidden');
+
+						// Add add new and edit links if current action is add
+						if( eotScriptData.action == 'add' ) {
+							var edit_link = eotScriptData.current_url + '&tab=edit&id=' + accommodation_id;
+							var actions = 
+								'<a href="' + edit_link + '" class="accommodation-edit-button" data-id="' + accommodation_id + '">Edit</a>' +
+								'<a href="#" class="add-new-item">Add New</a>';
+							$('#form-actions').html( actions ).show();
+						}
 						
 					}
 
 					var message = response.data.message;
 					$('#form-message').html(message).show();
-					$('#form-actions').html( actions ).show();
+
+					
 
 				},
 				error: function(error) {
 					// Handle error, e.g., display an error message
 					// Handle other errors, e.g., display a generic error message
 					console.log('Frontend Error:', error.responseText);
+					$('#eot-submit-button').removeClass('hidden');
+					$('#eot-submit-button-loading').addClass('hidden');
 					var message = 'An error occurred. Please try again.';
 					var actions = '';
 					$('#form-message').removeClass('success').addClass('notice error');
@@ -69,6 +80,10 @@
 				}
 			});
 		});
+
+		/**
+		 * Reset form when Add new link is clicked
+		 */
 
 		$(document).on('click', '.add-new-item', function(e) {
 			e.preventDefault(); // Prevent the default link behavior
@@ -81,29 +96,34 @@
 
 	});
 
-	const getFormData = (formId) => {
-
-		if (formId === undefined) {
-			throw new Error('No form ID provided');
-		}
-	
-		let formData;
-	
-		if (formId === '#event-organizer-toolkit-accommodations-form') {
-			formData = {
-				'title': $('#accommodation-title').val(),
-				'description': $('#accommodation-description').val(),
-				'rooms': []
+	const serializeToJSON = (serializedData) => {
+		
+		// Split the serialized data into an array of key-value pairs
+		var keyValuePairs = serializedData.split('&');
+		
+		// Initialize an empty object
+		var jsonObject = {};
+	  
+		// Convert the array into a JSON object
+		keyValuePairs.forEach(function(keyValuePair) {
+		  var pair = keyValuePair.split('=');
+		  var key = decodeURIComponent(pair[0]);
+		  var value = decodeURIComponent(pair[1]);
+		  
+		  // Handle arrays by checking for square brackets
+		  if (key.endsWith('[]')) {
+			key = key.slice(0, -2); // Remove the square brackets
+			if (!jsonObject[key]) {
+			  jsonObject[key] = [];
 			}
-	
-			$('.room-name').each(function() {
-				formData.rooms.push($(this).val());
-			});
-		}
-	
-		return formData;
-	};
+			jsonObject[key].push(value);
+		  } else {
+			jsonObject[key] = value;
+		  }
+		});
+	  
+		return JSON.stringify(jsonObject);
+	}
+
 
 })( jQuery );
-
-

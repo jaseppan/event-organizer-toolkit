@@ -161,7 +161,9 @@
             )
         );
 
-        parent::get_data( $this->table, $allowed_params );     
+        $response = parent::get_data( $this->table, $allowed_params ); 
+        $response = $this->unserialize_data( $response );
+        wp_send_json_success( $response );    
 
     }
     

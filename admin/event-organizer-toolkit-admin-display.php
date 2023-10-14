@@ -131,16 +131,16 @@
         echo '<p>This is where you can view a list of accommodations.</p>';
         // Add your code to display the list of accommodations here.
     } elseif ($active_tab === 'add') {
+
+        // Submit buttom text
+        $submit_button_text = __('Add Accommodation', 'event-toolkit-organizer');
         // Content for the "Add New Accommodation" tab
         require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/accommodation.php');
         // Add your code to create a new accommodation here.
     } elseif ($active_tab === 'edit') {
 
-        // Get the ID of the accommodation to edit
-        $id = isset( $_GET['id'] ) ? $_GET['id'] : '';
-        // Get title of 
-        $title = get_the_title();
-
+        // Submit buttom text
+        $submit_button_text = __('Update Accommodation', 'event-toolkit-organizer');
         // Content for the "Add New Accommodation" tab
         require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/accommodation.php');
         // Add your code to create a new accommodation here.

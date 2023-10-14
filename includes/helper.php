@@ -38,3 +38,38 @@ function is_eot_admin_page() {
     return $is_eot_admin_page;
 
 }
+
+/**
+ * This function adds a submit button
+ * 
+ * @return void
+ * @since 1.0.0
+ * @version 1.0.0
+ * @author janne
+ */
+
+function eot_submit_button($submit_button_text = 'Save Changes') {
+    ?>
+    <div class="submit">
+        <input id="eot-submit-button" type="submit" name="submit" value="<?php echo $submit_button_text ?>" class="button button-primary">
+        <?php eot_spinner(); ?>
+    </div>
+    <?php 
+}
+
+/**
+ * This function adds a spinner
+ * 
+ * @return void
+ * @since 1.0.0
+ * @version 1.0.0
+ * @author janne
+ */
+
+function eot_spinner() {
+    ?>
+    <div id="eot-submit-button-loading" class="loadingio-spinner-spinner-2j6pek9axc1 hidden"><div class="ldio-7s7lo9flxqe">
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div></div>
+    <?php
+}

@@ -406,9 +406,9 @@ class Event_Organizer_Toolkit_Request_Handler {
         // wp_send_json_success( $sql ); // For debugging
 
         if( $method == 'get_row') {
-            $data = $wpdb->get_row( $sql );
+            $data = $wpdb->get_row( $sql, ARRAY_A );
         } else {
-            $data = $wpdb->get_results( $sql );
+            $data = $wpdb->get_results( $sql, ARRAY_A );
         }
 
         // wp_send_json_success( $data ); // For debugging
@@ -418,7 +418,12 @@ class Event_Organizer_Toolkit_Request_Handler {
             $response['message'] = $message;
             // wp_send_json_error( $response );
         } else {
-            $count = count( $data );
+            if( is_array( $data ) ) {
+                $count = count( $data );
+            } else {
+                $count = 1;
+            }
+            
             if( $count > 1 ) {
                 $message = sprintf(__('%s results found', 'event-organizer-toolkit'), $count );
                 $response['message'] = $message;
@@ -431,7 +436,8 @@ class Event_Organizer_Toolkit_Request_Handler {
         }
 
         $response['data'] = $data;
-        wp_send_json_success( $response );
+
+        return $response;
 
     }
 
@@ -472,7 +478,10 @@ class Event_Organizer_Toolkit_Request_Handler {
             }, $allowed_params );  
             $this->search( $table, $keywords['search'], $fields, $keywords_str ); // Use search method if should be searched from multiple columns
         } else {
-            $this->get_data( $table, $allowed_params, $keywords_str );
+            $response = $this->get_data( $table, $allowed_params, $keywords_str );
+            $response = $this->unserialize_data( $response );
+            wp_send_json_success( $response );
+            
         }
 
     }
@@ -534,6 +543,17 @@ class Event_Organizer_Toolkit_Request_Handler {
             $response['message'] = __('Item not found', 'event-organizer-toolkit');
             wp_send_json_error( $response );
         }
+
+    }
+
+    public function unserialize_data($response) {
+
+        foreach( $response['data'] as  $key => $data ) {
+            if( is_serialized( $data ) ) 
+                $response['data'][$key] = unserialize( $data );
+        }
+
+        return $response;
 
     }
 

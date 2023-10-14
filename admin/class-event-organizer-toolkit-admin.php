@@ -111,7 +111,7 @@ class Event_Organizer_Toolkit_Admin {
 		if( !isset($_GET['page']) )
 			return;
 
-		$page = sanitize_text_field($_GET['page']);
+		$page = esc_attr($_GET['page']);
 		$url = $this->get_endpoint_url( $page,  $_GET['tab'] );
 		
 		if( !isset($url) )
@@ -123,6 +123,7 @@ class Event_Organizer_Toolkit_Admin {
 			'nonce' => wp_create_nonce('wp_rest'),
 			'current_url' => esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
 			'page' => $page,
+			'action' => esc_js( $_GET['tab'] ),
 		));
 	
 	}
@@ -149,6 +150,11 @@ class Event_Organizer_Toolkit_Admin {
 				'url' => rest_url('event-organizer-toolkit/v1/add-accommodation'),
 			),
 			array(
+				'page' => 'event-organizer-toolkit-accommodations',
+				'tab' => 'edit',
+				'url' => rest_url('event-organizer-toolkit/v1/update-accommodation'),
+			),
+			array(
 				'page' => 'event-organizer-toolkit-meals',
 				'tab' => 'add',
 				'url' => rest_url('event-organizer-toolkit/v1/add-meal'),
@@ -167,11 +173,11 @@ class Event_Organizer_Toolkit_Admin {
 
 		// Get the endpoint URL depending on page and optional tab.
 		foreach ( $end_points as $end_point ) {
-			if( $tab && isset(end_point['tab']) ) {
+			if( $tab && isset($end_point['tab']) ) {
 				if( $end_point['page'] == $page && $end_point['tab'] == $tab ) {
 					return $end_point['url'];
 				} 
-			} elseif( $end_point['page'] == $page ) {
+			} elseif( $end_point['page'] == $page && !isset($end_point['tab']) ) {
 				return $end_point['url'];
 			}
 		}

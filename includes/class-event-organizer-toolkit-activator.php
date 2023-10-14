@@ -220,8 +220,8 @@ class Event_Organizer_Toolkit_Activator {
 		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_ACCOMMODATIONS_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
 			title varchar(50) NOT NULL,
-			description varchar(255),
-			rooms varchar(255),
+			description LONGTEXT,
+			rooms LONGTEXT,
 			PRIMARY KEY (id) );";
 
 		return $sql;

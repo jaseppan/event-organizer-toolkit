@@ -5,7 +5,6 @@
 
  /* Style the form container */
 .wrap {
-    max-width: 600px;
     margin: 20px 5px;
     padding: 20px;
     background-color: #f7f7f7;
@@ -94,6 +93,119 @@ a.remove-item {
 
 .hidden {
     display: none !important;
+}
+
+/* Style the table */
+#eot-list {
+  width: 100%;
+  border-collapse: collapse; /* Remove spacing between table cells */
+  margin-top: 20px;
+  background-color: #fff; /* Background color for the table */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the table */
+}
+
+/* Style table headers */
+#eot-list th {
+  background-color: #0073e6; /* Header background color */
+  color: #fff; /* Header text color */
+  font-weight: bold;
+  padding: 10px;
+  text-align: left;
+}
+
+/* Style table rows */
+#eot-list td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd; /* Add a bottom border to separate rows */
+}
+
+/* Style alternating row backgrounds */
+#eot-list tr:nth-child(even) {
+  background-color: #f5f5f5; /* Alternate row background color */
+}
+
+/* Style the Edit and Delete links */
+.eot-table .edit-link,
+.eot-table .delete-link {
+    display: inline-block;
+    margin-right: 5px;
+    text-decoration: none;
+    border-radius: 3px;
+    transition: color 0.2s;
+}
+
+.edit-link {
+  color: #1981d4;
+}
+
+.delete-link {
+  color: #df0e0e;
+}
+
+.eot-table .edit-link:hover {
+    color: #003b7a;
+}
+.eot-table .delete-link:hover {
+    color: #7b0000;
+}
+
+/* Pagination Container */
+.pagination-container {
+  margin-top: 15px; /* Add spacing between pagination and content */
+  text-align: center; /* Center align the pagination links */
+}
+
+/* Pagination List */
+.pagination {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline-block; /* Display the pagination links in a horizontal line */
+}
+
+/* Pagination List Item */
+.pagination li {
+  display: inline; /* Display each pagination item horizontally */
+  margin-right: 5px; /* Add spacing between each pagination item */
+}
+
+/* Pagination Link */
+.pagination a {
+  text-decoration: none;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+/* Active Page Link */
+.pagination li.active a {
+  background-color: #0073e6; /* Change the background color for the active page link */
+  color: #fff; /* Change the text color for the active page link */
+}
+
+/* Hover Effect for Pagination Links */
+.pagination a:hover {
+  background-color: #0073e6; /* Change the background color on hover */
+  color: #fff; /* Change the text color on hover */
+}
+
+.eot-list-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Search bar */
+
+.eot-list-actions div {
+  display: inline-flex;
+}
+
+.eot-list-actions div input,
+.eot-list-actions div select {
+  padding: 0 10px;
+  margin-right: 6px;
 }
 
 /** Loading icon **/

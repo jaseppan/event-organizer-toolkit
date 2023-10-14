@@ -155,6 +155,11 @@ class Event_Organizer_Toolkit_Admin {
 				'url' => rest_url('event-organizer-toolkit/v1/update-accommodation'),
 			),
 			array(
+				'page' => 'event-organizer-toolkit-accommodations',
+				'tab' => 'list',
+				'url' => rest_url('event-organizer-toolkit/v1/list-accommodations'),
+			),
+			array(
 				'page' => 'event-organizer-toolkit-meals',
 				'tab' => 'add',
 				'url' => rest_url('event-organizer-toolkit/v1/add-meal'),

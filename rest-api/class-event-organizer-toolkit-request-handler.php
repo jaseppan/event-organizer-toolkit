@@ -404,38 +404,65 @@ class Event_Organizer_Toolkit_Request_Handler {
         $sql = $wpdb->prepare( "SELECT * FROM " . $table . $query_tail . $keywords_str, $query_values );
 
         // wp_send_json_success( $sql ); // For debugging
-
-        if( $method == 'get_row') {
+        
+        // Get data 
+        if( $method == 'get_row' ) {
             $data = $wpdb->get_row( $sql, ARRAY_A );
+            $message = __('Result found', 'event-organizer-toolkit');
         } else {
             $data = $wpdb->get_results( $sql, ARRAY_A );
-        }
-
-        // wp_send_json_success( $data ); // For debugging
-
-        if ( ! $data ) {
-            $message = sprintf(__('No result found with given criteria.', 'event-organizer-toolkit'), $data['title']);
-            $response['message'] = $message;
-            // wp_send_json_error( $response );
-        } else {
             if( is_array( $data ) ) {
                 $count = count( $data );
             } else {
                 $count = 1;
             }
             
+            // Get total count
+            $sql = $wpdb->prepare( "SELECT count(*) FROM " . $table . $query_tail . $query_values );
+            $total_count = (int) $wpdb->get_var( $sql );
+
             if( $count > 1 ) {
-                $message = sprintf(__('%s results found', 'event-organizer-toolkit'), $count );
+                $message = sprintf(__('%s results of %s found', 'event-organizer-toolkit'), $count, $total_count );
                 $response['message'] = $message;
                 // wp_send_json_error( $response );
             } else {
                 $message = __('Result found', 'event-organizer-toolkit');
             }
+        }
+
+        
+
+        // wp_send_json_success( $data ); // For debugging
+
+        if ( ! $data ) {
+            $count = 0;
+            $message = sprintf(__('No result found with given criteria.', 'event-organizer-toolkit'), $data['title']);
             $response['message'] = $message;
+            // wp_send_json_error( $response );
+        } else {
+            
+            
+            
+            $response['message'] = $message;
+            
             // wp_send_json_error( $response );
         }
 
         $response['data'] = $data;
+        if( $method == 'get_results' ) {
+
+            $response['count'] = array(
+                'found' => $count,
+                'total' => $total_count,
+            );
+
+            if( isset( $_GET['page'] ) ) {
+                $response['_pagination'] = array(
+                    'current_page' => (int) $_GET['page'],
+                    'total_pages' => ceil( $total_count / (int) $_GET['items_per_page'] )
+                );
+            }
+        }
 
         return $response;
 

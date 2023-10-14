@@ -128,7 +128,7 @@
 
     if ($active_tab === 'list') {
         // Content for the "List Accommodations" tab
-        echo '<p>This is where you can view a list of accommodations.</p>';
+        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/lists/accommodations.php');
         // Add your code to display the list of accommodations here.
     } elseif ($active_tab === 'add') {
 

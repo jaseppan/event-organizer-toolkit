@@ -95,11 +95,15 @@ a.remove-item {
     display: none !important;
 }
 
+.count-of-found {
+  align-items: center;
+}
+
 /* Style the table */
 #eot-list {
   width: 100%;
   border-collapse: collapse; /* Remove spacing between table cells */
-  margin-top: 20px;
+  margin-bottom: 20px;
   background-color: #fff; /* Background color for the table */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the table */
 }
@@ -151,8 +155,9 @@ a.remove-item {
 
 /* Pagination Container */
 .pagination-container {
-  margin-top: 15px; /* Add spacing between pagination and content */
+  /* margin-top: 15px;  Add spacing between pagination and content */
   text-align: center; /* Center align the pagination links */
+  align-items: center;
 }
 
 /* Pagination List */
@@ -194,12 +199,12 @@ a.remove-item {
 .eot-list-actions {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
-
-/* Search bar */
 
 .eot-list-actions div {
   display: inline-flex;
+  align-content: center;
 }
 
 .eot-list-actions div input,

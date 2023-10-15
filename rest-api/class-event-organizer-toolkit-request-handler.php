@@ -441,17 +441,17 @@ class Event_Organizer_Toolkit_Request_Handler {
                 $sql = $wpdb->prepare( "SELECT count(*) FROM " . $table . $query_tail . $query_values );
                 $total_count = (int) $wpdb->get_var( $sql );
 
-                $items_per_page = (int) $_GET['items_per_page'];
+                $items_per_page = isset($_GET['items_per_page']) ? (int) $_GET['items_per_page'] : '';
     
                 // Get a order number of the first item
-                if( isset( $_GET['page'] ) ) {
+                //if( isset( $_GET['page'] ) ) {
                     $first_item = (int) $_GET['page'];
                     $first_item = $first_item * $items_per_page - $items_per_page + 1;
                     $last_item = $first_item + $count - 1;
-                } else {
-                    $first_item = 1;
-                    $last_item = $count;
-                }
+                //} else {
+                //    $first_item = 1;
+                //    $last_item = $count;
+                //}
                  
 
                 if( $count > 1 ) {

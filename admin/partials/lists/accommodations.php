@@ -50,106 +50,120 @@
                     page: page
                 },
                 success: function(response) {
-                    // Clear the previous list
-                    $('#eot-list').empty();
-                    $('#eot-found-message').empty();
-
-                    // Add count of items
-                    var message = response.data.message,
-                        items_per_page = response.data.count.items_per_page;
-
-                    $('#eot-found-message').append(message);
-                    $('#count-of-items').val(items_per_page);
-
-                    // Create table header
-
-                    // Create select all checkbox
-                    var checkbox = $('<input></input>')
-                    .attr('type', 'checkbox')
-                    .attr('id', 'select-all')
-                    .attr('name', 'accommodations[]');
-
-                    var header = $('<tr></tr>');
-                    header.append($('<th></th>').append(checkbox));
-                    header.append('<th>Actions</th>');
-                    header.append('<th>ID</th>');
-                    header.append('<th>Name</th>');
-                    $('#eot-list').append(header);
-
-                    // Display list
-                    response.data.data.forEach(function(accommodation) {
-
-                        // Create a list item for each accommodation
-                        var listItem = $('<tr></tr>');
-                        
-                        // Create checkbox
-                        var checkbox = $('<input></input>')
-                            .attr('type', 'checkbox')
-                            .attr('name', 'accommodations[]')
-                            .attr('value', accommodation.id);
-                        
-                        // Create Edit and Delete links
-                        var editLink = $('<a></a>')
-                            .attr('href', eotScriptData.current_url + '&tab=edit&id=' + accommodation.id)
-                            .attr('class', 'edit-link')
-                            .text('Edit');
-
-                            var deleteLink = $('<a></a>')
-                                .attr('href', '#')
-                                .attr('class', 'delete-link')
-                                .attr('data-id', accommodation.id) // Add the data-id attribute with the accommodation ID
-                                .text('Delete');
-
-                        // create order number
-
-
-                        listItem.append($('<td></td>').append(checkbox));
-                        listItem.append($('<td></td>').append(editLink).append(deleteLink));
-                        listItem.append($('<td></td>').append(accommodation.id));
-                        listItem.append($('<td></td>').text(accommodation.title));
-                        
-                        $('#eot-list').append(listItem);
-                    });
-
-                    // Display pagination links
-                    var pagination = response.data._pagination;
-                    var paginationHtml = '<ul class="pagination">';
-                    if (pagination.current_page > 1) {
-                        paginationHtml += '<li><a href="#" data-page="1">&lt;&lt;</a></li>'; // Link to the first page
-                        paginationHtml += '<li><a href="#" data-page="' + (pagination.current_page - 1) + '">&lt;</a></li>'; // Link to the previous page
-                    }
-                    for (var i = 1; i <= pagination.total_pages; i++) {
-                        var activeClass = (i === pagination.current_page) ? 'active' : '';
-                        paginationHtml += '<li class="' + activeClass + '"><a href="#" data-page="' + i + '">' + i + '</a></li>';
-                    }
-                    if (pagination.current_page < pagination.total_pages) {
-                        paginationHtml += '<li><a href="#" data-page="' + (pagination.current_page + 1) + '">&gt;</a></li>'; // Link to the next page
-                        paginationHtml += '<li><a href="#" data-page="' + pagination.total_pages + '">&gt;&gt;</a></li>'; // Link to the last page
-                    }
-                    paginationHtml += '</ul>';
-                    $('.pagination-container').html(paginationHtml);
-
-                    // Handle pagination clicks
-                    $('.pagination-container a').on('click', function(e) {
-                        e.preventDefault();
-                        var page = $(this).data('page');
-                        fetchAccommodations(page);
-
-                        // Update the URL with the new page parameter
-                        updateUrlParameter('list-page', page);
-                    });
-
-                    // Function to update a URL parameter
-                    function updateUrlParameter(key, value) {
-                        var url = new URL(window.location.href);
-                        url.searchParams.set(key, value);
-                        history.pushState({}, '', url.toString());
-                    }
+                    printListContent(response, true);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error fetching accommodations:', error);
                 }
             });
+        }
+
+        function printListContent(response, showPagination) {
+
+            console.log(showPagination);
+            // Clear the previous list
+            $('#eot-list').empty();
+            $('#eot-found-message').empty();
+
+            // Add count of items
+            var message = response.data.message;
+            $('#eot-found-message').append(message);
+            if( showPagination == true ) {
+                items_per_page = response.data.count.items_per_page;
+                $('#count-of-items').val(items_per_page);
+            } else {
+                $('#count-of-items').val(0);
+            }
+
+
+            // Create table header
+
+            // Create select all checkbox
+            var checkbox = $('<input></input>')
+            .attr('type', 'checkbox')
+            .attr('id', 'select-all')
+            .attr('name', 'accommodations[]');
+
+            var header = $('<tr></tr>');
+            header.append($('<th></th>').append(checkbox));
+            header.append('<th>Actions</th>');
+            header.append('<th>ID</th>');
+            header.append('<th>Name</th>');
+            $('#eot-list').append(header);
+
+            // Display list
+            response.data.data.forEach(function(accommodation) {
+
+                // Create a list item for each accommodation
+                var listItem = $('<tr></tr>');
+                
+                // Create checkbox
+                var checkbox = $('<input></input>')
+                    .attr('type', 'checkbox')
+                    .attr('name', 'accommodations[]')
+                    .attr('value', accommodation.id);
+                
+                // Create Edit and Delete links
+                var editLink = $('<a></a>')
+                    .attr('href', eotScriptData.current_url + '&tab=edit&id=' + accommodation.id)
+                    .attr('class', 'edit-link')
+                    .text('Edit');
+
+                    var deleteLink = $('<a></a>')
+                        .attr('href', '#')
+                        .attr('class', 'delete-link')
+                        .attr('data-id', accommodation.id) // Add the data-id attribute with the accommodation ID
+                        .text('Delete');
+
+                // create order number
+
+
+                listItem.append($('<td></td>').append(checkbox));
+                listItem.append($('<td></td>').append(editLink).append(deleteLink));
+                listItem.append($('<td></td>').append(accommodation.id));
+                listItem.append($('<td></td>').text(accommodation.title));
+                
+                $('#eot-list').append(listItem);
+            });
+
+            if( showPagination == true ) {
+                // Display pagination links
+                var pagination = response.data._pagination;
+                var paginationHtml = '<ul class="pagination">';
+                if (pagination.current_page > 1) {
+                    paginationHtml += '<li><a href="#" data-page="1">&lt;&lt;</a></li>'; // Link to the first page
+                    paginationHtml += '<li><a href="#" data-page="' + (pagination.current_page - 1) + '">&lt;</a></li>'; // Link to the previous page
+                }
+                for (var i = 1; i <= pagination.total_pages; i++) {
+                    var activeClass = (i === pagination.current_page) ? 'active' : '';
+                    paginationHtml += '<li class="' + activeClass + '"><a href="#" data-page="' + i + '">' + i + '</a></li>';
+                }
+                if (pagination.current_page < pagination.total_pages) {
+                    paginationHtml += '<li><a href="#" data-page="' + (pagination.current_page + 1) + '">&gt;</a></li>'; // Link to the next page
+                    paginationHtml += '<li><a href="#" data-page="' + pagination.total_pages + '">&gt;&gt;</a></li>'; // Link to the last page
+                }
+                paginationHtml += '</ul>';
+                $('.pagination-container').html(paginationHtml);
+    
+                // Handle pagination clicks
+                $('.pagination-container a').on('click', function(e) {
+                    e.preventDefault();
+                    var page = $(this).data('page');
+                    fetchAccommodations(page);
+    
+                    // Update the URL with the new page parameter
+                    updateUrlParameter('list-page', page);
+                });
+            } else {
+                $('.pagination-container').html('');
+            }
+
+            // Function to update a URL parameter
+            function updateUrlParameter(key, value) {
+                var url = new URL(window.location.href);
+                url.searchParams.set(key, value);
+                history.pushState({}, '', url.toString());
+            }
         }
 
         // Get the list-page when the page loads
@@ -164,6 +178,7 @@
         
         fetchCurrentAccommodationsPage();
 
+        // Delete item
         $(document).on('click', '.delete-link', function(e) {
             e.preventDefault();
             
@@ -188,6 +203,38 @@
                     }
                 });
             }
+        });
+
+        // Search item
+
+        // Function to handle the search request
+        function searchAccommodations(page, searchTerm) {
+            $.ajax({
+                url: eotScriptData.url,
+                type: 'GET',
+                data: {
+                    items_per_page: 25, // Adjust items per page as needed
+                    page: 1,
+                    search: searchTerm // Add the "search" parameter
+                },
+                success: function(response) {
+                    if (searchTerm.trim() === '') {
+                        fetchCurrentAccommodationsPage();
+                    } else {
+                        printListContent(response, false);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching accommodations:', error);
+                }
+            });
+        }
+
+        // Event listener for the search button
+        $('#search-button').on('click', function() {
+            var searchTerm = $('#eot-search').val();
+            // Call the searchAccommodations function with the search term
+            searchAccommodations(1, searchTerm);
         });
 
     });

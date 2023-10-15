@@ -158,12 +158,14 @@
                 $('.pagination-container').html('');
             }
 
-            // Function to update a URL parameter
-            function updateUrlParameter(key, value) {
-                var url = new URL(window.location.href);
-                url.searchParams.set(key, value);
-                history.pushState({}, '', url.toString());
-            }
+           
+        }
+
+        // Function to update a URL parameter
+        function updateUrlParameter(key, value) {
+            var url = new URL(window.location.href);
+            url.searchParams.set(key, value);
+            history.pushState({}, '', url.toString());
         }
 
         // Get the list-page when the page loads
@@ -218,6 +220,7 @@
                     search: searchTerm // Add the "search" parameter
                 },
                 success: function(response) {
+                    updateUrlParameter('search', searchTerm);
                     if (searchTerm.trim() === '') {
                         fetchCurrentAccommodationsPage();
                     } else {

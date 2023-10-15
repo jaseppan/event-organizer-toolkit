@@ -124,6 +124,7 @@ class Event_Organizer_Toolkit_Admin {
 			'current_url' => esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
 			'page' => $page,
 			'action' => esc_js( $_GET['tab'] ),
+			'rest_api_url' => rest_url('event-organizer-toolkit'),
 		));
 	
 	}

@@ -58,8 +58,6 @@
                     var message = response.data.message,
                         items_per_page = response.data.count.items_per_page;
 
-                    console.log(message);
-
                     $('#eot-found-message').append(message);
                     $('#count-of-items').val(items_per_page);
 
@@ -94,20 +92,13 @@
                         var editLink = $('<a></a>')
                             .attr('href', eotScriptData.current_url + '&tab=edit&id=' + accommodation.id)
                             .attr('class', 'edit-link')
-                            .text('Edit')
-                            .on('click', function() {
-                                // Handle edit action here
-                                // You can use accommodation.id to identify the item to edit
-                            });
+                            .text('Edit');
 
-                        var deleteLink = $('<a></a>')
-                            .attr('href', '#')
-                            .attr('class', 'delete-link')
-                            .text('Delete')
-                            .on('click', function() {
-                                // Handle delete action here
-                                // You can use accommodation.id to identify the item to delete
-                            });
+                            var deleteLink = $('<a></a>')
+                                .attr('href', '#')
+                                .attr('class', 'delete-link')
+                                .attr('data-id', accommodation.id) // Add the data-id attribute with the accommodation ID
+                                .text('Delete');
 
                         // create order number
 
@@ -162,13 +153,42 @@
         }
 
         // Get the list-page when the page loads
-
-        const initialListPage = getUrlParameter('list-page');
-        if (initialListPage) {
-            fetchAccommodations(initialListPage);
-        } else {
-            fetchAccommodations(1);
+        function fetchCurrentAccommodationsPage() {
+            const initialListPage = getUrlParameter('list-page');
+            if (initialListPage) {
+                fetchAccommodations(initialListPage);
+            } else {
+                fetchAccommodations(1);
+            }
         }
+        
+        fetchCurrentAccommodationsPage();
+
+        $(document).on('click', '.delete-link', function(e) {
+            e.preventDefault();
+            
+            // Get the accommodation ID from the link's data attribute
+            var accommodationId = $(this).data('id');
+
+            // Confirm with the user before deleting
+            if (confirm('Are you sure you want to delete this accommodation?')) {
+                
+                // Send a DELETE request to the API
+                $.ajax({
+                    url: eotScriptData.rest_api_url + '/v1/delete-accommodation?id=' + accommodationId,
+                    type: 'DELETE',
+                    success: function(response) {
+                        // Handle success, e.g., remove the deleted item from the list
+                        // You may also want to display a success message to the user
+                        fetchCurrentAccommodationsPage(); // Refresh the list
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error deleting accommodation:', error);
+                        // Handle the error, e.g., display an error message to the user
+                    }
+                });
+            }
+        });
 
     });
 

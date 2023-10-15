@@ -5,8 +5,7 @@
     <div class="eot-list-actions">
         <div id="eot-found-message"></div>
         <div class="eot-search-bar">
-            <input type="text" id="eot-search" placeholder="Search by name">
-            <button id="search-button" class="eot-list-action-button">Search</button>
+            <input type="text" id="eot-search" placeholder="Search">
         </div>
     </div>
 
@@ -41,14 +40,51 @@
 <script>
     jQuery(document).ready(function($) {
         // Function to fetch and display accommodations
-        function fetchAccommodations(page) {
+        function fetchAccommodations() {
+
+            
+            // Get page
+            var page = getUrlParameter('list-page');
+            if (page == undefined) {
+                page = 1;
+                updateUrlParameter('list-page', page);
+            }
+
+            // Get items per page
+            var itemsPerPage = getUrlParameter('items-per-page');
+            if (itemsPerPage == null    ) {
+                itemsPerPage = 10;
+                updateUrlParameter('items-per-page', itemsPerPage);
+            }
+
+            data = {
+                items_per_page: itemsPerPage,
+                page: page
+            }
+
+            // Get search term
+            var searchTerm = getUrlParameter('search');
+            if( searchTerm !== null && searchTerm !== '') {
+                data.search = searchTerm;
+                $('#eot-search').val(searchTerm);
+            }
+
+            // Get sort by
+            var orderBy = getUrlParameter('order-by');
+            if( orderBy !== null && orderBy !== '') {
+                data.order_by = orderBy;
+            }
+
+            // Get sort order
+            var order = getUrlParameter('order');
+            if( order !== null && order !== '') {
+                data.order = order;
+            }
+
             $.ajax({
                 url: eotScriptData.url,
                 type: 'GET',
-                data: {
-                    items_per_page: 25, // Adjust items per page as needed
-                    page: page
-                },
+                data: data,
                 success: function(response) {
                     printListContent(response, true);
                 },
@@ -58,9 +94,8 @@
             });
         }
 
-        function printListContent(response, showPagination) {
+        function printListContent(response) {
 
-            console.log(showPagination);
             // Clear the previous list
             $('#eot-list').empty();
             $('#eot-found-message').empty();
@@ -68,13 +103,12 @@
             // Add count of items
             var message = response.data.message;
             $('#eot-found-message').append(message);
-            if( showPagination == true ) {
+            if( response.data.count !== undefined ) {
                 items_per_page = response.data.count.items_per_page;
                 $('#count-of-items').val(items_per_page);
             } else {
                 $('#count-of-items').val(0);
             }
-
 
             // Create table header
 
@@ -126,7 +160,7 @@
                 $('#eot-list').append(listItem);
             });
 
-            if( showPagination == true ) {
+            if(  response.data._pagination !== undefined ) {
                 // Display pagination links
                 var pagination = response.data._pagination;
                 var paginationHtml = '<ul class="pagination">';
@@ -149,36 +183,18 @@
                 $('.pagination-container a').on('click', function(e) {
                     e.preventDefault();
                     var page = $(this).data('page');
-                    fetchAccommodations(page);
+                    updateUrlParameter('list-page', page);
+                    fetchAccommodations();
     
                     // Update the URL with the new page parameter
-                    updateUrlParameter('list-page', page);
                 });
             } else {
                 $('.pagination-container').html('');
             }
-
            
         }
-
-        // Function to update a URL parameter
-        function updateUrlParameter(key, value) {
-            var url = new URL(window.location.href);
-            url.searchParams.set(key, value);
-            history.pushState({}, '', url.toString());
-        }
-
-        // Get the list-page when the page loads
-        function fetchCurrentAccommodationsPage() {
-            const initialListPage = getUrlParameter('list-page');
-            if (initialListPage) {
-                fetchAccommodations(initialListPage);
-            } else {
-                fetchAccommodations(1);
-            }
-        }
         
-        fetchCurrentAccommodationsPage();
+        fetchAccommodations();
 
         // Delete item
         $(document).on('click', '.delete-link', function(e) {
@@ -197,7 +213,7 @@
                     success: function(response) {
                         // Handle success, e.g., remove the deleted item from the list
                         // You may also want to display a success message to the user
-                        fetchCurrentAccommodationsPage(); // Refresh the list
+                        fetchAccommodations(); // Refresh the list
                     },
                     error: function(xhr, status, error) {
                         console.error('Error deleting accommodation:', error);
@@ -207,40 +223,31 @@
             }
         });
 
-        // Search item
-
-        // Function to handle the search request
-        function searchAccommodations(page, searchTerm) {
-            $.ajax({
-                url: eotScriptData.url,
-                type: 'GET',
-                data: {
-                    items_per_page: 25, // Adjust items per page as needed
-                    page: 1,
-                    search: searchTerm // Add the "search" parameter
-                },
-                success: function(response) {
-                    updateUrlParameter('search', searchTerm);
-                    if (searchTerm.trim() === '') {
-                        fetchCurrentAccommodationsPage();
-                    } else {
-                        printListContent(response, false);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching accommodations:', error);
-                }
-            });
-        }
-
         // Event listener for the search button
-        $('#search-button').on('click', function() {
+        $('#eot-search').on('input', function() {
+
+            
+            // Get search term from url parameter if defined
             var searchTerm = $('#eot-search').val();
+            if( searchTerm.length < 3 )
+                return;
+
+            console.log(searchTerm);
             // Call the searchAccommodations function with the search term
-            searchAccommodations(1, searchTerm);
+            updateUrlParameter('search', searchTerm);
+            updateUrlParameter('list-page', 1);
+            // searchAccommodations(1, searchTerm);
+            fetchAccommodations();
         });
 
     });
+
+    // Function to update a URL parameter
+    function updateUrlParameter(key, value) {
+        var url = new URL(window.location.href);
+        url.searchParams.set(key, value);
+        history.pushState({}, '', url.toString());
+    }
 
     // Function to get a URL parameter by name
     function getUrlParameter(name) {

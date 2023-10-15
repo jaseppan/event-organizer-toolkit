@@ -411,23 +411,6 @@ class Event_Organizer_Toolkit_Request_Handler {
             $message = __('Result found', 'event-organizer-toolkit');
         } else {
             $data = $wpdb->get_results( $sql, ARRAY_A );
-            if( is_array( $data ) ) {
-                $count = count( $data );
-            } else {
-                $count = 1;
-            }
-            
-            // Get total count
-            $sql = $wpdb->prepare( "SELECT count(*) FROM " . $table . $query_tail . $query_values );
-            $total_count = (int) $wpdb->get_var( $sql );
-
-            if( $count > 1 ) {
-                $message = sprintf(__('%s results of %s found', 'event-organizer-toolkit'), $count, $total_count );
-                $response['message'] = $message;
-                // wp_send_json_error( $response );
-            } else {
-                $message = __('Result found', 'event-organizer-toolkit');
-            }
         }
 
         
@@ -446,23 +429,60 @@ class Event_Organizer_Toolkit_Request_Handler {
             $response['message'] = $message;
             
             // wp_send_json_error( $response );
+            if( $method == 'get_results' ) {
+
+                if( is_array( $data ) ) {
+                    $count = count( $data );
+                } else {
+                    $count = 1;
+                }
+                
+                // Get total count
+                $sql = $wpdb->prepare( "SELECT count(*) FROM " . $table . $query_tail . $query_values );
+                $total_count = (int) $wpdb->get_var( $sql );
+
+                $items_per_page = (int) $_GET['items_per_page'];
+    
+                // Get a order number of the first item
+                if( isset( $_GET['page'] ) ) {
+                    $first_item = (int) $_GET['page'];
+                    $first_item = $first_item * $items_per_page - $items_per_page + 1;
+                    $last_item = $first_item + $count - 1;
+                } else {
+                    $first_item = 1;
+                    $last_item = $count;
+                }
+                 
+
+                if( $count > 1 ) {
+                    $message = sprintf(__('Showing %s (%s to %s) of %s items', 'event-organizer-toolkit'), $count, $first_item, $last_item, $total_count);
+                    $response['message'] = $message;
+                    // wp_send_json_error( $response );
+                } else {
+                    $message = __('Result found', 'event-organizer-toolkit');
+                }
+    
+                $response['count'] = array(
+                    'found' => $count,
+                    'total' => $total_count,
+                    'first_item' =>  $first_item,
+                    'items_per_page' => $items_per_page,
+                );
+    
+                if( isset( $_GET['page'] ) ) {
+                    $response['_pagination'] = array(
+                        'current_page' => (int) $_GET['page'],
+                        'total_pages' => ceil( $total_count / $items_per_page ),
+                    );
+                }
+    
+               
+                
+            }
         }
 
         $response['data'] = $data;
-        if( $method == 'get_results' ) {
-
-            $response['count'] = array(
-                'found' => $count,
-                'total' => $total_count,
-            );
-
-            if( isset( $_GET['page'] ) ) {
-                $response['_pagination'] = array(
-                    'current_page' => (int) $_GET['page'],
-                    'total_pages' => ceil( $total_count / (int) $_GET['items_per_page'] )
-                );
-            }
-        }
+        
 
         return $response;
 

@@ -42,7 +42,6 @@
         // Function to fetch and display accommodations
         function fetchAccommodations() {
 
-            
             // Get page
             var page = getUrlParameter('list-page');
             if (page == undefined) {
@@ -111,6 +110,8 @@
             }
 
             // Create table header
+            // Append the header row to the table
+            $('#eot-list').append('<thead></thead>');
 
             // Create select all checkbox
             var checkbox = $('<input></input>')
@@ -118,12 +119,63 @@
             .attr('id', 'select-all')
             .attr('name', 'accommodations[]');
 
+            // Create table header
             var header = $('<tr></tr>');
+
+            // Create select all checkbox
+            var checkbox = $('<input></input>')
+                .attr('type', 'checkbox')
+                .attr('id', 'select-all')
+                .attr('name', 'accommodations[]');
             header.append($('<th></th>').append(checkbox));
+
+            // Sortable header for "Actions" column (non-sortable)
             header.append('<th>Actions</th>');
-            header.append('<th>ID</th>');
-            header.append('<th>Name</th>');
-            $('#eot-list').append(header);
+
+            // Sortable header for "ID" column
+            var idHeader = $('<th></th>');
+            var idSortLink = $('<a></a>')
+                .attr('href', '#')
+                .addClass('sort-link')
+                .attr('data-sort', 'id')
+                .text('ID');
+            idHeader.append(idSortLink);
+            header.append(idHeader);
+
+            // Sortable header for "Title" column
+            var titleHeader = $('<th></th>');
+            var titleSortLink = $('<a></a>')
+                .attr('href', '#')
+                .addClass('sort-link')
+                .attr('data-sort', 'title')
+                .text('Title');
+            titleHeader.append(titleSortLink);
+            header.append(titleHeader);
+
+            // Check if the ID column is currently sorted in ascending or descending order
+            if (getUrlParameter('order-by') === 'id') {
+                if (getUrlParameter('order') === 'asc') {
+                    // Add an up arrow for ascending sorting
+                    idSortLink.append($('<span></span>').addClass('sort-arrow up'));
+                } else {
+                    // Add a down arrow for descending sorting
+                    idSortLink.append($('<span></span>').addClass('sort-arrow down'));
+                }
+            }
+            
+            // Check if the ID column is currently sorted in ascending or descending order
+            if (getUrlParameter('order-by') === 'title') {
+                if (getUrlParameter('order') === 'asc') {
+                    // Add an up arrow for ascending sorting
+                    titleSortLink.append($('<span></span>').addClass('sort-arrow up'));
+                } else {
+                    // Add a down arrow for descending sorting
+                    titleSortLink.append($('<span></span>').addClass('sort-arrow down'));
+                }
+            }
+
+            // Append the header row to the table
+            $('#eot-list thead').append(header);
 
             // Display list
             response.data.data.forEach(function(accommodation) {
@@ -237,6 +289,28 @@
             updateUrlParameter('search', searchTerm);
             updateUrlParameter('list-page', 1);
             // searchAccommodations(1, searchTerm);
+            fetchAccommodations();
+        });
+
+        // Sort accommodations when a column header is clicked
+        $(document).on('click', '.sort-link', function(e) {
+            e.preventDefault();
+
+            // Get the column to sort by from the data attribute
+            var columnToSort = $(this).data('sort');
+
+            // Get the current sort order from the URL parameter
+            var currentOrder = getUrlParameter('order');
+            
+            // Determine the new sort order (toggle between 'asc' and 'desc')
+            var newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+
+            // Update the URL parameters for sorting
+            updateUrlParameter('order', newOrder);
+            updateUrlParameter('order-by', columnToSort);
+            updateUrlParameter('list-page', 1); // Reset to the first page when sorting
+
+            // Fetch accommodations with the new sorting criteria
             fetchAccommodations();
         });
 

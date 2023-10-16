@@ -117,6 +117,10 @@ a.remove-item {
   text-align: left;
 }
 
+#eot-list th a {
+  color: #fff;
+}
+
 /* Style table rows */
 #eot-list td {
   padding: 10px;
@@ -151,6 +155,22 @@ a.remove-item {
 }
 .eot-table .delete-link:hover {
     color: #7b0000;
+}
+
+/* Sorting arrows */
+.sort-arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  margin-left: 5px;
+}
+.sort-arrow.up {
+  border-bottom: 5px solid #000; /* Up arrow */
+}
+.sort-arrow.down {
+  border-top: 5px solid #000; /* Down arrow */
 }
 
 /* Pagination Container */

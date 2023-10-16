@@ -113,21 +113,27 @@
             // Append the header row to the table
             $('#eot-list').append('<thead></thead>');
 
-            // Create select all checkbox
-            var checkbox = $('<input></input>')
-            .attr('type', 'checkbox')
-            .attr('id', 'select-all')
-            .attr('name', 'accommodations[]');
-
             // Create table header
             var header = $('<tr></tr>');
+            header.append('<th></th>');
 
-            // Create select all checkbox
-            var checkbox = $('<input></input>')
+            // Create the "Select All" checkbox in the table header
+            var selectAllCheckbox = $('<input></input>')
                 .attr('type', 'checkbox')
                 .attr('id', 'select-all')
-                .attr('name', 'accommodations[]');
-            header.append($('<th></th>').append(checkbox));
+                .attr('name', 'select-all');
+
+            // Add an event handler to the "Select All" checkbox
+            selectAllCheckbox.on('change', function() {
+                // Get the current state of the "Select All" checkbox
+                var isChecked = $(this).prop('checked');
+                
+                // Set the state of all checkboxes in the table rows to match the "Select All" checkbox
+                $('input[name="accommodations[]"]').prop('checked', isChecked);
+            });
+
+            // Append the "Select All" checkbox to the table header
+            header.find('th:first').append(selectAllCheckbox);
 
             // Sortable header for "Actions" column (non-sortable)
             header.append('<th>Actions</th>');
@@ -272,6 +278,43 @@
                         // Handle the error, e.g., display an error message to the user
                     }
                 });
+            }
+        });
+
+        // Delete selected items
+        $('#eot-batch-action-submit').on('click', function() {
+            var selectedIds = [];
+
+            // Find all selected checkboxes
+            $('input[name="accommodations[]"]:checked').each(function() {
+                selectedIds.push($(this).val());
+            });
+
+            if (selectedIds.length === 0) {
+                alert('No items selected for deletion.');
+                return;
+            }
+
+            if (confirm('Are you sure you want to delete ' + selectedIds.length + ' selected accommodation(s)?')) {
+                var deleteRequests = selectedIds.map(function(accommodationId) {
+                    // Return a promise for each DELETE request
+                    return $.ajax({
+                        url: eotScriptData.rest_api_url + '/v1/delete-accommodation?id=' + accommodationId,
+                        type: 'DELETE'
+                    });
+                });
+
+                // Use $.when to wait for all DELETE requests to complete
+                $.when.apply($, deleteRequests)
+                    .then(function() {
+                        // All DELETE requests have completed
+                        console.log('Deletion completed.');
+                        fetchAccommodations(); // Reload the table
+                    })
+                    .fail(function() {
+                        // Handle any failures here
+                        console.error('Error deleting accommodations.');
+                    });
             }
         });
 

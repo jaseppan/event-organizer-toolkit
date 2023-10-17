@@ -70,6 +70,10 @@
             
             // Get items per page
             var itemsPerPage = getUrlParameter('items-per-page');
+            // var itemsPerPage = $('#items-per-page').val();
+
+            console.log(itemsPerPage);
+
             if ( itemsPerPage == null ) {
                 data.items_per_page = 25;
                 data.page = 1;
@@ -77,7 +81,7 @@
                 updateUrlParameter('list-page', data.page);
             } 
             
-            if ( itemsPerPage !== null && itemsPerPage !== 'add' ) {
+            if ( itemsPerPage !== null && itemsPerPage !== 'all' ) {
                 
                 if (page == undefined) {
                     page = 1;
@@ -87,6 +91,8 @@
                 data.items_per_page = itemsPerPage;
                 data.page = page;
             }
+
+            console.log(data);
 
             // Get search term
             var searchTerm = getUrlParameter('search');
@@ -121,6 +127,7 @@
         }
 
         function printListContent(response) {
+            
 
             // Clear the previous list
             $('#eot-list').empty();
@@ -422,8 +429,10 @@
             var newValue = $(this).val();
             // Check if the value is numeric
             if (!isNaN(newValue)) {
+                
                 // Update the URL parameter
                 updateUrlParameter('items-per-page', newValue);
+                removeUrlParameter('list-page', 1)
                 // Fetch the table data with the new items-per-page value
                 fetchAccommodations();
             }
@@ -432,8 +441,9 @@
         $('#items-per-page').on('input', function() {
             var newValue = $(this).val().toLowerCase();
             if (newValue === 'all') {
+                console.log(newValue);
                 // Remove the items-per-page and list-page parameters from the URL
-                removeUrlParameter('items-per-page');
+                updateUrlParameter('items-per-page', 'all');
                 removeUrlParameter('list-page');
                 // Fetch the table data without these parameters
                 fetchAccommodations();

@@ -99,6 +99,18 @@ a.remove-item {
   align-items: center;
 }
 
+#eot-batch-select {
+  width: 140px;
+}
+
+.overlay {
+  position: absolute;
+  pointer-events: none;
+  padding: 2px 6px;
+  color: #888;
+}
+
+
 /* Style the table */
 #eot-list {
   width: 100%;
@@ -227,9 +239,9 @@ a.remove-item {
   align-content: center;
 }
 
-.eot-list-actions div input,
+.eot-list-actions div input, 
 .eot-list-actions div select {
-  padding: 0 10px;
+  padding: 10px 6px 0;
   margin-right: 6px;
 }
 

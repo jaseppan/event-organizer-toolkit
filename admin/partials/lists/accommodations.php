@@ -5,26 +5,46 @@
     <div class="eot-list-actions">
         <div id="eot-found-message"></div>
         <div class="eot-search-bar">
-            <input type="text" id="eot-search" placeholder="Search">
+            <div id="search-bar-overlay" class="overlay">Search</div>
+            <input type="text" id="eot-search">
         </div>
     </div>
 
      <!-- Actions bar -->
      <div class="eot-list-actions">
         <div class="eot-list-batch-actions">
+            <!-- Overlay element for displaying the text -->
+            <div id="list-batch-actions-overlay" class="overlay">Select an action</div>
             <select name="eot-batch-action-select" id="eot-batch-select">
-                <option value="">Select an action</option>
+                <option value=""></option>
                 <option value="delete">Delete</option>
             </select>
-            <button id="eot-batch-action-submit" class="eot-list-action-button">Submit</button>
+            <button id="batch-action-submit" class="eot-list-action-button">Submit</button>
         </div>
         <!-- Pagination links -->
         <div class="pagination-container">
             <!-- Pagination links will be displayed here -->
         </div>
-         <div class="count-of-items-container">
-            <input type="text" id="count-of-items" placeholder="Count of items">
+        <!-- Items per page -->
+        <div class="items-per-page-container">
+            <!-- Overlay element for displaying the text -->
+            <div id="items-per-page-overlay" class="overlay">Items per page</div>
+        
+            <!-- Actual input field -->
+            <input type="text" id="items-per-page" list="items-per-page-list">
+            
+            <datalist id="items-per-page-list">
+                <option value="5">
+                <option value="10">
+                <option value="15">
+                <option value="20">
+                <option value="25">
+                <option value="50">
+                <option value="all">
+            </datalist>
         </div>
+
+
      </div>
 
     <!-- Container to display accommodation list -->
@@ -42,23 +62,30 @@
         // Function to fetch and display accommodations
         function fetchAccommodations() {
 
+            // Initialize the data
+            var data = {};
+
             // Get page
             var page = getUrlParameter('list-page');
-            if (page == undefined) {
-                page = 1;
-                updateUrlParameter('list-page', page);
-            }
-
+            
             // Get items per page
             var itemsPerPage = getUrlParameter('items-per-page');
-            if (itemsPerPage == null    ) {
-                itemsPerPage = 10;
-                updateUrlParameter('items-per-page', itemsPerPage);
-            }
+            if ( itemsPerPage == null ) {
+                data.items_per_page = 25;
+                data.page = 1;
+                updateUrlParameter('items-per-page', data.items_per_page);
+                updateUrlParameter('list-page', data.page);
+            } 
+            
+            if ( itemsPerPage !== null && itemsPerPage !== 'add' ) {
+                
+                if (page == undefined) {
+                    page = 1;
+                    updateUrlParameter('list-page', page);
+                }
 
-            data = {
-                items_per_page: itemsPerPage,
-                page: page
+                data.items_per_page = itemsPerPage;
+                data.page = page;
             }
 
             // Get search term
@@ -98,16 +125,23 @@
             // Clear the previous list
             $('#eot-list').empty();
             $('#eot-found-message').empty();
-
-            // Add count of items
+            
+            // Add messager
             var message = response.data.message;
             $('#eot-found-message').append(message);
-            if( response.data.count !== undefined ) {
-                items_per_page = response.data.count.items_per_page;
-                $('#count-of-items').val(items_per_page);
-            } else {
-                $('#count-of-items').val(0);
+
+            // Add count of items
+
+            items_per_page_field = getUrlParameter(name);
+            if( items_per_page_field !== 'all') {
+                if( response.data.count !== undefined ) {
+                    items_per_page = response.data.count.items_per_page;
+                    $('#items-per-page').val(items_per_page);
+                } else {
+                    $('#items-per-page').val(0);
+                }
             }
+
 
             // Create table header
             // Append the header row to the table
@@ -251,8 +285,6 @@
             }
            
         }
-        
-        fetchAccommodations();
 
         // Delete item
         $(document).on('click', '.delete-link', function(e) {
@@ -282,7 +314,7 @@
         });
 
         // Delete selected items
-        $('#eot-batch-action-submit').on('click', function() {
+        $('#batch-action-submit').on('click', function() {
             var selectedIds = [];
 
             // Find all selected checkboxes
@@ -324,8 +356,15 @@
             
             // Get search term from url parameter if defined
             var searchTerm = $('#eot-search').val();
-            if( searchTerm.length < 3 )
+            if( searchTerm.length < 3 ) {
+                var search = getUrlParameter('search');
+                if( search.length > 0 ) {
+                    updateUrlParameter('search', '');
+                    fetchAccommodations();
+                }
+
                 return;
+            }
 
             console.log(searchTerm);
             // Call the searchAccommodations function with the search term
@@ -357,6 +396,54 @@
             fetchAccommodations();
         });
 
+        // Items per page functionalities
+        
+        // Detect when the input field is clicked
+        $('#items-per-page').on('mousedown', function() {
+            // Clear the input field's value
+            $(this).val('');
+        });
+
+        // Filter datalist options based on user input
+        $('#items-per-page').on('input', function() {
+            var userInput = $(this).val().toLowerCase();
+            $('#items-per-page-list option').each(function() {
+                var optionValue = $(this).val().toLowerCase();
+                if (userInput === '' || optionValue.includes(userInput)) {
+                    $(this).prop('hidden', false);
+                } else {
+                    $(this).prop('hidden', true);
+                }
+            });
+        });
+
+        $('#items-per-page').on('input', function() {
+            // Get the numeric value entered by the user
+            var newValue = $(this).val();
+            // Check if the value is numeric
+            if (!isNaN(newValue)) {
+                // Update the URL parameter
+                updateUrlParameter('items-per-page', newValue);
+                // Fetch the table data with the new items-per-page value
+                fetchAccommodations();
+            }
+        });
+
+        $('#items-per-page').on('input', function() {
+            var newValue = $(this).val().toLowerCase();
+            if (newValue === 'all') {
+                // Remove the items-per-page and list-page parameters from the URL
+                removeUrlParameter('items-per-page');
+                removeUrlParameter('list-page');
+                // Fetch the table data without these parameters
+                fetchAccommodations();
+            }
+        });
+
+
+
+        fetchAccommodations();
+
     });
 
     // Function to update a URL parameter
@@ -371,4 +458,16 @@
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(name);
     }
+
+    function removeUrlParameter(key) {
+        // Get the current URL
+        var url = new URL(window.location.href);
+
+        // Remove the specified parameter
+        url.searchParams.delete(key);
+
+        // Replace the current URL without the parameter
+        history.pushState({}, '', url.toString());
+    }
+    
 </script>

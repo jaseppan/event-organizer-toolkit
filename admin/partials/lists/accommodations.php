@@ -267,24 +267,30 @@
                     paginationHtml += '<li><a href="#" data-page="1">&lt;&lt;</a></li>'; // Link to the first page
                     paginationHtml += '<li><a href="#" data-page="' + (pagination.current_page - 1) + '">&lt;</a></li>'; // Link to the previous page
                 }
-                for (var i = 1; i <= pagination.total_pages; i++) {
+
+                var maxVisiblePages = 5; // Adjust the number of visible pages as needed
+                var startPage = Math.max(pagination.current_page - Math.floor(maxVisiblePages / 2), 1);
+                var endPage = Math.min(startPage + maxVisiblePages - 1, pagination.total_pages);
+
+                for (var i = startPage; i <= endPage; i++) {
                     var activeClass = (i === pagination.current_page) ? 'active' : '';
                     paginationHtml += '<li class="' + activeClass + '"><a href="#" data-page="' + i + '">' + i + '</a></li>';
                 }
+
                 if (pagination.current_page < pagination.total_pages) {
                     paginationHtml += '<li><a href="#" data-page="' + (pagination.current_page + 1) + '">&gt;</a></li>'; // Link to the next page
                     paginationHtml += '<li><a href="#" data-page="' + pagination.total_pages + '">&gt;&gt;</a></li>'; // Link to the last page
                 }
                 paginationHtml += '</ul>';
                 $('.pagination-container').html(paginationHtml);
-    
+
                 // Handle pagination clicks
                 $('.pagination-container a').on('click', function(e) {
                     e.preventDefault();
                     var page = $(this).data('page');
                     updateUrlParameter('list-page', page);
                     fetchAccommodations();
-    
+
                     // Update the URL with the new page parameter
                 });
             } else {

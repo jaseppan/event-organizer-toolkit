@@ -67,7 +67,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         foreach ($fields as $field) {
             if (!isset($params[$field]) || empty($params[$field]) || !is_string($params[$field])) {
-                $error_message = sprintf(__('Parameter "%s" is required'), $field);
+                $error_message = sprintf(esc_html__('Parameter "%s" is required'), esc_html($field));
                 $eot_errors->add($field, $error_message);
             }
         }
@@ -87,7 +87,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         foreach ($texts as $text) {
             if ( isset($params[$text]) && !is_string($params[$text]) ) {
-                $error_message = sprintf(__('Parameter "%s" must be text'), $text);
+                $error_message = sprintf(esc_html__('Parameter "%s" must be text'), esc_html($text));
                 $eot_errors->add($text, $error_message);
             }
         }
@@ -107,7 +107,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         foreach ($integers as $integer) {
             if ( isset($params[$integer]) && !is_int($params[$integer]) ) {
-                $error_message = sprintf(__('Parameter "%s" must be integer'), $integer);
+                $error_message = sprintf(esc_html__('Parameter "%s" must be integer'), esc_html($integer));
                 $eot_errors->add($integer, $error_message);
             }
         }
@@ -127,7 +127,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         foreach ($dates as $integer) {
             if ( isset($params[$date]) && !$this->is_valid_date($params[$date]) ) {
-                $error_message = sprintf(__('Parameter "%s" is not valid date'), $date);
+                $error_message = sprintf(esc_html__('Parameter "%s" is not valid date'), esc_html($date));
                 $eot_errors->add($date, $error_message);
             }
         }
@@ -147,7 +147,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         foreach ($times as $integer) {
             if ( isset($params[$time]) && !$this->is_valid_date($params[$time], 'H:i:s') ) {
-                $error_message = sprintf(__('Parameter "%s" is not valid time'), $time);
+                $error_message = sprintf(esc_html__('Parameter "%s" is not valid time'), esc_html($time));
                 $eot_errors->add($time, $error_message);
             }
         }
@@ -172,7 +172,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         foreach ($emails as $email) {
             if ( isset($params[$email]) && !is_array($params[$email]) ) {
-                $error_message = sprintf(__('Parameter "%s" is not valid email'), $email);
+                $error_message = sprintf(esc_html__('Parameter "%s" is not valid email'), esc_html($email));
                 $eot_errors->add($email, $error_message);
             }
         }
@@ -193,7 +193,7 @@ class Event_Organizer_Toolkit_Request_Handler {
         foreach ($arrays as $array) {
             if ( isset($params[$array]) ) {
                 if( !is_array($params[$array]) ) {
-                    $error_message = sprintf(__('Parameter "%s" must be array'), $array);
+                    $error_message = sprintf(esc_html__('Parameter "%s" must be array'), esc_html($array));
                     $eot_errors->add($array, $error_message);
                 } else {
                     $this->validate_array_values( $array, $params );
@@ -215,13 +215,13 @@ class Event_Organizer_Toolkit_Request_Handler {
             $format = $value['format'];
             if( $value[$format] == 'string' ) {
                 if ( !is_string($params[$field['key'][$key]]) ) {
-                    $error_message = sprintf(__('Values in parameter "%s" must be text'), $field);
+                    $error_message = sprintf(esc_html__('Values in parameter "%s" must be text'), esc_html($field));
                     $eot_errors->add($field, $error_message);
                 }
             }
             if( $value[$format] == 'int' ) {
                 if ( !is_int($params[$field['key'][$key]]) ) {
-                    $error_message = sprintf(__('Values in parameter "%s" must be integers'), $field);
+                    $error_message = sprintf(esc_html__('Values in parameter "%s" must be integers'), esc_html($field));
                     $eot_errors->add($field, $error_message);
                 }
             }
@@ -275,9 +275,14 @@ class Event_Organizer_Toolkit_Request_Handler {
         if( $check_duplicate && isset( $data[$check_duplicate] ) ) {
             
             if ( $this->similar_exists( $data[$check_duplicate], $table, $check_duplicate ) ) {
-                $message = sprintf(__('An %1$s with similar %2$s already exists: %3$s.', 'event-organizer-toolkit'), $property_name, $check_duplicate, $data[$check_duplicate]);
+                $message = sprintf(
+                    esc_html__('An %1$s with similar %2$s already exists: %3$s.', 'event-organizer-toolkit'),
+                    esc_html($property_name),
+                    esc_html($check_duplicate),
+                    esc_html($data[$check_duplicate])
+                );
                 $response['message'] = $message;
-                wp_send_json_error($response);
+                wp_send_json_error($response, 409);
             }
 
         }
@@ -288,11 +293,18 @@ class Event_Organizer_Toolkit_Request_Handler {
         // wp_send_json_success( $data );
         
         if ($result !== false) {
-            $message = sprintf(__('%1$s %2$s inserted.', 'event-organizer-toolkit'), $property_name, $data['title']);
+            $message = sprintf(
+                esc_html__('%1$s %2$s inserted.', 'event-organizer-toolkit'), 
+                esc_html($property_name), 
+                esc_html($data['title'])
+            );
             $status = 'success';
             $id = $wpdb->insert_id;
         } else {
-            $message = sprintf(__('Error inserting %1$s %2$s.', 'event-organizer-toolkit'), $property_name, $data['title']);
+            $message = sprintf(
+                esc_html__('Error inserting %1$s %2$s.', 'event-organizer-toolkit'), 
+                esc_html($property_name), 
+                esc_html($data['title']));
             $status = 'error';
         }
 
@@ -318,7 +330,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         // Check if id is numeric
         if ( !is_numeric($params['id']) || $params['id'] == 0) {
-            $message = sprintf(__('The parameter "id" must be numeric.', 'event-organizer-toolkit'), $data['title']);
+            $message = sprintf( esc_html__('The parameter "id" must be numeric.', 'event-organizer-toolkit'), esc_html($data['title']) );
             $response['message'] = $message;
             wp_send_json_error( $response );
         }
@@ -327,7 +339,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         // Check that id exists
         if ( !$this->id_exists( $id, $this->table ) ) {
-            $message = sprintf(__('The provided ID does not correspond to an existing record.', 'event-organizer-toolkit'), $data['title']);
+            $message = sprintf( esc_html__('The provided ID does not correspond to an existing record.', 'event-organizer-toolkit'), esc_html($data['title']) );
             $response['message'] = $message;
             wp_send_json_error( $response );
         }
@@ -339,10 +351,14 @@ class Event_Organizer_Toolkit_Request_Handler {
         );
 
         if( $result ) {
-            $message = sprintf( __('%1$s %2$s updated.', 'event-organizer-toolkit'), $property_name, $data['title'] );
+            $message = sprintf( esc_html__('%1$s %2$s updated.', 'event-organizer-toolkit'), esc_html($property_name), esc_html($data['title']) );
             $status = 'success';
         } else {
-            $message = sprintf(__('%1$s %2$s not updated. No changes were made to the data.', 'event-organizer-toolkit'), $property_name, $data['title']);
+            $message = sprintf( 
+                esc_html__('%1$s %2$s not updated. No changes were made to the data.', 'event-organizer-toolkit'), 
+                esc_html($property_name), 
+                esc_html($data['title'])
+            );
             $status = 'error';
         }
 
@@ -419,7 +435,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         if ( ! $data ) {
             $count = 0;
-            $message = sprintf(__('No result found with given criteria.', 'event-organizer-toolkit'), $data['title']);
+            $message = sprintf( esc_html__('No result found with given criteria.', 'event-organizer-toolkit'), esc_html($data['title']));
             $response['message'] = $message;
             // wp_send_json_error( $response );
         } else {
@@ -455,7 +471,7 @@ class Event_Organizer_Toolkit_Request_Handler {
                  
 
                 if( $count > 1 ) {
-                    $message = sprintf(__('Showing %s (%s to %s) of %s items', 'event-organizer-toolkit'), $count, $first_item, $last_item, $total_count);
+                    $message = sprintf( esc_html__('Showing %s (%s to %s) of %s items', 'event-organizer-toolkit'), esc_html($count), esc_html($first_item), esc_html($last_item), esc_html($total_count));
                     $response['message'] = $message;
                     // wp_send_json_error( $response );
                 } else {
@@ -554,11 +570,14 @@ class Event_Organizer_Toolkit_Request_Handler {
         $data = $wpdb->get_results( $sql . $keywords_str, ARRAY_A );
 
         if ( ! $data ) {
-            $message = sprintf(__('No result found with given criteria.', 'event-organizer-toolkit'), $data['title']);
+            $message = __('No result found with given criteria.', 'event-organizer-toolkit');
             $response['message'] = $message;
         } else {
             $count = count( $data );
-            $message = sprintf(__('%s results found', 'event-organizer-toolkit'), $count );
+            $message = sprintf(
+                esc_html__('%s results found', 'event-organizer-toolkit'), 
+                esc_html__($count)
+            );
             $response['message'] = $message;
         }
 

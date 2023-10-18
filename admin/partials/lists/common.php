@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1>Accommodation List</h1>
+    <h1><?php echo $topic ?> List</h1>
 
     <!-- Search bar -->
     <div class="eot-list-actions">
@@ -47,9 +47,9 @@
 
      </div>
 
-    <!-- Container to display accommodation list -->
+    <!-- Container to display list -->
     <table id="eot-list" class="eot-table">
-        <!-- Accommodations will be displayed here -->
+        <!-- List items will be displayed here -->
     </table>
 
     <!-- Pagination links -->
@@ -59,8 +59,8 @@
 </div>
 <script>
     jQuery(document).ready(function($) {
-        // Function to fetch and display accommodations
-        function fetchAccommodations() {
+        // Function to fetch and display list
+        function fetchListItems() {
 
             // Initialize the data
             var data = {};
@@ -117,7 +117,7 @@
                     printListContent(response, true);
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error fetching accommodations:', error);
+                    console.error('Error fetching list items:', error);
                 }
             });
         }
@@ -166,7 +166,7 @@
                 var isChecked = $(this).prop('checked');
                 
                 // Set the state of all checkboxes in the table rows to match the "Select All" checkbox
-                $('input[name="accommodations[]"]').prop('checked', isChecked);
+                $('input[name="items[]"]').prop('checked', isChecked);
             });
 
             // Append the "Select All" checkbox to the table header
@@ -221,27 +221,27 @@
             $('#eot-list thead').append(header);
 
             // Display list
-            response.data.data.forEach(function(accommodation) {
+            response.data.data.forEach(function(item) {
 
-                // Create a list item for each accommodation
+                // Create a list item for each item
                 var listItem = $('<tr></tr>');
                 
                 // Create checkbox
                 var checkbox = $('<input></input>')
                     .attr('type', 'checkbox')
-                    .attr('name', 'accommodations[]')
-                    .attr('value', accommodation.id);
+                    .attr('name', 'items[]')
+                    .attr('value', item.id);
                 
                 // Create Edit and Delete links
                 var editLink = $('<a></a>')
-                    .attr('href', eotScriptData.current_url + '&tab=edit&id=' + accommodation.id)
+                    .attr('href', eotScriptData.current_url + '&tab=edit&id=' + item.id)
                     .attr('class', 'edit-link')
                     .text('Edit');
 
                     var deleteLink = $('<a></a>')
                         .attr('href', '#')
                         .attr('class', 'delete-link')
-                        .attr('data-id', accommodation.id) // Add the data-id attribute with the accommodation ID
+                        .attr('data-id', item.id) // Add the data-id attribute with the item ID
                         .text('Delete');
 
                 // create order number
@@ -249,8 +249,8 @@
 
                 listItem.append($('<td></td>').append(checkbox));
                 listItem.append($('<td></td>').append(editLink).append(deleteLink));
-                listItem.append($('<td></td>').append(accommodation.id));
-                listItem.append($('<td></td>').text(accommodation.title));
+                listItem.append($('<td></td>').append(item.id));
+                listItem.append($('<td></td>').text(item.title));
                 
                 $('#eot-list').append(listItem);
             });
@@ -285,7 +285,7 @@
                     e.preventDefault();
                     var page = $(this).data('page');
                     updateUrlParameter('list-page', page);
-                    fetchAccommodations();
+                    fetchListItems();
 
                     // Update the URL with the new page parameter
                 });
@@ -299,23 +299,23 @@
         $(document).on('click', '.delete-link', function(e) {
             e.preventDefault();
             
-            // Get the accommodation ID from the link's data attribute
-            var accommodationId = $(this).data('id');
+            // Get the item ID from the link's data attribute
+            var itemId = $(this).data('id');
 
             // Confirm with the user before deleting
-            if (confirm('Are you sure you want to delete this accommodation?')) {
+            if (confirm('Are you sure you want to delete this item?')) {
                 
                 // Send a DELETE request to the API
                 $.ajax({
-                    url: eotScriptData.rest_api_url + '/v1/delete-accommodation?id=' + accommodationId,
+                    url: eotScriptData.rest_api_url + '/v1/delete-accommodation?id=' + itemId,
                     type: 'DELETE',
                     success: function(response) {
                         // Handle success, e.g., remove the deleted item from the list
                         // You may also want to display a success message to the user
-                        fetchAccommodations(); // Refresh the list
+                        fetchListItems(); // Refresh the list
                     },
                     error: function(xhr, status, error) {
-                        console.error('Error deleting accommodation:', error);
+                        console.error('Error deleting item:', error);
                         // Handle the error, e.g., display an error message to the user
                     }
                 });
@@ -327,7 +327,7 @@
             var selectedIds = [];
 
             // Find all selected checkboxes
-            $('input[name="accommodations[]"]:checked').each(function() {
+            $('input[name="items[]"]:checked').each(function() {
                 selectedIds.push($(this).val());
             });
 
@@ -336,11 +336,11 @@
                 return;
             }
 
-            if (confirm('Are you sure you want to delete ' + selectedIds.length + ' selected accommodation(s)?')) {
-                var deleteRequests = selectedIds.map(function(accommodationId) {
+            if (confirm('Are you sure you want to delete ' + selectedIds.length + ' selected items(s)?')) {
+                var deleteRequests = selectedIds.map(function(itemId) {
                     // Return a promise for each DELETE request
                     return $.ajax({
-                        url: eotScriptData.rest_api_url + '/v1/delete-accommodation?id=' + accommodationId,
+                        url: eotScriptData.rest_api_url + '/v1/delete-accommodation?id=' + itemId,
                         type: 'DELETE'
                     });
                 });
@@ -350,11 +350,11 @@
                     .then(function() {
                         // All DELETE requests have completed
                         console.log('Deletion completed.');
-                        fetchAccommodations(); // Reload the table
+                        fetchListItems(); // Reload the table
                     })
                     .fail(function() {
                         // Handle any failures here
-                        console.error('Error deleting accommodations.');
+                        console.error('Error deleting items.');
                     });
             }
         });
@@ -368,20 +368,20 @@
                 var search = getUrlParameter('search');
                 if( search.length > 0 ) {
                     updateUrlParameter('search', '');
-                    fetchAccommodations();
+                    fetchListItems();
                 }
 
                 return;
             }
 
-            // Call the searchAccommodations function with the search term
+            // Call the searchitems function with the search term
             updateUrlParameter('search', searchTerm);
             updateUrlParameter('list-page', 1);
-            // searchAccommodations(1, searchTerm);
-            fetchAccommodations();
+            // searchitems(1, searchTerm);
+            fetchListItems();
         });
 
-        // Sort accommodations when a column header is clicked
+        // Sort items when a column header is clicked
         $(document).on('click', '.sort-link', function(e) {
             e.preventDefault();
 
@@ -399,8 +399,8 @@
             updateUrlParameter('order-by', columnToSort);
             updateUrlParameter('list-page', 1); // Reset to the first page when sorting
 
-            // Fetch accommodations with the new sorting criteria
-            fetchAccommodations();
+            // Fetch items with the new sorting criteria
+            fetchListItems();
         });
 
         // Items per page functionalities
@@ -434,7 +434,7 @@
                 updateUrlParameter('items-per-page', newValue);
                 removeUrlParameter('list-page', 1)
                 // Fetch the table data with the new items-per-page value
-                fetchAccommodations();
+                fetchListItems();
             }
         });
 
@@ -445,13 +445,13 @@
                 updateUrlParameter('items-per-page', 'all');
                 removeUrlParameter('list-page');
                 // Fetch the table data without these parameters
-                fetchAccommodations();
+                fetchListItems();
             }
         });
 
 
 
-        fetchAccommodations();
+        fetchListItems();
 
     });
 

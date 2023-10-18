@@ -156,6 +156,9 @@ class Event_Organizer_Toolkit_Admin {
 				'tab' => 'list',
 				'url' => rest_url('event-organizer-toolkit/v1/list-accommodations'),
 				'method' => 'GET',
+				'fields' => array(
+					'name' => 'title'
+				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-accommodation',
 			),
 			array(

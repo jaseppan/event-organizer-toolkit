@@ -33,6 +33,8 @@
 					
 					$('#eot-submit-button-loading').addClass('hidden');
 
+					console.log('Response:', response);
+
 					// Check if the response indicates failure
 					if (!response.success) {
 

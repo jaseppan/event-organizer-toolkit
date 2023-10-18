@@ -307,7 +307,7 @@
                 
                 // Send a DELETE request to the API
                 $.ajax({
-                    url: eotScriptData.rest_api_url + '/v1/delete-accommodation?id=' + itemId,
+                    url: eotScriptData.deletion_url + '?id=' + itemId,
                     type: 'DELETE',
                     success: function(response) {
                         // Handle success, e.g., remove the deleted item from the list
@@ -340,7 +340,7 @@
                 var deleteRequests = selectedIds.map(function(itemId) {
                     // Return a promise for each DELETE request
                     return $.ajax({
-                        url: eotScriptData.rest_api_url + '/v1/delete-accommodation?id=' + itemId,
+                        url: eotScriptData.deletion_url + '?id=' + itemId,
                         type: 'DELETE'
                     });
                 });

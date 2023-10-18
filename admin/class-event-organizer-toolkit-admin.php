@@ -112,21 +112,112 @@ class Event_Organizer_Toolkit_Admin {
 			return;
 
 		$page = esc_attr($_GET['page']);
-		$url = $this->get_endpoint_url( $page,  $_GET['tab'] );
+		//$url = $this->get_endpoint_url( $page,  $_GET['tab'] );
+		$script_data = $this->get_script_data( $page, $_GET['tab'] );
 		
-		if( !isset($url) )
+		if( !$script_data || empty($script_data) || !isset($script_data['url']) )
 			return;
 
 		// Pass the REST API URL to the JavaScript file
-		wp_localize_script( $this->plugin_name, 'eotScriptData', array(
-			'url' => $url,
-			'nonce' => wp_create_nonce('wp_rest'),
-			'current_url' => esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
-			'page' => $page,
-			'action' => esc_js( $_GET['tab'] ),
-			'rest_api_url' => rest_url('event-organizer-toolkit'),
-		));
+		wp_localize_script( $this->plugin_name, 'eotScriptData', $script_data );
 	
+	}
+
+	/**
+	 * Get script data for the admin area.
+	 * 
+	 * @param string $page The page name.
+	 * @param string string|false $tab (Optional) The tab name. Default is false.
+	 * @return string The endpoint URL.
+	 * @since 1.0
+	 * @version 1.0
+	 * @access public
+	 * @author Janne Seppänen
+	 */
+
+	public function get_script_data( $page, $tab = false ) {
+
+		// List of end point urls and their pages and tabs
+		$end_points = array(
+			array(
+				'page' => 'event-organizer-toolkit-accommodations',
+				'tab' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-accommodation'),
+				'method' => 'POST',
+			),
+			array(
+				'page' => 'event-organizer-toolkit-accommodations',
+				'tab' => 'edit',
+				'url' => rest_url('event-organizer-toolkit/v1/update-accommodation'),
+				'method' => 'PUT',
+			),
+			array(
+				'page' => 'event-organizer-toolkit-accommodations',
+				'tab' => 'list',
+				'url' => rest_url('event-organizer-toolkit/v1/list-accommodations'),
+				'method' => 'GET',
+				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-accommodation',
+			),
+			array(
+				'page' => 'event-organizer-toolkit-meals',
+				'tab' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-meal'),
+				'method' => 'POST',
+			),
+			array(
+				'page' => 'event-organizer-toolkit-participants',
+				'tab' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-participant'),
+				'method' => 'POST',
+			),
+			array(
+				'page' => 'event-organizer-toolkit-events',
+				'tab' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-event'),	
+				'method' => 'POST',
+			),
+		);
+
+		
+		$script_data = array();
+
+		// Get the endpoint URL depending on page and optional tab.
+		foreach ( $end_points as $end_point ) {
+			if( $tab && isset($end_point['tab']) ) {
+				if( $end_point['page'] == $page && $end_point['tab'] == $tab ) {
+					if( isset($end_point['url'] ) )
+						$script_data['url'] = $end_point['url'];
+					if( isset($end_point['method'] ) )
+						$script_data['method'] = $end_point['method'];
+					if( isset($end_point['deletion_url']) )
+						$script_data['deletion_url'] = $end_point['deletion_url'];
+					break;
+				} 
+			} elseif( $end_point['page'] == $page && !isset($end_point['tab']) ) {
+				if( isset($end_point['url'] ) )
+					$script_data['url'] = $end_point['url'];
+				if( isset($end_point['method'] ) )
+					$script_data['method'] = $end_point['method'];
+				if( isset($end_point['deletion_url']) )
+					$script_data['deletion_url'] = $end_point['deletion_url'];
+				break;
+			}
+		}
+
+		if( empty($script_data) )
+			return false;
+
+		// Merge default data
+		$script_data = array_merge($script_data, array(
+				'nonce' => wp_create_nonce('wp_rest'),
+				'current_url' => esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
+				'page' => $page,
+				'action' => esc_js( $_GET['tab'] ),
+			)
+		);
+
+		return $script_data;
+
 	}
 
 	/**

@@ -103,7 +103,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
     public function update_event_type() {
         register_rest_route( 'event-organizer-toolkit/v1', '/update-event-type',array(
-                 'methods' => 'POST',
+                 'methods' => 'PUT',
                  'callback' => function($request) {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/event-types.php' );
                      $handler = NEW Event_Organizer_Toolkit_Event_Types_Handler();
@@ -222,7 +222,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
      public function update_participant() {
         register_rest_route( 'event-organizer-toolkit/v1', '/update-participant',array(
-                 'methods' => 'POST',
+                 'methods' => 'PUT',
                  'callback' => function($request) {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/participants.php' );
                      $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
@@ -342,7 +342,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
      public function update_parent() {
         register_rest_route( 'event-organizer-toolkit/v1', '/update-parent',array(
-                 'methods' => 'POST',
+                 'methods' => 'PUT',
                  'callback' => function($request) {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/parents.php' );
                      $handler = NEW Event_Organizer_Toolkit_Participants_Handler();
@@ -464,7 +464,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
      public function update_meal() {
         register_rest_route( 'event-organizer-toolkit/v1', '/update-meal',array(
-                 'methods' => 'POST',
+                 'methods' => 'PUT',
                  'callback' => function($request) {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meals.php' );
                      $handler = NEW Event_Organizer_Toolkit_Meals_Handler();
@@ -586,7 +586,7 @@ class Event_Organizer_Toolkit_Rest_Api {
 
      public function update_accommodation() {
         register_rest_route( 'event-organizer-toolkit/v1', '/update-accommodation',array(
-                 'methods' => 'POST',
+                 'methods' => 'PUT',
                  'callback' => function($request) {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/accommodations.php' );
                      $handler = NEW Event_Organizer_Toolkit_Accommodations_Handler();

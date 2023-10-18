@@ -20,7 +20,7 @@
 	
 			// AJAX request
 			$.ajax({
-				type: 'POST',
+				type: eotScriptData.method,
 				url: eotScriptData.url,
 				data: formData,
 				contentType: 'application/json',

@@ -292,6 +292,11 @@
             if(  response.data._pagination !== undefined ) {
                 // Display pagination links
                 var pagination = response.data._pagination;
+
+                if( pagination.total_pages <= 1 ) {
+                    return;
+                }
+
                 var paginationHtml = '<ul class="pagination">';
                 if (pagination.current_page > 1) {
                     paginationHtml += '<li><a href="#" data-page="1">&lt;&lt;</a></li>'; // Link to the first page
@@ -525,14 +530,8 @@
             history.pushState({}, '', url.toString());
         }
 
-
-
         fetchListItems();
-
-        
 
     });
 
-    
-    
 </script>

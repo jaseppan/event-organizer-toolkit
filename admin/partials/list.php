@@ -4,7 +4,7 @@
     <div class="eot-list-actions">
         <div id="eot-found-message"></div>
         <div class="eot-search-bar">
-            <div id="search-bar-overlay" class="overlay">Search</div>
+            <div id="search-bar-overlay" class="overlay"><?php _e('Search', 'event-organizer-toolkit'); ?></div>
             <input type="text" id="eot-search">
         </div>
     </div>
@@ -13,18 +13,18 @@
      <div class="eot-list-actions">
         <div class="eot-list-batch-actions">
             <!-- Overlay element for displaying the text -->
-            <div id="list-batch-actions-overlay" class="overlay">Select an action</div>
+            <div id="list-batch-actions-overlay" class="overlay"><?php _e('Select an action', 'event-organizer-toolkit'); ?></div>
             <select name="eot-batch-action-select" id="eot-batch-select">
                 <option value=""></option>
-                <option value="delete">Delete</option>
+                <option value="delete"><?php _e('Delete', 'event-organizer-toolkit'); ?></option>
             </select>
-            <button id="batch-action-submit" class="eot-list-action-button">Submit</button>
+            <button id="batch-action-submit" class="eot-list-action-button"><?php _e('Submit', 'event-organizer-toolkit'); ?></button>
         </div>
         
         <!-- Items per page -->
         <div class="items-per-page-container">
             <!-- Overlay element for displaying the text -->
-            <div id="items-per-page-overlay" class="overlay">Items per page</div>
+            <div id="items-per-page-overlay" class="overlay"><?php _e('Items per page', 'event-organizer-toolkit'); ?></div>
         
             <!-- Actual input field -->
             <input type="text" id="items-per-page" list="items-per-page-list">
@@ -136,14 +136,14 @@
                     printListContent(response, true);
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error fetching list items:', error);
+                    //console.error('Error fetching list items:', error);
+                    console.error(eotScriptData.texts.error_fetching_items, error);
                 }
             });
         }
 
         function printListContent(response) {
             
-
             // Clear the previous list
             $('#eot-found-message').empty();
             
@@ -197,7 +197,7 @@
             header.find('th:first').append(selectAllCheckbox);
 
             // Sortable header for "Actions" column (non-sortable)
-            header.append('<th>Actions</th>');
+            header.append($('<th></th>').append(eotScriptData.texts.actions));
 
             // Sortable header for "ID" column
             var idHeader = $('<th></th>');
@@ -209,15 +209,21 @@
             idHeader.append(idSortLink);
             header.append(idHeader);
 
-            // Sortable header for "Title" column
-            var titleHeader = $('<th></th>');
-            var titleSortLink = $('<a></a>')
-                .attr('href', '#')
-                .addClass('sort-link')
-                .attr('data-sort', 'title')
-                .text('Title');
-            titleHeader.append(titleSortLink);
-            header.append(titleHeader);
+            // Add dynamic header based on 
+            // the fields defined in the eotScriptData.fields array
+            if( eotScriptData.fields !== undefined ) {
+                eotScriptData.fields.forEach(function(field) {
+                    // Add Sortable header for column
+                    var titleHeader = $('<th></th>');
+                    var titleSortLink = $('<a></a>')
+                        .attr('href', '#')
+                        .addClass('sort-link')
+                        .attr('data-sort', field.name)
+                        .text(field.label);
+                    titleHeader.append(titleSortLink);
+                    header.append(titleHeader);
+                });
+            }
 
             // Check if the ID column is currently sorted in ascending or descending order
             if (getUrlParameter('order-by') === 'id') {
@@ -261,13 +267,13 @@
                 var editLink = $('<a></a>')
                     .attr('href', eotScriptData.current_url + '&tab=edit&id=' + item.id)
                     .attr('class', 'edit-link')
-                    .text('Edit');
+                    .text(eotScriptData.texts.edit);
 
                 var deleteLink = $('<a></a>')
                     .attr('href', '#')
                     .attr('class', 'delete-link')
                     .attr('data-id', item.id) // Add the data-id attribute with the item ID
-                    .text('Delete');
+                    .text(eotScriptData.texts.delete);
 
                 // create order number
                 listItem.append($('<td></td>').append(checkbox));
@@ -329,7 +335,7 @@
             var itemId = $(this).data('id');
 
             // Confirm with the user before deleting
-            if (confirm('Are you sure you want to delete this item?')) {
+            if (confirm(eotScriptData.texts.confirm_delete_item)) {
                 
 
                 // Send a DELETE request to the API
@@ -359,11 +365,11 @@
             });
 
             if (selectedIds.length === 0) {
-                alert('No items selected for deletion.');
+                alert(eotScriptData.texts.no_items_for_deletion);
                 return;
             }
 
-            if (confirm('Are you sure you want to delete ' + selectedIds.length + ' selected items(s)?')) {
+            if (confirm(eotScriptData.texts.confirm_delete_items)) {
                 
                 // Hide list container
                 $('#list-container').hide();
@@ -383,12 +389,12 @@
                 $.when.apply($, deleteRequests)
                     .then(function() {
                         // All DELETE requests have completed
-                        console.log('Deletion completed.');
+                        console.log(eotScriptData.texts.deletion_completed);
                         fetchListItems(); // Reload the table
                     })
                     .fail(function() {
                         // Handle any failures here
-                        console.error('Error deleting items.');
+                        console.error(eotScriptData.texts.error_deleting_items);
                     });
             }
         });
@@ -495,34 +501,38 @@
             }
         });
 
+        // Function to update a URL parameter
+        function updateUrlParameter(key, value) {
+            var url = new URL(window.location.href);
+            url.searchParams.set(key, value);
+            history.pushState({}, '', url.toString());
+        }
+
+        // Function to get a URL parameter by name
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function removeUrlParameter(key) {
+            // Get the current URL
+            var url = new URL(window.location.href);
+
+            // Remove the specified parameter
+            url.searchParams.delete(key);
+
+            // Replace the current URL without the parameter
+            history.pushState({}, '', url.toString());
+        }
+
 
 
         fetchListItems();
 
+        
+
     });
 
-    // Function to update a URL parameter
-    function updateUrlParameter(key, value) {
-        var url = new URL(window.location.href);
-        url.searchParams.set(key, value);
-        history.pushState({}, '', url.toString());
-    }
-
-    // Function to get a URL parameter by name
-    function getUrlParameter(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-    }
-
-    function removeUrlParameter(key) {
-        // Get the current URL
-        var url = new URL(window.location.href);
-
-        // Remove the specified parameter
-        url.searchParams.delete(key);
-
-        // Replace the current URL without the parameter
-        history.pushState({}, '', url.toString());
-    }
+    
     
 </script>

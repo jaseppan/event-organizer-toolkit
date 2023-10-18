@@ -159,7 +159,8 @@ class Event_Organizer_Toolkit_Admin {
 				'method' => 'GET',
 				'fields' => array(
 					array(					
-						'name' => 'title'
+						'name' => 'title',
+						'label' => __( 'Title', 'event-organizer-toolkit' ),
 					)
 				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-accommodation',
@@ -219,8 +220,9 @@ class Event_Organizer_Toolkit_Admin {
 
 		// Merge default data
 		$script_data = array_merge($script_data, array(
-				'nonce' => wp_create_nonce('wp_rest'),
-				'current_url' => esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
+				'nonce' 		=> wp_create_nonce('wp_rest'),
+				'current_url' 	=> esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
+				'texts' 		=> $this->script_texts($end_point['action']),
 			)
 		);
 
@@ -229,66 +231,49 @@ class Event_Organizer_Toolkit_Admin {
 	}
 
 	/**
-	 * Get the endpoint URL for the REST API depending on page and optional tab.
+	 * Texts for scripts will be displayed on the list, add and edit views
 	 * 
-	 * @param string $page The page name.
-	 * @param string string|false $tab (Optional) The tab name. Default is false.
-	 * @return string The endpoint URL.
+	 * @return array
 	 * @since 1.0
 	 * @version 1.0
 	 * @access public
 	 * @author Janne Seppänen
 	 */
 
-	public function get_endpoint_url( $page, $tab = false ) {
+	public function script_texts( $action ) {
 
-		// List of end point urls and their pages and tabs
-		$end_points = array(
-			array(
-				'page' => 'event-organizer-toolkit-accommodations',
-				'tab' => 'add',
-				'url' => rest_url('event-organizer-toolkit/v1/add-accommodation'),
-			),
-			array(
-				'page' => 'event-organizer-toolkit-accommodations',
-				'tab' => 'edit',
-				'url' => rest_url('event-organizer-toolkit/v1/update-accommodation'),
-			),
-			array(
-				'page' => 'event-organizer-toolkit-accommodations',
-				'tab' => 'list',
-				'url' => rest_url('event-organizer-toolkit/v1/list-accommodations'),
-			),
-			array(
-				'page' => 'event-organizer-toolkit-meals',
-				'tab' => 'add',
-				'url' => rest_url('event-organizer-toolkit/v1/add-meal'),
-			),
-			array(
-				'page' => 'event-organizer-toolkit-participants',
-				'tab' => 'add',
-				'url' => rest_url('event-organizer-toolkit/v1/add-participant'),
-			),
-			array(
-				'page' => 'event-organizer-toolkit-events',
-				'tab' => 'add',
-				'url' => rest_url('event-organizer-toolkit/v1/add-event'),
-			),
-		);
+		switch ($action) :
+			case 'add':
+				$texts = array(
 
-		// Get the endpoint URL depending on page and optional tab.
-		foreach ( $end_points as $end_point ) {
-			if( $tab && isset($end_point['tab']) ) {
-				if( $end_point['page'] == $page && $end_point['tab'] == $tab ) {
-					return $end_point['url'];
-				} 
-			} elseif( $end_point['page'] == $page && !isset($end_point['tab']) ) {
-				return $end_point['url'];
-			}
-		}
+				);
+				break;
+			case 'edit':
+				$texts = array(
 
-		return false;
+				);
+				break;
+			case 'list':
+				$texts = array(
+					'error_fetching_items' => __('Error fetching list items:', 'event-organizer-toolkit'),
+					'actions' => __('Actions', 'event-organizer-toolkit'),
+					'edit' => __('Edit', 'event-organizer-toolkit'),
+					'delete' => __('Delete', 'event-organizer-toolkit'),
+					'confirm_delete_item' => __('Are you sure you want to delete this item?', 'event-organizer-toolkit'),
+					'confirm_delete_items' => __('Are you sure you want to delete selected items?', 'event-organizer-toolkit'),
+					'no_items_for_deletion' => __('No items selected for deletion.', 'event-organizer-toolkit'),
+					'deletion_completed' => __('Deletion completed.', 'event-organizer-toolkit'),
+					'error_deleting_items' => __('Error deleting items', 'event-organizer-toolkit'),
+				);
+				break;
+			default:
+				$texts = array(
 
+				);
+				break;
+		endswitch;
+
+		return $texts;
 	}
 
 }

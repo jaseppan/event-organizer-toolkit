@@ -192,6 +192,8 @@ class Event_Organizer_Toolkit_Admin {
 		foreach ( $end_points as $end_point ) {
 			if( $tab && isset($end_point['action']) ) {
 				if( $end_point['page'] == $page && $end_point['action'] == $tab ) {
+					if( isset($end_point['page'] ) )
+						$script_data['page'] = $end_point['page'];
 					if( isset($end_point['url'] ) )
 						$script_data['url'] = $end_point['url'];
 					if( isset($end_point['method'] ) )
@@ -202,7 +204,10 @@ class Event_Organizer_Toolkit_Admin {
 						$script_data['fields'] = $end_point['fields'];
 					break;
 				} 
+				
 			} elseif( $end_point['page'] == $page && !isset($end_point['action']) ) {
+				if( isset($end_point['page'] ) )
+						$script_data['page'] = $end_point['page'];
 				if( isset($end_point['url'] ) )
 					$script_data['url'] = $end_point['url'];
 				if( isset($end_point['method'] ) )

@@ -77,6 +77,7 @@
             // empty $eot-list
             $('#eot-list').empty();
 
+            
             // Hide list container
             $('#list-container').hide();
 
@@ -108,6 +109,7 @@
             }
 
             // Get search term
+            
             var searchTerm = getUrlParameter('search');
             if( searchTerm !== null && searchTerm !== '') {
                 data.search = searchTerm;
@@ -382,26 +384,38 @@
             }
         });
 
-        // Event listener for the search button
+        // Store the previous search term and a delay timer
+        var previousSearchTerm = '';
+        var searchDelayTimer;
+
+        // Event listener for the search
         $('#eot-search').on('input', function() {
+            // Get the current search term
+            var searchTerm = $(this).val();
 
-            // Get search term from url parameter if defined
-            var searchTerm = $('#eot-search').val();
-            if( searchTerm.length < 3 ) {
-                var search = getUrlParameter('search');
-                if( search.length > 0 ) {
-                    updateUrlParameter('search', '');
-                    fetchListItems();
+            // Clear the previous delay timer if it exists
+            clearTimeout(searchDelayTimer);
+
+            // Set a new delay timer to trigger the search after a brief pause (e.g., 300 milliseconds)
+            searchDelayTimer = setTimeout(function() {
+                // Check if the new search term is different from the previous one
+                if (searchTerm !== previousSearchTerm) {
+                    // Update the previous search term
+                    previousSearchTerm = searchTerm;
+
+                    // Perform the search only if the search term is at least 3 characters long
+                    if (searchTerm.length >= 3) {
+                        updateUrlParameter('search', searchTerm);
+                        updateUrlParameter('list-page', 1);
+                        fetchListItems();
+                    } else {
+                        // If the search term is too short, clear it and update the URL
+                        updateUrlParameter('search', '');
+                        updateUrlParameter('list-page', 1);
+                        fetchListItems();
+                    }
                 }
-
-                return;
-            }
-
-            // Call the searchitems function with the search term
-            updateUrlParameter('search', searchTerm);
-            updateUrlParameter('list-page', 1);
-            // searchitems(1, searchTerm);
-            fetchListItems();
+            }, 400); // Adjust the delay duration as needed
         });
 
         // Sort items when a column header is clicked

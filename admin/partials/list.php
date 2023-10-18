@@ -1,5 +1,4 @@
 <div class="wrap">
-    <h1><?php echo $topic ?> List</h1>
 
     <!-- Search bar -->
     <div class="eot-list-actions">
@@ -21,10 +20,7 @@
             </select>
             <button id="batch-action-submit" class="eot-list-action-button">Submit</button>
         </div>
-        <!-- Pagination links -->
-        <div class="pagination-container">
-            <!-- Pagination links will be displayed here -->
-        </div>
+        
         <!-- Items per page -->
         <div class="items-per-page-container">
             <!-- Overlay element for displaying the text -->
@@ -44,18 +40,27 @@
             </datalist>
         </div>
 
-
      </div>
 
-    <!-- Container to display list -->
-    <table id="eot-list" class="eot-table">
-        <!-- List items will be displayed here -->
-    </table>
+     <?php echo eot_spinner( 'list-loading' ) ?>
 
-    <!-- Pagination links -->
-    <div class="pagination-container">
-        <!-- Pagination links will be displayed here -->
+    <div id="list-container">
+        <!-- Pagination links -->
+        <div class="pagination-container">
+            <!-- Pagination links will be displayed here -->
+        </div>
+        
+        <!-- Container to display list -->
+        <table id="eot-list" class="eot-table">
+            <!-- List items will be displayed here -->
+        </table>
+    
+        <!-- Pagination links -->
+        <div class="pagination-container">
+            <!-- Pagination links will be displayed here -->
+        </div>
     </div>
+
 </div>
 <script>
     jQuery(document).ready(function($) {
@@ -65,12 +70,24 @@
             // Initialize the data
             var data = {};
 
+            if( getUrlParameter('tab') == null ) {
+                updateUrlParameter('tab', 'list');
+            }
+
+            // empty $eot-list
+            $('#eot-list').empty();
+
+            // Hide list container
+            $('#list-container').hide();
+
+            // Show loading spinner
+            $('#list-loading').removeClass('hidden');
+
             // Get page
             var page = getUrlParameter('list-page');
             
             // Get items per page
             var itemsPerPage = getUrlParameter('items-per-page');
-            // var itemsPerPage = $('#items-per-page').val();
 
             if ( itemsPerPage == null ) {
                 data.items_per_page = 25;
@@ -126,7 +143,6 @@
             
 
             // Clear the previous list
-            $('#eot-list').empty();
             $('#eot-found-message').empty();
             
             // Add messager
@@ -145,7 +161,13 @@
                 }
             }
 
+            // Hide loading spinner
+            $('#list-loading').addClass('hidden');
+            
+            // Show list
+            $('#list-container').fadeIn('fast');
 
+            
             // Create table header
             // Append the header row to the table
             $('#eot-list').append('<thead></thead>');
@@ -238,15 +260,13 @@
                     .attr('class', 'edit-link')
                     .text('Edit');
 
-                    var deleteLink = $('<a></a>')
-                        .attr('href', '#')
-                        .attr('class', 'delete-link')
-                        .attr('data-id', item.id) // Add the data-id attribute with the item ID
-                        .text('Delete');
+                var deleteLink = $('<a></a>')
+                    .attr('href', '#')
+                    .attr('class', 'delete-link')
+                    .attr('data-id', item.id) // Add the data-id attribute with the item ID
+                    .text('Delete');
 
                 // create order number
-
-
                 listItem.append($('<td></td>').append(checkbox));
                 listItem.append($('<td></td>').append(editLink).append(deleteLink));
                 listItem.append($('<td></td>').append(item.id));
@@ -291,8 +311,6 @@
                     var page = $(this).data('page');
                     updateUrlParameter('list-page', page);
                     fetchListItems();
-
-                    // Update the URL with the new page parameter
                 });
             } else {
                 $('.pagination-container').html('');

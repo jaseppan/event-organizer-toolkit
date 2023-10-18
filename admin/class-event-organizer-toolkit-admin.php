@@ -113,7 +113,8 @@ class Event_Organizer_Toolkit_Admin {
 
 		$page = esc_attr($_GET['page']);
 		//$url = $this->get_endpoint_url( $page,  $_GET['tab'] );
-		$script_data = $this->get_script_data( $page, $_GET['tab'] );
+		$tab = (isset($_GET['tab'])) ? esc_attr($_GET['tab']) : 'list';
+		$script_data = $this->get_script_data( $page, $tab );
 		
 		if( !$script_data || empty($script_data) || !isset($script_data['url']) )
 			return;

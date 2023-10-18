@@ -103,28 +103,34 @@
     // Add tabs for navigation
     printf('<div class="nav-tab-wrapper">');
 
+    $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'list';
+    
+    $class = ($active_tab == 'list' ) ? 'active' : '';
     printf(
-        '<a href="?page=%s&tab=list" class="nav-tab">%s</a>',
+        '<a href="?page=%s&tab=list" class="nav-tab %s">%s</a>',
         'event-organizer-toolkit-accommodations',
+        $class,
         __('List Accommodations', 'event-toolkit-organizer')
     );
+    $class = ($active_tab == 'add' ) ? 'active' : '';
     printf(
-        '<a href="?page=%s&tab=add" class="nav-tab">%s</a>',
+        '<a href="?page=%s&tab=add" class="nav-tab %s">%s</a>',
         'event-organizer-toolkit-accommodations',
+        $class,
         __('Add New Accommodation', 'event-toolkit-organizer')
     );
-    if( $_GET['tab'] == 'edit' ) {
+    $class = ($active_tab == 'edit' ) ? 'active' : '';
+    if( $active_tab == 'edit' ) {
+        $class = 'active';
         printf(
-            '<a href="?page=%s&tab=edit" class="nav-tab">%s</a>',
+            '<a href="?page=%s&tab=edit" class="nav-tab %s">%s</a>',
             'event-organizer-toolkit-accommodations',
+            $class,
             __('Edit New Accommodation', 'event-toolkit-organizer')
         );
     }
     
     printf('</div>');
-
-    // Check which tab is active and display the appropriate content
-    $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'list';
 
     if ($active_tab === 'list') {
         // Content for the "List Accommodations" tab

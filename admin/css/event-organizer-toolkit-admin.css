@@ -103,11 +103,17 @@ a.remove-item {
   width: 140px;
 }
 
+/* overlay element for inputs */
 .overlay {
   position: absolute;
   pointer-events: none;
   padding: 2px 6px;
   color: #888;
+}
+
+/* active tab */
+a.nav-tab.active {
+  background: #fff;
 }
 
 
@@ -187,9 +193,9 @@ a.remove-item {
 
 /* Pagination Container */
 .pagination-container {
-  /* margin-top: 15px;  Add spacing between pagination and content */
-  text-align: center; /* Center align the pagination links */
+  text-align: center;
   align-items: center;
+  margin: 3px 0 13px;
 }
 
 /* Pagination List */
@@ -326,4 +332,10 @@ a.remove-item {
   transform-origin: 0 0; /* see note above */
 }
 .ldio-7s7lo9flxqe div { box-sizing: content-box; }
+
+
+#list-loading {
+  margin: 150px auto;
+  display: flex;
+}
 /* Loading icon end */

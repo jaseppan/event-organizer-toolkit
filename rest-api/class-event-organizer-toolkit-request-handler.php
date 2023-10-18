@@ -191,7 +191,7 @@ class Event_Organizer_Toolkit_Request_Handler {
         global $eot_errors;
 
         foreach ($arrays as $array) {
-            if ( isset($params[$array]) ) {
+            if ( isset($params) && isset($array) && isset($params[$array]) ) {
                 if( !is_array($params[$array]) ) {
                     $error_message = sprintf(esc_html__('Parameter "%s" must be array'), esc_html($array));
                     $eot_errors->add($array, $error_message);

@@ -250,7 +250,12 @@
                 listItem.append($('<td></td>').append(checkbox));
                 listItem.append($('<td></td>').append(editLink).append(deleteLink));
                 listItem.append($('<td></td>').append(item.id));
-                listItem.append($('<td></td>').text(item.title));
+                
+                if( eotScriptData.fields !== undefined ) {
+                    eotScriptData.fields.forEach(function(field) {
+                        listItem.append($('<td></td>').text(item[field.name]));
+                    });
+                }
                 
                 $('#eot-list').append(listItem);
             });

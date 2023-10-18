@@ -243,6 +243,7 @@
 
             // Append the header row to the table
             $('#eot-list thead').append(header);
+            $('#eot-list').append('<tbody></tbody>');
 
             // Display list
             response.data.data.forEach(function(item) {
@@ -279,7 +280,7 @@
                     });
                 }
                 
-                $('#eot-list').append(listItem);
+                $('#eot-list tbody').append(listItem);
             });
 
             if(  response.data._pagination !== undefined ) {
@@ -330,6 +331,7 @@
             // Confirm with the user before deleting
             if (confirm('Are you sure you want to delete this item?')) {
                 
+
                 // Send a DELETE request to the API
                 $.ajax({
                     url: eotScriptData.deletion_url + '?id=' + itemId,
@@ -362,6 +364,13 @@
             }
 
             if (confirm('Are you sure you want to delete ' + selectedIds.length + ' selected items(s)?')) {
+                
+                // Hide list container
+                $('#list-container').hide();
+
+                // Show loading spinner
+                $('#list-loading').removeClass('hidden');
+
                 var deleteRequests = selectedIds.map(function(itemId) {
                     // Return a promise for each DELETE request
                     return $.ajax({

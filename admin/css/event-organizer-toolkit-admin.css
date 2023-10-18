@@ -126,6 +126,30 @@ a.nav-tab.active {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the table */
 }
 
+/* List checkbox width */
+thead tr th:first-child,
+tbody tr td:first-child {
+  width: 10px;
+  min-width: 10px;
+  max-width: 10px;
+}
+
+/* List Edit/Delete action width */
+thead tr th:nth-child(2),
+tbody tr td:nth-child(2) {
+  width: 80px;
+  min-width: 80px;
+  max-width: 80px;
+}
+
+/* List Id width */
+thead tr th:nth-child(3),
+tbody tr td:nth-child(3) {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+}
+
 /* Style table headers */
 #eot-list th {
   background-color: #0073e6; /* Header background color */

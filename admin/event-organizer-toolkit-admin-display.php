@@ -97,7 +97,7 @@
     
      printf(
         '<h1>%s</h1>',
-        _e('Accommodations', 'event-toolkit-organizer')
+        _e('Accommodations', 'event-organizer-toolkit')
     );
     
     // Add tabs for navigation
@@ -110,14 +110,14 @@
         '<a href="?page=%s&tab=list" class="nav-tab %s">%s</a>',
         'event-organizer-toolkit-accommodations',
         $class,
-        __('List Accommodations', 'event-toolkit-organizer')
+        __('List Accommodations', 'event-organizer-toolkit')
     );
     $class = ($active_tab == 'add' ) ? 'active' : '';
     printf(
         '<a href="?page=%s&tab=add" class="nav-tab %s">%s</a>',
         'event-organizer-toolkit-accommodations',
         $class,
-        __('Add New Accommodation', 'event-toolkit-organizer')
+        __('Add New Accommodation', 'event-organizer-toolkit')
     );
     $class = ($active_tab == 'edit' ) ? 'active' : '';
     if( $active_tab == 'edit' ) {
@@ -126,7 +126,7 @@
             '<a href="?page=%s&tab=edit" class="nav-tab %s">%s</a>',
             'event-organizer-toolkit-accommodations',
             $class,
-            __('Edit New Accommodation', 'event-toolkit-organizer')
+            __('Edit New Accommodation', 'event-organizer-toolkit')
         );
     }
     
@@ -139,14 +139,14 @@
     } elseif ($active_tab === 'add') {
 
         // Submit buttom text
-        $submit_button_text = __('Add Accommodation', 'event-toolkit-organizer');
+        $submit_button_text = __('Add Accommodation', 'event-organizer-toolkit');
         // Content for the "Add New Accommodation" tab
         require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/accommodation.php');
         // Add your code to create a new accommodation here.
     } elseif ($active_tab === 'edit') {
 
         // Submit buttom text
-        $submit_button_text = __('Update Accommodation', 'event-toolkit-organizer');
+        $submit_button_text = __('Update Accommodation', 'event-organizer-toolkit');
         // Content for the "Add New Accommodation" tab
         require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/accommodation.php');
         // Add your code to create a new accommodation here.

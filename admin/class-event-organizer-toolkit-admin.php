@@ -205,6 +205,11 @@ class Event_Organizer_Toolkit_Admin {
 		if( empty($script_data) )
 			return false;
 
+		// Set default action
+		if( !isset($end_point['action']) || !$end_point['action'] ) {
+			$end_point['action'] = 'list';
+		}
+
 		// Merge default data
 		$script_data = array_merge($script_data, array(
 				'nonce' 		=> wp_create_nonce('wp_rest'),
@@ -259,6 +264,8 @@ class Event_Organizer_Toolkit_Admin {
 				);
 				break;
 		endswitch;
+
+		var_dump($action);
 
 		return $texts;
 	}

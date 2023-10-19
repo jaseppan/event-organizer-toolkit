@@ -37,6 +37,62 @@ You'll find a page with tabs labeled "List Accommodations" and "Add New Accommod
 
 ### REST API Endpoints
 
+**Testing with python module**
+
+Before diving into the endpoints, if you are looking for a way to automate testing these endpoints, consider using the rest_test module. It provides functionalities to test REST API endpoints and also helps in generating random test data, making the testing process efficient and comprehensive.
+
+**Using rest_test to Test Endpoints**
+
+Add Accommodation Endpoint Test:
+
+```python
+from rest_test import test_api_endpoint
+
+url = "{{hostname}}/wp-json/event-organizer-toolkit/v1/add-accommodation"
+method = "POST"
+parameters = {
+    "title": "Accommodation",
+    "description": "Lorem ipsum...",
+    "rooms": ["room 1", "room 2"]
+}
+responses = test_api_endpoint(url, method, parameters)
+```
+
+Generating fake data:
+
+```python
+url = "{{hostname}}/wp-json/event-organizer-toolkit/v1/add-accommodation"
+method = "POST"
+parameters = {
+   "title":"%word",
+   "description":"%text",
+   "rooms":[
+      "%word",
+      "%word"
+   ]
+}
+iterations = 10
+responses = test_api_endpoint(url, method, parameters, iterations)
+```
+
+Testing CRUD Operations:
+
+```python
+create_url = "{{hostname}}/wp-json/event-organizer-toolkit/v1/add-accommodation"
+read_url = "{{hostname}}/wp-json/event-organizer-toolkit/v1/get-accommodation"
+update_url = "{{hostname}}/wp-json/event-organizer-toolkit/v1/update-accommodation"
+delete_url = "{{hostname}}/delete-accommodation"
+parameters = {
+	"title": "%word",
+    "description": "%text",
+    "rooms": ["%email", "%url"]
+}
+
+responses = test_crud(create_url, read_url, update_url, delete_url, parameters, parameters, {}, {})
+```
+
+Read more about rest_test: [here](https://github.com/jaseppan/rest-test)
+
 #### Add Accommodation
 To add an accommodation, send a POST request to the following endpoint:
 

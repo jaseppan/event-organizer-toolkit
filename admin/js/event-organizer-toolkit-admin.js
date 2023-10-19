@@ -2,7 +2,7 @@
 	'use strict';
 
 	/**
-	 * Submit add accommodation form
+	 * Submit a form for adding and editing
 	 */
 
 	jQuery(document).ready(function($) {
@@ -28,47 +28,32 @@
 					xhr.setRequestHeader('X-WP-Nonce', eotScriptData.nonce);
 				},
 				success: function(response) {
+
+					var responseData = response.data.data;
 					
 					$('#eot-submit-button-loading').addClass('hidden');
+					var item_id = responseData.id;
+					
+					// Change message class
+					$('#form-message').removeClass('error').addClass('notice notice-success');
 
-					console.log('Response:', response);
+					// Add add new and edit links if current action is add
+					if( eotScriptData.action == 'add' ) {
+						$('input').attr('disabled', true);
+						$('textarea').attr('disabled', true);
+						$('.remove-item').addClass('hidden');
+						$('.remove-item').addClass('hidden');
+						$('.add-item').addClass('hidden');
 
-					// Check if the response indicates failure
-					if (!response.success) {
+						var edit_link = eotScriptData.current_url + '&tab=edit&id=' + item_id;
+						var actions = 
+							'<a href="' + edit_link + '" class="edit-button" data-id="' + item_id + '">Edit</a>' +
+							'<a href="#" class="add-new-item">Add New</a>';
+						$('#form-actions').html( actions ).show();
+					}
 
-						console.log('Backend Error:', response);
-
+					if( eotScriptData.action == 'edit' ) {
 						$('#eot-submit-button').removeClass('hidden');
-						// Change message class
-						var actions = '';
-						$('#form-message').removeClass('notice-success').addClass('notice error');
-						
-					} else {
-
-						var accommodation_id = response.data.data.id;
-						
-						// Change message class
-						$('#form-message').removeClass('error').addClass('notice notice-success');
-
-						// Add add new and edit links if current action is add
-						if( eotScriptData.action == 'add' ) {
-							$('input').attr('disabled', true);
-							$('textarea').attr('disabled', true);
-							$('.remove-item').addClass('hidden');
-							$('.remove-item').addClass('hidden');
-							$('.add-item').addClass('hidden');
-
-							var edit_link = eotScriptData.current_url + '&tab=edit&id=' + accommodation_id;
-							var actions = 
-								'<a href="' + edit_link + '" class="accommodation-edit-button" data-id="' + accommodation_id + '">Edit</a>' +
-								'<a href="#" class="add-new-item">Add New</a>';
-							$('#form-actions').html( actions ).show();
-						}
-
-						if( eotScriptData.action == 'edit' ) {
-							$('#eot-submit-button').removeClass('hidden');
-						}
-						
 					}
 
 					var message = response.data.message;
@@ -76,12 +61,11 @@
 
 				},
 				error: function(error) {
-					// Handle error, e.g., display an error message
-					// Handle other errors, e.g., display a generic error message
-					console.log('Frontend Error:', error.responseText);
+					// Handle error, display an error message
+					var errorData = error.responseJSON.data;
 					$('#eot-submit-button').removeClass('hidden');
 					$('#eot-submit-button-loading').addClass('hidden');
-					var message = 'An error occurred. Please try again.';
+					var message = errorData.message;
 					var actions = '';
 					$('#form-message').removeClass('success').addClass('notice error');
 					$('#form-message').html(message).show();
@@ -95,16 +79,14 @@
 		 */
 
 		$(document).on('click', '.add-new-item', function(e) {
-			e.preventDefault(); // Prevent the default link behavior
-				// Assuming your form has an ID like 'accommodation-form', you can empty it like this:
-				$(formId).trigger('reset');
-				$('.form-field').removeClass('hidden');
-				$('input').attr('disabled', false);
-				$('textarea').attr('disabled', false);
-				$('.remove-item').removeClass('hidden');
-				$('.add-item').removeClass('hidden');
-			}
-		);
+			e.preventDefault();
+			$(formId).trigger('reset');
+			$('.form-field').removeClass('hidden');
+			$('input').attr('disabled', false);
+			$('textarea').attr('disabled', false);
+			$('.remove-item').removeClass('hidden');
+			$('.add-item').removeClass('hidden');
+		});
 		
 
 	});

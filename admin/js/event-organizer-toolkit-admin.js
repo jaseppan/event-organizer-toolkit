@@ -10,11 +10,9 @@
 		const page = eotScriptData.page;
 		const formId = '#' + page + '-form';
 
-		console.log(eotScriptData);
-
 		$(formId).on('submit', function(e) {
 			e.preventDefault();
-	
+			
 			// Get data of the current form
 			var formData = serializeToJSON($(this).serialize());
 	
@@ -75,8 +73,6 @@
 
 					var message = response.data.message;
 					$('#form-message').html(message).show();
-
-					
 
 				},
 				error: function(error) {

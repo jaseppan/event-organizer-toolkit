@@ -189,33 +189,15 @@ class Event_Organizer_Toolkit_Admin {
 		$script_data = array();
 
 		// Get the endpoint URL depending on page and optional tab.
-		foreach ( $end_points as $end_point ) {
-			if( $tab && isset($end_point['action']) ) {
-				if( $end_point['page'] == $page && $end_point['action'] == $tab ) {
-					if( isset($end_point['page'] ) )
-						$script_data['page'] = $end_point['page'];
-					if( isset($end_point['url'] ) )
-						$script_data['url'] = $end_point['url'];
-					if( isset($end_point['method'] ) )
-						$script_data['method'] = $end_point['method'];
-					if( isset($end_point['deletion_url']) )
-						$script_data['deletion_url'] = $end_point['deletion_url'];
-					if( isset($end_point['fields']) )
-						$script_data['fields'] = $end_point['fields'];
+		foreach ( $end_points as $script_data ) {
+			if( $tab && isset($script_data['action']) ) {
+				if( $script_data['page'] == $page && $script_data['action'] == $tab ) {
+					// Stop the loop. The latest $script_data is chosen
 					break;
 				} 
 				
-			} elseif( $end_point['page'] == $page && !isset($end_point['action']) ) {
-				if( isset($end_point['page'] ) )
-						$script_data['page'] = $end_point['page'];
-				if( isset($end_point['url'] ) )
-					$script_data['url'] = $end_point['url'];
-				if( isset($end_point['method'] ) )
-					$script_data['method'] = $end_point['method'];
-				if( isset($end_point['deletion_url']) )
-					$script_data['deletion_url'] = $end_point['deletion_url'];
-				if( isset($end_point['fields']) )
-					$script_data['fields'] = $end_point['fields'];
+			} elseif( $script_data['page'] == $page && !isset($script_data['action']) ) {
+				// Stop the loop. The latest $script_data is chosen
 				break;
 			}
 		}

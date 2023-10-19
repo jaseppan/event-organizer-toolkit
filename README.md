@@ -8,11 +8,13 @@ REST API endpoints for accommodations management.
 Accommodation admin UI for listing, adding, editing, and deleting accommodations.
 
 ## Caution
-This project is currently under construction and may contain bugs or incomplete features.
-The REST API endpoints do not currently use authentication, so exercise caution and only test the plugin locally in a development environment.
-Be sure to back up your data before using this plugin in any WordPress installation.
-Please note that this README serves as an initial guide and will be updated as the project progresses and new features are added.
+This project is currently under construction and may contain bugs or incomplete features. While the REST API endpoints do support authentication, queries are not restricted by capabilities, so exercise caution when testing the plugin.
 
+For safety reasons, it's recommended to test the plugin only locally in a development environment. Additionally, be sure to back up your data before using this plugin in any live WordPress installation.
+
+Please note that this README serves as an initial guide and will be updated as the project progresses and new features are added."
+
+This updated caution section reflects the use of authentication for REST API endpoints and emphasizes the importance of testing and data backup for safe usage.
 
 ## Installation 
 

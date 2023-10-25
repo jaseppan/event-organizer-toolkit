@@ -30,26 +30,27 @@
 				success: function(response) {
 
 					var responseData = response.data.data;
-					
 					$('#eot-submit-button-loading').addClass('hidden');
-					var item_id = responseData.id;
-					
+
 					// Change message class
 					$('#form-message').removeClass('error').addClass('notice notice-success');
 
 					// Add add new and edit links if current action is add
 					if( eotScriptData.action == 'add' ) {
+
 						$('input').attr('disabled', true);
 						$('textarea').attr('disabled', true);
 						$('.remove-item').addClass('hidden');
 						$('.remove-item').addClass('hidden');
 						$('.add-item').addClass('hidden');
 
+						var item_id = responseData.id;
 						var edit_link = eotScriptData.current_url + '&tab=edit&id=' + item_id;
 						var actions = 
 							'<a href="' + edit_link + '" class="edit-button" data-id="' + item_id + '">Edit</a>' +
 							'<a href="#" class="add-new-item">Add New</a>';
 						$('#form-actions').html( actions ).show();
+						
 					}
 
 					if( eotScriptData.action == 'edit' ) {

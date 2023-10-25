@@ -56,6 +56,56 @@ class Event_Organizer_Toolkit_Request_Handler {
 
      }
 
+
+     public function validate_form_fields( $fields, $params ) {
+
+        $required_fields = array();
+        $text_fields = array();
+        $date_fields = array();
+        $time_fields = array();
+        $repeater_fields = array();
+
+        foreach( $fields as $field ) {
+
+            if( $field['sub-type'] == 'repeater' ) {
+                $repeater_fields = array(
+                    'key' => $field['name'],
+                    'format' => $field['item-format'],
+                );
+            } else {
+                if( $field['type'] == 'text' || $field['type'] == 'textarea' )
+                    $text_fields[] = $field['name'];
+                
+                if( $field['type'] == 'date' ) 
+                    $date_fields[] = $field['name'];
+    
+                if( $field['type'] == 'time' ) 
+                    $time_fields[] = $field['name'];
+            }
+
+        } 
+
+        if( !empty( $required_fields ) )
+            $this->validate_required_fields( $required_fields, $params );
+
+        if( !empty( $repeater_fields ) ) {
+            $this->validate_arrays( $repeater_fields, $params );
+        }
+
+        if( !empty( $text_fields ) )
+            $this->validate_texts( $text_fields, $params );
+
+        if( !empty( $date_fields ) )
+            $this->validate_dates( $date_fields, $params );
+
+        if( !empty( $time_fields ) )
+            $this->validate_times( $time_fields, $params );
+        
+
+        // parent::validate_required_fields( $this->get_required_fields, $params );
+
+     }
+
      /**
       * Validate required texts
       * @since 1.0.0
@@ -268,6 +318,83 @@ class Event_Organizer_Toolkit_Request_Handler {
 
     }
 
+    public function  collect_data( $fields, $params ) {
+
+        // FIKSAA TÄMÄ!!!!!!!
+
+        $data = array();
+
+        foreach( $fields as $field ) {
+            $key = $field['name'];
+            if( isset($params[$key]) ) {
+                $value = false;
+                if( isset( $field['sub-type']) ) {
+                    $type = $field['sub-type'];
+                } else {
+                    $type = (isset($field['type'])) ? $field['type'] : 'text';
+                }
+
+                if( $type == 'repeater' ) {
+
+                    $value = isset($params[$key]) ? serialize(array_map('sanitize_text_field', $params[$key])) : '';
+
+                } else {
+                    
+                    if( $type == 'text' || $type == 'select' )
+                        $value = sanitize_text_field($params[$key]);
+        
+                    if( $type == 'textarea' )
+                        $value = wp_kses_post($params[$key]);
+        
+                    if( $type == 'checkbox' )
+                        $value = isset($params[$key]) ? 1 : 0;
+        
+                    if( !$value )
+                        $value = sanitize_text_field($params[$key]);    
+                    
+                }
+
+                $data[$key] = $value; 
+
+            }
+
+        }
+        
+        return $data;
+       
+    }
+
+    public function update($fields, $request, $property_name) {
+        
+        global $wpdb;
+        global $eot_errors;
+        $eot_errors = new WP_Error();
+
+        $params = apply_filters( 'eot_json_params', $request->get_json_params() );
+        
+
+        $this->validate_form_fields( $fields, $fields );
+        $this->check_errors();
+        
+        // Sanitize and collect data
+
+        $id = isset($params['id']) ? (int)$params['id'] : null;
+        $data = $this->collect_data( $fields, $params );
+       
+
+        // Update if ID exists
+        if ( isset($params['id']) && $params['id'] !== null ) {
+
+            $this->update_data( $this->table, $params, $data, $property_name );
+
+        } else {
+
+            $this->insert_data( $this->table, $data, $property_name );
+
+        }
+        
+    }
+
     public function insert_data( $table, $data, $property_name, $check_duplicate = 'title' ) {
 
         global $wpdb;
@@ -440,8 +567,6 @@ class Event_Organizer_Toolkit_Request_Handler {
             // wp_send_json_error( $response );
         } else {
             
-            
-            
             $response['message'] = $message;
             
             // wp_send_json_error( $response );
@@ -460,15 +585,9 @@ class Event_Organizer_Toolkit_Request_Handler {
                 $items_per_page = isset($_GET['items_per_page']) ? (int) $_GET['items_per_page'] : '';
     
                 // Get a order number of the first item
-                //if( isset( $_GET['page'] ) ) {
-                    $first_item = (int) $_GET['page'];
-                    $first_item = $first_item * $items_per_page - $items_per_page + 1;
-                    $last_item = $first_item + $count - 1;
-                //} else {
-                //    $first_item = 1;
-                //    $last_item = $count;
-                //}
-                 
+                $first_item = (int) $_GET['page'];
+                $first_item = $first_item * $items_per_page - $items_per_page + 1;
+                $last_item = $first_item + $count - 1;
 
                 if( $count > 1 ) {
                     $message = sprintf( esc_html__('Showing %s (%s to %s) of %s items', 'event-organizer-toolkit'), esc_html($count), esc_html($first_item), esc_html($last_item), esc_html($total_count));
@@ -491,14 +610,11 @@ class Event_Organizer_Toolkit_Request_Handler {
                         'total_pages' => ceil( $total_count / $items_per_page ),
                     );
                 }
-    
-               
-                
             }
         }
 
         $response['data'] = $data;
-        
+        $response = $this->unserialize_data( $response );
 
         return $response;
 
@@ -516,9 +632,51 @@ class Event_Organizer_Toolkit_Request_Handler {
      * @author Janne Seppänen 
      */
 
-    public function list_data( $table, $allowed_params, $keywords = array() ) {
+    public function list_data( $table, $allowed_for_search = false ) {
 
+        $keywords = array();
         $keywords_str = ''; 
+
+        if( !$allowed_for_search )
+            $allowed_for_search = array(
+                array(
+                    'key' => 'id',
+                    'placeholder' => '%d', 
+                ),
+                array(
+                    'key' => 'title',
+                    'placeholder' => '%s',
+                ),
+                array(
+                    'key' => 'description',
+                    'placeholder' => '%s',
+                ),
+            );
+
+        if( isset( $_GET['order_by'] ) )
+            $keywords['order_by'] = sanitize_text_field( $_GET['order_by'] );
+
+        if( isset($_GET['order']) )
+            $keywords['order'] = sanitize_text_field( $_GET['order'] );
+
+        if( isset($_GET['page']) ) 
+            $keywords['page'] = (int) $_GET['page'];
+
+        if( isset($_GET['items_per_page']) )
+            $keywords['items_per_page'] = (int) $_GET['items_per_page'];
+
+        if( isset($_GET['search']) ) {
+            $keywords['search'] = sanitize_text_field( $_GET['search'] );
+            if( isset($_GET['search-from']) ) {
+                $allowed_params = array(
+                    array(
+                        'key' => sanitize_key( $_GET['search-from'] ),
+                    )
+                );
+            } else {
+                $allowed_params = $allowed_for_search;
+            }   
+        }
         
         if( isset($keywords['order_by']) )
             $keywords_str .= ' ORDER BY ' . $keywords['order_by'];
@@ -542,7 +700,6 @@ class Event_Organizer_Toolkit_Request_Handler {
             $this->search( $table, $keywords['search'], $fields, $keywords_str ); // Use search method if should be searched from multiple columns
         } else {
             $response = $this->get_data( $table, $allowed_params, $keywords_str );
-            $response = $this->unserialize_data( $response );
             wp_send_json_success( $response );
             
         }

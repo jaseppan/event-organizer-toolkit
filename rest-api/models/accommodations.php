@@ -21,7 +21,7 @@
 	 * @var      string    $table    The database table for accommodations.
 	 */
 
-    private $table;
+    public $table;
 
     /**
 	 * Initialize the class and set its properties.
@@ -39,7 +39,7 @@
     }
 
     /**
-     * Method to get definitions fields
+     * Method to get accommodation fields
      * @since    1.0.0
      * @return array
      */
@@ -56,8 +56,7 @@
             array(
                 'name' => 'description',
                 'label' => __('Description', 'event-organizer-toolkit'),
-                // 'type' => '',
-                'attributes' => 'required',
+                'type' => 'textarea',
                 // 'container-classes' => '',
             ),
             array(
@@ -65,25 +64,14 @@
                 'label' => __('Rooms:', 'event-organizer-toolkit'),
                 'sub-type' => 'repeater',
                 'singular-name' => 'room',
-                'item-format' => 'string'
                 // 'container-classes' => '',
             ),
             
         );
 
         return $fields;
-
     }
 
-    /**
-     * Method to get list of required fields
-     * @since    1.0.0
-     * @return array
-     */
-
-    public function get_required_fields() {
-        return array('title');
-    }
 
     /**
      * Method for adding and updating an accommodation
@@ -92,58 +80,11 @@
      */
     public function update(WP_REST_Request $request)
     {
-        global $wpdb;
-        global $eot_errors;
-        $eot_errors = new WP_Error();
-
-        $params = apply_filters( 'eot_json_params', $request->get_json_params() );
 
         $fields = $this->get_fields();
-    
-        // Validate parameters
-        parent::validate_required_fields( $this->get_required_fields(), $params );
-
-        foreach( $fields as $field ) {
-            if( $field['sub-type'] == 'repeater' ) {
-                parent::validate_arrays( [
-                    [
-                        'key' => $field['name'],
-                        'format' => $field['item-format'],
-                    ]
-                ], $params );
-            } else {
-                if( $field['type'] == 'text' ) {
-                    parent::validate_texts( [
-                        'title',
-                        'description'
-                    ], $params );
-                }
-            }
-        }      
+        $property_name = 'Accommodations';
+        parent::update( $fields, $request, $property_name );
         
-        parent::check_errors();
-        
-        // Collect data
-
-        $id = isset($params['id']) ? (int)$params['id'] : null;
-
-        // Sanitize and collect data
-        $data = array(
-            'title' => sanitize_text_field($params['title']),
-            'description' => isset($params['description']) ? wp_kses_post($params['description']) : '',
-            'rooms' => isset($params['rooms']) ? serialize(array_map('sanitize_text_field', $params['rooms'])) : '',
-        );
-
-        // Update if ID exists
-        if ( $id !== null ) {
-
-            parent::update_data( $this->table, $params, $data, 'Accommodation' );
-
-        } else {
-
-            parent::insert_data( $this->table, $data, 'Accommodation' );
-
-        }
     }
     
     /**
@@ -154,47 +95,7 @@
 
      public function list() {
 
-        $keywords = array();
-
-        if( isset( $_GET['order_by'] ) )
-            $keywords['order_by'] = sanitize_text_field( $_GET['order_by'] );
-
-        if( isset($_GET['order']) )
-            $keywords['order'] = sanitize_text_field( $_GET['order'] );
-
-        if( isset($_GET['search']) ) {
-            $keywords['search'] = sanitize_text_field( $_GET['search'] );
-            if( isset($_GET['search-from']) ) {
-                $allowed_params = array(
-                    array(
-                        'key' => sanitize_key( $_GET['search-from'] ),
-                    )
-                );
-            } else {
-                $allowed_params = array(
-                    array(
-                        'key' => 'id',
-                        'placeholder' => '%d', 
-                    ),
-                    array(
-                        'key' => 'title',
-                        'placeholder' => '%s',
-                    ),
-                    array(
-                        'key' => 'description',
-                        'placeholder' => '%s',
-                    ),
-                );
-            }
-        }
-
-        if( isset($_GET['page']) ) 
-            $keywords['page'] = (int) $_GET['page'];
-
-        if( isset($_GET['items_per_page']) )
-            $keywords['items_per_page'] = (int) $_GET['items_per_page'];
-
-        parent::list_data( $this->table, $allowed_params, $keywords );       
+        parent::list_data( $this->table );       
 
     }
     
@@ -218,7 +119,6 @@
         );
 
         $response = parent::get_data( $this->table, $allowed_params ); 
-        $response = $this->unserialize_data( $response );
         wp_send_json_success( $response );    
 
     }

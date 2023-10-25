@@ -73,3 +73,62 @@ function eot_spinner( $id = 'eot-submit-button-loading' ) {
     </div></div>
     <?php
 }
+
+/**
+ * Function for selecting form field
+ */
+
+function eot_select_form_field( $field ) {
+
+    /**
+     * If sub-type is set
+     */
+    
+    if( isset($field['sub-type']) ) { 
+        if( $field['sub-type'] == 'repeater' ) {
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/repeatable-field.php' );
+            return;
+        }
+        return;
+    }
+
+
+    switch( $field['type'] ) {
+        case 'text':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/field.php' );
+            break;
+        case 'textarea':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/textarea.php' );
+            break;
+        case 'select':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/select.php' );
+            break;
+        case 'checkbox':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/checkbox.php' );
+            break;
+        case 'radio':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/radio.php' );
+            break;
+        case 'date':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/date.php' );
+            break;
+        case 'time':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/time.php' );
+            break;
+        case 'datetime':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/datetime.php' );
+            break;
+        case 'color':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/color.php' );
+            break;
+        case 'image':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/image.php' );
+            break;
+        case 'file':
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/file.php' );
+            break;
+        default:
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/field.php' );
+            break;
+    }
+ }

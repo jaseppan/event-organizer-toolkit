@@ -151,6 +151,8 @@ class Event_Organizer_Toolkit_Admin {
 				'action' => 'edit',
 				'url' => rest_url('event-organizer-toolkit/v1/update-accommodation'),
 				'method' => 'PUT',
+				'get_url' => rest_url('event-organizer-toolkit/v1/get-accommodation'),
+				'item_id' => (int) $_GET['id'],
 			),
 			array(
 				'page' => 'event-organizer-toolkit-accommodations',
@@ -189,15 +191,17 @@ class Event_Organizer_Toolkit_Admin {
 		$script_data = array();
 
 		// Get the endpoint URL depending on page and optional tab.
-		foreach ( $end_points as $script_data ) {
-			if( $tab && isset($script_data['action']) ) {
-				if( $script_data['page'] == $page && $script_data['action'] == $tab ) {
+		foreach ( $end_points as $data ) {
+			if( $tab && isset($data['action']) ) {
+				if( $data['page'] == $page && $data['action'] == $tab ) {
 					// Stop the loop. The latest $script_data is chosen
+					$script_data = $data;
 					break;
 				} 
 				
-			} elseif( $script_data['page'] == $page && !isset($script_data['action']) ) {
+			} elseif( $data['page'] == $page && !isset($data['action']) ) {
 				// Stop the loop. The latest $script_data is chosen
+				$script_data = $data;
 				break;
 			}
 		}
@@ -205,8 +209,9 @@ class Event_Organizer_Toolkit_Admin {
 		if( empty($script_data) )
 			return false;
 
+
 		// Set default action
-		if( !isset($end_point['action']) || !$end_point['action'] ) {
+		if( !isset($script_data['action']) ) {
 			$end_point['action'] = 'list';
 		}
 
@@ -214,7 +219,7 @@ class Event_Organizer_Toolkit_Admin {
 		$script_data = array_merge($script_data, array(
 				'nonce' 		=> wp_create_nonce('wp_rest'),
 				'current_url' 	=> esc_url_raw(admin_url(sprintf('admin.php?page=%s', $page))),
-				'texts' 		=> $this->script_texts($end_point['action']),
+				'texts' 		=> $this->script_texts($script_data['action']),
 			)
 		);
 
@@ -237,12 +242,12 @@ class Event_Organizer_Toolkit_Admin {
 		switch ($action) :
 			case 'add':
 				$texts = array(
-
+					'remove' => __('Remove', 'event-organizer-toolkit'),
 				);
 				break;
 			case 'edit':
 				$texts = array(
-
+					'remove' => __('Remove', 'event-organizer-toolkit'),
 				);
 				break;
 			case 'list':
@@ -264,8 +269,6 @@ class Event_Organizer_Toolkit_Admin {
 				);
 				break;
 		endswitch;
-
-		var_dump($action);
 
 		return $texts;
 	}

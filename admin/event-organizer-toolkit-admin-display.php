@@ -121,7 +121,7 @@
     );
     $class = ($active_tab == 'edit' ) ? 'active' : '';
     if( $active_tab == 'edit' ) {
-        $class = 'active';
+        // $class = 'active';
         printf(
             '<a href="?page=%s&tab=edit" class="nav-tab %s">%s</a>',
             'event-organizer-toolkit-accommodations',
@@ -131,24 +131,57 @@
     }
     
     printf('</div>');
+    // Tabs end
+
+    // Define fields
+    // name and label are required for each field
+    if( $active_tab == 'add' || $active_tab == 'edit' ) {
+        $fields = array(
+            array(
+                'name' => 'title',
+                'label' => __('Title', 'event-organizer-toolkit'),
+                // 'type' => '',
+                'attributes' => 'required',
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'description',
+                'label' => __('Description', 'event-organizer-toolkit'),
+                // 'type' => '',
+                'attributes' => 'required',
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'rooms',
+                'label' => __('Rooms:', 'event-organizer-toolkit'),
+                'sub-type' => 'repeater',
+                'singular-name' => 'room',
+                ''
+                // 'container-classes' => '',
+            ),
+            
+        );
+    }
 
     if ($active_tab === 'list') {
         // Content for the "List Accommodations" tab
-        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/list.php');
+        require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/list.php');
         // Add your code to display the list of accommodations here.
     } elseif ($active_tab === 'add') {
 
         // Submit buttom text
+        $view_title = __('Add new accommodation', 'event-organizer-toolkit');
         $submit_button_text = __('Add Accommodation', 'event-organizer-toolkit');
         // Content for the "Add New Accommodation" tab
-        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/accommodation.php');
+        require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/form.php');
         // Add your code to create a new accommodation here.
     } elseif ($active_tab === 'edit') {
 
         // Submit buttom text
+        $view_title = __('Edit Accommodation', 'event-organizer-toolkit');
         $submit_button_text = __('Update Accommodation', 'event-organizer-toolkit');
         // Content for the "Add New Accommodation" tab
-        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/accommodation.php');
+        require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/form.php');
         // Add your code to create a new accommodation here.
     }
  }

@@ -14,43 +14,21 @@ if (!defined('ABSPATH')) exit;
 
 <div class="wrap">
     <div id="form-actions"></div>
-    <h1><?php _e('Add New Accommodation', 'event-organizer-toolkit'); ?></h1>
+    <?php if(isset( $view_title )) { ?>
+        <h1><?php echo $view_title ?></h1>
+    <?php } ?>
     <div id="form-message"></div>
     <form id="event-organizer-toolkit-accommodations-form" method="post" action="">
 
         <!-- Hidden fields -->
         <?php if(isset($_GET['id'])) : ?>
-            <input type="hidden" id="accommodation-id" name="id" value="">
+            <input type="hidden" id="id" name="id" value="">
         <?php endif; ?>
-        
-        <!-- Title -->
-        <div class="form-field">
-            <label for="accommodation_title"><?php _e('Title:', 'event-organizer-toolkit'); ?></label>
-            <input type="text" id="accommodation-title" name="title" required>
-        </div>
 
-        <!-- Description -->
-        <div class="form-field">
-            <label for="accommodation-description"><?php _e('Description:', 'event-organizer-toolkit'); ?></label>
-            <textarea id="accommodation-description" name="description" rows="4"></textarea>
-        </div>
-
-        <!-- Rooms -->
-        <div class="form-field" id="room-fields">
-            <label><?php _e('Rooms:', 'event-organizer-toolkit'); ?></label>
-            <?php if (isset($_GET['tab']) && $_GET['tab'] == 'add') : ?>
-                
-                <div class="room">
-                    <input type="text" class="room-name" name="rooms[]">
-                    <a href="#" class="remove-room remove-item"><?php _e('Remove', 'event-organizer-toolkit') ?></a>
-                </div>
-            
-            <?php else : ?>
-               
-            <?php endif; ?>
-        </div>
-        <a href="#" id="add-room" class="add-item"><?php _e('Add room', 'event-organizer-toolkit') ?></a>
-
+        <?php foreach( $fields as $field ) {
+            eot_select_form_field( $field );            
+        }
+        ?>
         <!-- Submit Button -->
         <?php echo eot_submit_button($submit_button_text) ?>
     </form>
@@ -58,51 +36,44 @@ if (!defined('ABSPATH')) exit;
 
 <script>
     jQuery(document).ready(function($) {
-
-        // Add Room
-        $('#add-room').click(function(e) {
-            e.preventDefault();
-            var roomField = '<div class="room"><input type="text" class="room-name" name="rooms[]"><a href="#" class="remove-room remove-item">' + '<?php _e('Remove', 'event-organizer-toolkit') ?>' + '</a></div>';
-            $('#room-fields').append(roomField);
-        });
-
-        // Remove Room
-        $('#room-fields').on('click', '.remove-room', function(e) {
-            e.preventDefault();
-            $(this).parent('.room').remove();
-        });
-        <?php if (isset($_GET['tab']) && $_GET['tab'] == 'edit' && isset($_GET['id']) ) { ?>
         
+        if( eotScriptData.item_id !== undefined ) {
+            
             // Get accommodation data
             $.ajax({
-                url: '/wp-json/event-organizer-toolkit/v1/get-accommodation?id=' + <?php echo $_GET['id'] ?>, // Update the URL to match your WordPress installation
+                url: eotScriptData.get_url + '?id=' + eotScriptData.item_id, // Update the URL to match your WordPress installation
                 type: 'GET',
                 success: function(response) {
+    
+                    responseData = response.data.data;
+                    
+                    $.each(responseData, function(index, item) {
+                        if ( Array.isArray(item) || typeof item === 'object' ) {
+                            // Populate repeater fields
+                            var repeaterContainer = '#' + index + '-repeater-fields';
+                            console.log('repeater field: ' + index);
 
-                    var id = response.data.data.id,
-                        title = response.data.data.title,
-                        description = response.data.data.description,
-                        rooms = response.data.data.rooms;
-
-                    // Handle the data, e.g., populate the form fields
-                    $('#accommodation-id').val(id);
-                    $('#accommodation-title').val(title);
-                    $('#accommodation-description').val(description);
-
-                    // Populate rooms, assuming data.rooms is an array
-                    $.each(rooms, function(index, room) {
-                        var roomField = '<div class="room"><input type="text" class="room-name" name="rooms[]" value="' + room + '"><a href="#" class="remove-room remove-item">Remove</a></div>';
-                        $('#room-fields').append(roomField);
+                            $.each(item, function(repeater_item_index, repeater_item) {
+                                // console.log(index);
+                                var repeaterField = '<div class="repeater-item"><input type="text" class="repeater-item-name" name="' + index + '[]" value="' + repeater_item + '"><a href="#" class="remove-item">' + eotScriptData.texts.remove + '</a></div>';
+                                $(repeaterContainer).append(repeaterField);
+                            });
+                        } else {
+                            $('#' + index).val(item);
+                        }
                     });
+    
                 },
                 error: function(xhr, status, error) {
                     // Handle errors
                     console.log(error);
                 }
             });
-            
+
+        }
         
-        <?php } ?>
+            
+
     });
 
 

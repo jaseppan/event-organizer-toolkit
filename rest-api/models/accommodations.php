@@ -21,7 +21,7 @@
 	 * @var      string    $table    The database table for accommodations.
 	 */
 
-    public $table;
+    private $table;
 
     /**
 	 * Initialize the class and set its properties.
@@ -38,6 +38,52 @@
 
     }
 
+    /**
+     * Method to get definitions fields
+     * @since    1.0.0
+     * @return array
+     */
+
+    public function get_fields() {
+        $fields = array(
+            array(
+                'name' => 'title',
+                'label' => __('Title', 'event-organizer-toolkit'),
+                // 'type' => '',
+                'attributes' => 'required',
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'description',
+                'label' => __('Description', 'event-organizer-toolkit'),
+                // 'type' => '',
+                'attributes' => 'required',
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'rooms',
+                'label' => __('Rooms:', 'event-organizer-toolkit'),
+                'sub-type' => 'repeater',
+                'singular-name' => 'room',
+                'item-format' => 'string'
+                // 'container-classes' => '',
+            ),
+            
+        );
+
+        return $fields;
+
+    }
+
+    /**
+     * Method to get list of required fields
+     * @since    1.0.0
+     * @return array
+     */
+
+    public function get_required_fields() {
+        return array('title');
+    }
 
     /**
      * Method for adding and updating an accommodation
@@ -51,19 +97,29 @@
         $eot_errors = new WP_Error();
 
         $params = apply_filters( 'eot_json_params', $request->get_json_params() );
+
+        $fields = $this->get_fields();
     
         // Validate parameters
-        parent::validate_required_fields( ['title'], $params );
-        parent::validate_texts( [
-            'title',
-            'description'
-        ], $params );
-        parent::validate_arrays( [
-            [
-                'key' => 'rooms',
-                'format' => 'string',
-            ]
-        ], $params );        
+        parent::validate_required_fields( $this->get_required_fields(), $params );
+
+        foreach( $fields as $field ) {
+            if( $field['sub-type'] == 'repeater' ) {
+                parent::validate_arrays( [
+                    [
+                        'key' => $field['name'],
+                        'format' => $field['item-format'],
+                    ]
+                ], $params );
+            } else {
+                if( $field['type'] == 'text' ) {
+                    parent::validate_texts( [
+                        'title',
+                        'description'
+                    ], $params );
+                }
+            }
+        }      
         
         parent::check_errors();
         

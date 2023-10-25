@@ -136,31 +136,11 @@
     // Define fields
     // name and label are required for each field
     if( $active_tab == 'add' || $active_tab == 'edit' ) {
-        $fields = array(
-            array(
-                'name' => 'title',
-                'label' => __('Title', 'event-organizer-toolkit'),
-                // 'type' => '',
-                'attributes' => 'required',
-                // 'container-classes' => '',
-            ),
-            array(
-                'name' => 'description',
-                'label' => __('Description', 'event-organizer-toolkit'),
-                // 'type' => '',
-                'attributes' => 'required',
-                // 'container-classes' => '',
-            ),
-            array(
-                'name' => 'rooms',
-                'label' => __('Rooms:', 'event-organizer-toolkit'),
-                'sub-type' => 'repeater',
-                'singular-name' => 'room',
-                ''
-                // 'container-classes' => '',
-            ),
-            
-        );
+        if( !class_exists('Event_Organizer_Toolkit_Accommodations_Handler') )
+            require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'rest-api/models/accommodations.php' );
+        
+        $accommodation = new Event_Organizer_Toolkit_Accommodations_Handler();
+        $fields = $accommodation->get_fields();
     }
 
     if ($active_tab === 'list') {

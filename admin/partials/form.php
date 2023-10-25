@@ -51,8 +51,7 @@ if (!defined('ABSPATH')) exit;
                         if ( Array.isArray(item) || typeof item === 'object' ) {
                             // Populate repeater fields
                             var repeaterContainer = '#' + index + '-repeater-fields';
-                            console.log('repeater field: ' + index);
-
+                            
                             $.each(item, function(repeater_item_index, repeater_item) {
                                 // console.log(index);
                                 var repeaterField = '<div class="repeater-item"><input type="text" class="repeater-item-name" name="' + index + '[]" value="' + repeater_item + '"><a href="#" class="remove-item">' + eotScriptData.texts.remove + '</a></div>';

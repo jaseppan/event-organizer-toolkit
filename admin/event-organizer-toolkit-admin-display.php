@@ -84,11 +84,39 @@
  // Callback function for the Participants sub-menu page
  function event_organizer_toolkit_participants_page() {
      // Your Participants page content goes here
+    $page_title = __('Participants', 'event-organizer-toolkit');
+    $singular_title = __('Participant', 'event-organizer-toolkit');
+    $page_slug = 'event-organizer-toolkit-participants';
+    if( !class_exists('Event_Organizer_Toolkit_Participants_Handler') )
+        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'rest-api/models/participants.php' );
+
+    $property_object = new Event_Organizer_Toolkit_Participants_Handler();
+
+    event_organizer_toolkit_admin_view( 
+        $page_title, 
+        $singular_title, 
+        $page_slug,
+        $property_object
+    );
  }
  
  // Callback function for the Meals sub-menu page
  function event_organizer_toolkit_meals_page() {
      // Your Meals page content goes here
+    $page_title = __('Meals', 'event-organizer-toolkit');
+    $singular_title = __('Meal', 'event-organizer-toolkit');
+    $page_slug = 'event-organizer-toolkit-meals';
+    if( !class_exists('Event_Organizer_Toolkit_Meals_Handler') )
+        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'rest-api/models/meals.php' );
+
+    $property_object = new Event_Organizer_Toolkit_Meals_Handler();
+
+    event_organizer_toolkit_admin_view( 
+        $page_title, 
+        $singular_title, 
+        $page_slug,
+        $property_object
+    );
  }
  
  // Callback function for the Accommodations sub-menu page

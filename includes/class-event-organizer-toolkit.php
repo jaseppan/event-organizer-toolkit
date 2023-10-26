@@ -180,6 +180,7 @@ class Event_Organizer_Toolkit {
 			$plugin_admin = new Event_Organizer_Toolkit_Admin( $this->get_plugin_name(), $this->get_version() );
 	
 			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts_dependencies', 1 );
 			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'localize_script' );
 

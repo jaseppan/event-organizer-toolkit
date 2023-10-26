@@ -505,7 +505,7 @@ class Event_Organizer_Toolkit_Rest_Api {
                  'methods' => 'GET',
                  'callback' => function($request) {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meals.php' );
-                     $handler = NEW Event_Organizer_Toolkit_Event_Types_Handler();
+                     $handler = NEW Event_Organizer_Toolkit_Meals_Handler();
                      $handler->get( $request );
                  },
                  'permission_callback' => function () {

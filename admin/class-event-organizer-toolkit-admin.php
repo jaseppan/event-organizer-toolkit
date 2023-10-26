@@ -78,25 +78,34 @@ class Event_Organizer_Toolkit_Admin {
 	}
 
 	/**
+	 * Register the JavaScript dependencies for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+
+	public function enqueue_scripts_dependencies() {
+
+		wp_register_style('jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css');
+		wp_enqueue_style('jquery-ui');
+		// enqueue datepicker addon script
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		// enqueue timepicker addon CSS
+		wp_enqueue_style('jquery-ui-timepicker-addon-css', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css');
+		// enqueue timepicker addon script
+		wp_enqueue_script('jquery-ui-timepicker-addon', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js', array('jquery-ui-datepicker'));
+		
+		
+
+	}
+
+	/**
 	 * Register the JavaScript for the admin area.
 	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Event_Organizer_Toolkit_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Event_Organizer_Toolkit_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/event-organizer-toolkit-admin.js', array( 'jquery' ), $this->version, false );
+		
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/event-organizer-toolkit-admin.js', array( 'jquery' ), $this->version, true );
 
 	}
 
@@ -140,12 +149,14 @@ class Event_Organizer_Toolkit_Admin {
 
 		// List of end point urls and their pages and tabs
 		$end_points = array(
+			// Add accommodation
 			array(
 				'page' => 'event-organizer-toolkit-accommodations',
 				'action' => 'add',
 				'url' => rest_url('event-organizer-toolkit/v1/add-accommodation'),
 				'method' => 'POST',
 			),
+			// Edit accommodation
 			array(
 				'page' => 'event-organizer-toolkit-accommodations',
 				'action' => 'edit',
@@ -154,6 +165,7 @@ class Event_Organizer_Toolkit_Admin {
 				'get_url' => rest_url('event-organizer-toolkit/v1/get-accommodation'),
 				'item_id' => (int) $_GET['id'],
 			),
+			// List accommodation
 			array(
 				'page' => 'event-organizer-toolkit-accommodations',
 				'action' => 'list',
@@ -167,11 +179,35 @@ class Event_Organizer_Toolkit_Admin {
 				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-accommodation',
 			),
+			// Add meal
 			array(
 				'page' => 'event-organizer-toolkit-meals',
 				'action' => 'add',
 				'url' => rest_url('event-organizer-toolkit/v1/add-meal'),
 				'method' => 'POST',
+			),
+			// Edit meal
+			array(
+				'page' => 'event-organizer-toolkit-meals',
+				'action' => 'edit',
+				'url' => rest_url('event-organizer-toolkit/v1/update-meal'),
+				'method' => 'PUT',
+				'get_url' => rest_url('event-organizer-toolkit/v1/get-meal'),
+				'item_id' => (int) $_GET['id'],
+			),
+			// List meal
+			array(
+				'page' => 'event-organizer-toolkit-meals',
+				'action' => 'list',
+				'url' => rest_url('event-organizer-toolkit/v1/list-meals'),
+				'method' => 'GET',
+				'fields' => array(
+					array(					
+						'name' => 'title',
+						'label' => __( 'Title', 'event-organizer-toolkit' ),
+					)
+				),
+				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-meal',
 			),
 			array(
 				'page' => 'event-organizer-toolkit-participants',

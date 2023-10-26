@@ -37,6 +37,77 @@
          $this->table = $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE;
  
      }
+
+     /**
+     * Method to get definitions fields
+     * @since    1.0.0
+     * @return array
+     */
+
+    public function get_fields() {
+        $fields = array(
+            array(
+                'name' => 'title',
+                'label' => __('Title', 'event-organizer-toolkit'),
+                'type' => 'select',
+                'attributes' => 'required',
+                'options' => $this->get_meal_names(),
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'date',
+                'label' => __('Date', 'event-organizer-toolkit'),
+                'type' => 'date',
+                'attributes' => 'required',
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'start_time',
+                'label' => __('Start time', 'event-organizer-toolkit'),
+                'type' => 'time',
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'end_time',
+                'label' => __('Start time', 'event-organizer-toolkit'),
+                'type' => 'time',
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'venue',
+                'label' => __('Venue', 'event-organizer-toolkit'),
+                // 'type' => '',
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'menu',
+                'label' => __('Menu', 'event-organizer-toolkit'),
+                // 'type' => '',
+                // 'container-classes' => '',
+            ),
+            
+            
+            
+        );
+
+        return $fields;
+
+    }
+
+    public function get_meal_names() {
+
+        $meals = array(
+            'Breakfast' => __('Breakfast', 'event-organizer-toolkit'),
+            'Lunch' => __('Lunch', 'event-organizer-toolkit'),
+            'Dinner' => __('Dinner', 'event-organizer-toolkit'),
+            'Snack' => __('Snack', 'event-organizer-toolkit'),
+            'Supper' => __('Supper', 'event-organizer-toolkit'),
+        );
+
+        return $meals;
+
+    }
+    
  
      /**
       * Handler for both wp-json/event-organizer-toolkit/v1/add-meal and ../update-meal endpoints
@@ -46,57 +117,9 @@
  
      public function update( WP_REST_Request $request ) {
  
-         global $wpdb;
-         global $eot_errors;
-         $eot_errors = new WP_Error();
- 
-         $params = apply_filters( 'eot_json_params', $request->get_json_params() );
-     
-         // Validate parameters
-         parent::validate_required_fields( [
-             'title',
-             'date',
-             'time',
-         ], $params );
-         parent::validate_texts( [
-            'title',
-            'venue', 
-            'menu'
-        ], $params );       
-        parent::validate_dates( [
-            'date',
-        ], $params );       
-        parent::validate_times( [
-            'start_time',
-            'end_time',
-        ], $params );       
-         
-         parent::check_errors();
-         
-         // Collect data
- 
-         $id = isset($params['id']) ? (int)$params['id'] : null;
- 
-         // Sanitize and collect data
-         $data = array(
-            'title' => sanitize_text_field($params['title']),
-            'date' => sanitize_text_field($params['date']),
-            'start_time' => sanitize_text_field($params['start_time']),
-            'end_time' => sanitize_text_field($params['end_time']),
-            'venue' => isset($params['venue']) ? sanitize_text_field($params['venue']) : '',
-            'menu' => isset($params['menu']) ? sanitize_text_field($params['menu']) : ''
-        );
- 
-         // Update if ID exists
-         if ( $id !== null ) {
- 
-             parent::update_data( $this->table, $params, $data, 'Event type' );
- 
-         } else {
- 
-             parent::insert_data( $this->table, $data, 'Event type', false );
- 
-         }
+        $fields = $this->get_fields();
+        $property_name = 'Meals';
+        parent::update( $fields, $request, $property_name );
  
      }
     
@@ -108,13 +131,18 @@
 
      public function list( WP_REST_Request $request ) {
 
-        $json_params = apply_filters( 'eot_json_params', $request->get_json_params() );
+        $allowed_for_search = array(
+            array(
+                'key' => 'id',
+                'placeholder' => '%d', 
+            ),
+            array(
+                'key' => 'title',
+                'placeholder' => '%s',
+            ),
+        );
 
-        $response = [
-            'state' => 'test list',
-        ];
-
-        return $response;       
+        parent::list_data( $this->table, $allowed_for_search );      
 
     }
     
@@ -126,13 +154,19 @@
 
      public function get( WP_REST_Request $request ) {
 
-        $json_params = apply_filters( 'eot_json_params', $request->get_json_params() );
+        $allowed_params = array(
+            array(
+                'key' => 'id',
+                'placeholder' => '%d', 
+            ),
+            array(
+                'key' => 'title',
+                'placeholder' => '%s',
+            )
+        );
 
-        $response = [
-            'state' => 'test get',
-        ];
-
-        return $response;       
+        $response = parent::get_data( $this->table, $allowed_params ); 
+        wp_send_json_success( $response );       
 
     }
     
@@ -144,13 +178,7 @@
 
      public function delete( WP_REST_Request $request ) {
 
-        $json_params = apply_filters( 'eot_json_params', $request->get_json_params() );
-
-        $response = [
-            'state' => 'test delete',
-        ];
-
-        return $response;       
+        parent::delete_item( $this->table, $_GET['id'] );     
 
     }
 

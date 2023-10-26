@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) exit;
         <h1><?php echo $view_title ?></h1>
     <?php } ?>
     <div id="form-message"></div>
-    <form id="event-organizer-toolkit-accommodations-form" method="post" action="">
+    <form id="event-organizer-toolkit-<?php echo strtolower($page_title) ?>-form" method="post" action="" autocomplete="off">
 
         <!-- Hidden fields -->
         <?php if(isset($_GET['id'])) : ?>
@@ -51,7 +51,7 @@ if (!defined('ABSPATH')) exit;
                         if ( Array.isArray(item) || typeof item === 'object' ) {
                             // Populate repeater fields
                             var repeaterContainer = '#' + index + '-repeater-fields';
-                            
+
                             $.each(item, function(repeater_item_index, repeater_item) {
                                 // console.log(index);
                                 var repeaterField = '<div class="repeater-item"><input type="text" class="repeater-item-name" name="' + index + '[]" value="' + repeater_item + '"><a href="#" class="remove-item">' + eotScriptData.texts.remove + '</a></div>';

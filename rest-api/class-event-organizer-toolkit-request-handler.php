@@ -136,7 +136,7 @@ class Event_Organizer_Toolkit_Request_Handler {
         global $eot_errors;
 
         foreach ($texts as $text) {
-            if ( isset($params[$text]) && !is_string($params[$text]) ) {
+            if ( isset($params[$text]) && !empty($params[$text]) && !is_string($params[$text]) ) {
                 $error_message = sprintf(esc_html__('Parameter "%s" must be text'), esc_html($text));
                 $eot_errors->add($text, $error_message);
             }
@@ -156,7 +156,7 @@ class Event_Organizer_Toolkit_Request_Handler {
         global $eot_errors;
 
         foreach ($integers as $integer) {
-            if ( isset($params[$integer]) && !is_int($params[$integer]) ) {
+            if ( isset($params[$integer]) && !empty($params[$integer]) && !is_int($params[$integer]) ) {
                 $error_message = sprintf(esc_html__('Parameter "%s" must be integer'), esc_html($integer));
                 $eot_errors->add($integer, $error_message);
             }
@@ -175,8 +175,8 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         global $eot_errors;
 
-        foreach ($dates as $integer) {
-            if ( isset($params[$date]) && !$this->is_valid_date($params[$date]) ) {
+        foreach ($dates as $date) {
+            if ( isset($params[$date]) && !empty($params[$date]) && !$this->is_valid_date($params[$date]) ) {
                 $error_message = sprintf(esc_html__('Parameter "%s" is not valid date'), esc_html($date));
                 $eot_errors->add($date, $error_message);
             }
@@ -195,8 +195,8 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         global $eot_errors;
 
-        foreach ($times as $integer) {
-            if ( isset($params[$time]) && !$this->is_valid_date($params[$time], 'H:i:s') ) {
+        foreach ($times as $time) {
+            if ( isset($params[$time]) && !empty($params[$time]) && !$this->is_valid_date($params[$time], 'H:i:s') ) {
                 $error_message = sprintf(esc_html__('Parameter "%s" is not valid time'), esc_html($time));
                 $eot_errors->add($time, $error_message);
             }
@@ -221,7 +221,7 @@ class Event_Organizer_Toolkit_Request_Handler {
         global $eot_errors;
 
         foreach ($emails as $email) {
-            if ( isset($params[$email]) && !is_array($params[$email]) ) {
+            if ( isset($params[$email]) && !empty($params[$email]) && !is_array($params[$email]) ) {
                 $error_message = sprintf(esc_html__('Parameter "%s" is not valid email'), esc_html($email));
                 $eot_errors->add($email, $error_message);
             }
@@ -311,16 +311,13 @@ class Event_Organizer_Toolkit_Request_Handler {
             $title
         );
 
+        $existingDuplicates = $wpdb->get_results($sql);
         
-        $existingDuplicate = $wpdb->get_var($sql);
-        
-        return $existingDuplicate;
+        return $existingDuplicates;
 
     }
 
     public function  collect_data( $fields, $params ) {
-
-        // FIKSAA TÄMÄ!!!!!!!
 
         $data = array();
 
@@ -342,6 +339,19 @@ class Event_Organizer_Toolkit_Request_Handler {
                     
                     if( $type == 'text' || $type == 'select' )
                         $value = sanitize_text_field($params[$key]);
+                        
+                    if( $type == 'date' ) {
+                        $value = sanitize_text_field($params[$key]);
+                        $value = strtotime( $params[$key] );
+                        $value = date('Y-m-d', $value);
+                    }
+
+                    if( $type == 'time' ) {
+                        
+                        $value = sanitize_text_field($params[$key]);
+                        $value = strtotime( $value );
+                        $value = date('H:i:s', $value);
+                    }
         
                     if( $type == 'textarea' )
                         $value = wp_kses_post($params[$key]);
@@ -360,11 +370,15 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         }
         
+        // Uncomment for developing and debugging
+        // wp_send_json_success( $params );
+        // wp_send_json_success( $data );
+
         return $data;
        
     }
 
-    public function update($fields, $request, $property_name) {
+    public function update( $fields, $request, $property_name, $check_duplicate = false ) {
         
         global $wpdb;
         global $eot_errors;
@@ -372,15 +386,12 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         $params = apply_filters( 'eot_json_params', $request->get_json_params() );
         
-
-        $this->validate_form_fields( $fields, $fields );
-        $this->check_errors();
-        
         // Sanitize and collect data
 
         $id = isset($params['id']) ? (int)$params['id'] : null;
         $data = $this->collect_data( $fields, $params );
-       
+        $this->validate_form_fields( $fields, $data );
+        $this->check_errors();
 
         // Update if ID exists
         if ( isset($params['id']) && $params['id'] !== null ) {
@@ -395,12 +406,14 @@ class Event_Organizer_Toolkit_Request_Handler {
         
     }
 
-    public function insert_data( $table, $data, $property_name, $check_duplicate = 'title' ) {
+    public function insert_data( $table, $data, $property_name, $check_duplicate = false ) {
 
         global $wpdb;
+
         // Check if similar title exists
         if( $check_duplicate && isset( $data[$check_duplicate] ) ) {
             
+            //wp_send_json_success( $this->similar_exists( $data[$check_duplicate], $table, $check_duplicate ) );
             if ( $this->similar_exists( $data[$check_duplicate], $table, $check_duplicate ) ) {
                 $message = sprintf(
                     esc_html__('An %1$s with similar %2$s already exists: %3$s.', 'event-organizer-toolkit'),
@@ -414,7 +427,6 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         }
 
-        
         $result = $wpdb->insert($table, $data);
        
         // wp_send_json_success( $data );
@@ -615,6 +627,8 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         $response['data'] = $data;
         $response = $this->unserialize_data( $response );
+
+        wp_send_json_success( $response );
 
         return $response;
 

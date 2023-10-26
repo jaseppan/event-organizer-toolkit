@@ -33,9 +33,10 @@ label {
 
 input[type="text"],
 input[type="number"],
+select,
 textarea {
     width: 100%;
-    padding: 10px;
+    /*padding: 10px;*/
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -127,24 +128,24 @@ a.nav-tab.active {
 }
 
 /* List checkbox width */
-thead tr th:first-child,
-tbody tr td:first-child {
+#eot-list thead tr th:first-child,
+#eot-list tbody tr td:first-child {
   width: 10px;
   min-width: 10px;
   max-width: 10px;
 }
 
 /* List Edit/Delete action width */
-thead tr th:nth-child(2),
-tbody tr td:nth-child(2) {
+#eot-list thead tr th:nth-child(2),
+#eot-list tbody tr td:nth-child(2) {
   width: 80px;
   min-width: 80px;
   max-width: 80px;
 }
 
 /* List Id width */
-thead tr th:nth-child(3),
-tbody tr td:nth-child(3) {
+#eot-list thead tr th:nth-child(3),
+#eot-list tbody tr td:nth-child(3) {
   width: 40px;
   min-width: 40px;
   max-width: 40px;
@@ -175,8 +176,8 @@ tbody tr td:nth-child(3) {
 }
 
 /* Style the Edit and Delete links */
-.eot-table .edit-link,
-.eot-table .delete-link {
+#eot-list .edit-link,
+#eot-list .delete-link {
     display: inline-block;
     margin-right: 5px;
     text-decoration: none;
@@ -184,23 +185,24 @@ tbody tr td:nth-child(3) {
     transition: color 0.2s;
 }
 
-.edit-link {
+#eot-list .edit-link {
   color: #1981d4;
 }
 
-.delete-link {
+#eot-list .delete-link {
   color: #df0e0e;
 }
 
-.eot-table .edit-link:hover {
+#eot-list .edit-link:hover {
     color: #003b7a;
 }
-.eot-table .delete-link:hover {
+
+#eot-list .delete-link:hover {
     color: #7b0000;
 }
 
 /* Sorting arrows */
-.sort-arrow {
+#eot-list .sort-arrow {
   display: inline-block;
   width: 0;
   height: 0;
@@ -208,10 +210,10 @@ tbody tr td:nth-child(3) {
   border-right: 5px solid transparent;
   margin-left: 5px;
 }
-.sort-arrow.up {
+#eot-list .sort-arrow.up {
   border-bottom: 5px solid #000; /* Up arrow */
 }
-.sort-arrow.down {
+#eot-list .sort-arrow.down {
   border-top: 5px solid #000; /* Down arrow */
 }
 

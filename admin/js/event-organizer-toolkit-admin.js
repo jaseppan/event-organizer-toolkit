@@ -38,19 +38,42 @@
 					// Add add new and edit links if current action is add
 					if( eotScriptData.action == 'add' ) {
 
+						
+						if( response.data.errors !== undefined ) {
+							var errors = response.data.errors;
+							console.log(errors);
+							
+							// Generate the list as a string
+							var listItems = '';
+
+							// Iterate over object keys
+							for (var key in errors) {
+								// For each key, map over its array values to generate list items
+								listItems += errors[key].map(function(error) {
+									return '<li>' + error + '</li>';
+								}).join('');
+							}
+
+							message = '<ul>' + listItems + '</ul>';
+							handle_error(message);
+							return;
+						}
+
+						var item_id = responseData.id;
+
 						$('input').attr('disabled', true);
 						$('textarea').attr('disabled', true);
 						$('.remove-item').addClass('hidden');
 						$('.remove-item').addClass('hidden');
 						$('.add-item').addClass('hidden');
 
-						var item_id = responseData.id;
+						
 						var edit_link = eotScriptData.current_url + '&tab=edit&id=' + item_id;
 						var actions = 
 							'<a href="' + edit_link + '" class="edit-button" data-id="' + item_id + '">Edit</a>' +
 							'<a href="#" class="add-new-item">Add New</a>';
 						$('#form-actions').html( actions ).show();
-						
+
 					}
 
 					if( eotScriptData.action == 'edit' ) {
@@ -64,16 +87,22 @@
 				error: function(error) {
 					// Handle error, display an error message
 					var errorData = error.responseJSON.data;
-					$('#eot-submit-button').removeClass('hidden');
-					$('#eot-submit-button-loading').addClass('hidden');
 					var message = errorData.message;
-					var actions = '';
-					$('#form-message').removeClass('success').addClass('notice error');
-					$('#form-message').html(message).show();
-					$('#form-actions').html( actions );
+					handle_error( message );
+					
 				}
 			});
 		});
+
+		function handle_error( message ) {
+			$('#eot-submit-button').removeClass('hidden');
+			$('#eot-submit-button-loading').addClass('hidden');
+			var actions = '';
+			$('#form-message').removeClass('success').addClass('notice error');
+			$('#form-message').html(message).show();
+			$('#form-actions').html( actions );
+
+		}
 
 		/**
 		 * Reset form when Add new link is clicked
@@ -121,5 +150,20 @@
 		return JSON.stringify(jsonObject);
 	}
 
+	// Datepicker
+	jQuery( '.eot-datepicker' ).datepicker();
+
+	// Timepicker
+	$('.eot-timepicker').timepicker({
+        timeFormat: 'HH:mm',
+		interval: 15,
+		minTime: '8:00am',
+		maxTime: '8:00pm',
+		defaultTime: '12:00am',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true
+		
+    });
 
 })( jQuery );

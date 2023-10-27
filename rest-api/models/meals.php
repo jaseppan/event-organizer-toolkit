@@ -38,7 +38,7 @@
  
      }
 
-     /**
+    /**
      * Method to get definitions fields
      * @since    1.0.0
      * @return array
@@ -119,7 +119,7 @@
  
         $fields = $this->get_fields();
         $property_name = 'Meals';
-        parent::update( $fields, $request, $property_name );
+        parent::updater( $fields, $request, $property_name );
  
      }
     

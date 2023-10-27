@@ -163,7 +163,7 @@ class Event_Organizer_Toolkit_Admin {
 				'url' => rest_url('event-organizer-toolkit/v1/update-accommodation'),
 				'method' => 'PUT',
 				'get_url' => rest_url('event-organizer-toolkit/v1/get-accommodation'),
-				'item_id' => (int) $_GET['id'],
+				'item_id' => (isset($_GET['id'])) ? (int) $_GET['id'] : '',
 			),
 			// List accommodation
 			array(
@@ -171,6 +171,7 @@ class Event_Organizer_Toolkit_Admin {
 				'action' => 'list',
 				'url' => rest_url('event-organizer-toolkit/v1/list-accommodations'),
 				'method' => 'GET',
+				// Define fields in list view
 				'fields' => array(
 					array(					
 						'name' => 'title',
@@ -193,7 +194,7 @@ class Event_Organizer_Toolkit_Admin {
 				'url' => rest_url('event-organizer-toolkit/v1/update-meal'),
 				'method' => 'PUT',
 				'get_url' => rest_url('event-organizer-toolkit/v1/get-meal'),
-				'item_id' => (int) $_GET['id'],
+				'item_id' => (isset($_GET['id'])) ? (int) $_GET['id'] : '',
 			),
 			// List meal
 			array(
@@ -201,13 +202,58 @@ class Event_Organizer_Toolkit_Admin {
 				'action' => 'list',
 				'url' => rest_url('event-organizer-toolkit/v1/list-meals'),
 				'method' => 'GET',
+				// Define fields in list view
 				'fields' => array(
 					array(					
 						'name' => 'title',
 						'label' => __( 'Title', 'event-organizer-toolkit' ),
+					),
+					array(					
+						'name' => 'date',
+						'label' => __( 'Date', 'event-organizer-toolkit' ),
+						'format' => 'date'
 					)
 				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-meal',
+			),
+			// Add Event type
+			array(
+				'page' => 'event-organizer-toolkit-event-types',
+				'action' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-event-type'),
+				'method' => 'POST',
+			),
+			// Edit Event type
+			array(
+				'page' => 'event-organizer-toolkit-event-types',
+				'action' => 'edit',
+				'url' => rest_url('event-organizer-toolkit/v1/update-event-type'),
+				'method' => 'PUT',
+				'get_url' => rest_url('event-organizer-toolkit/v1/get-event-type'),
+				'item_id' => (isset($_GET['id'])) ? (int) $_GET['id'] : '',
+			),
+			// List Event types
+			array(
+				'page' => 'event-organizer-toolkit-event-types',
+				'action' => 'list',
+				'url' => rest_url('event-organizer-toolkit/v1/list-event-types'),
+				'method' => 'GET',
+				// Define fields in list view
+				'fields' => array(
+					array(					
+						'name' => 'name',
+						'label' => __( 'Name', 'event-organizer-toolkit' ),
+					),
+					array(					
+						'name' => 'post_type',
+						'label' => __( 'Post type', 'event-organizer-toolkit' ),
+					),
+					array(					
+						'name' => 'taxonomy',
+						'label' => __( 'Taxonomy', 'event-organizer-toolkit' ),
+					)
+				),
+				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-event-type',
 			),
 			array(
 				'page' => 'event-organizer-toolkit-participants',

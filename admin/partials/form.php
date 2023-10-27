@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) exit;
         <h1><?php echo $view_title ?></h1>
     <?php } ?>
     <div id="form-message"></div>
-    <form id="event-organizer-toolkit-<?php echo strtolower($page_title) ?>-form" method="post" action="" autocomplete="off">
+    <form id="event-organizer-toolkit-<?php echo sanitize_title($page_title) ?>-form" method="post" action="" autocomplete="off">
 
         <!-- Hidden fields -->
         <?php if(isset($_GET['id'])) : ?>
@@ -36,10 +36,9 @@ if (!defined('ABSPATH')) exit;
 
 <script>
     jQuery(document).ready(function($) {
-        
+
         if( eotScriptData.item_id !== undefined ) {
-            
-            // Get accommodation data
+            // Get data
             $.ajax({
                 url: eotScriptData.get_url + '?id=' + eotScriptData.item_id, // Update the URL to match your WordPress installation
                 type: 'GET',
@@ -58,6 +57,7 @@ if (!defined('ABSPATH')) exit;
                                 $(repeaterContainer).append(repeaterField);
                             });
                         } else {
+                            //console.log(index + ':' + item);
                             $('#' + index).val(item);
                         }
                     });
@@ -65,7 +65,8 @@ if (!defined('ABSPATH')) exit;
                 },
                 error: function(xhr, status, error) {
                     // Handle errors
-                    console.log(error);
+                    console.log(xhr);
+                    console.error(error);
                 }
             });
 

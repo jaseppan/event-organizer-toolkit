@@ -136,8 +136,9 @@
                     printListContent(response, true);
                 },
                 error: function(xhr, status, error) {
-                    //console.error('Error fetching list items:', error);
-                    console.error(eotScriptData.texts.error_fetching_items, error);
+                    console.log(xhr);
+                    console.error('Error fetching list items:', error);
+                    // console.error(eotScriptData.texts.error_fetching_items, error);
                 }
             });
         }

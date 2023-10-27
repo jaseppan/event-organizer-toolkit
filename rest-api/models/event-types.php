@@ -40,6 +40,40 @@
     }
 
     /**
+     * Method to get definitions fields. The post_types for event types are set by field values
+     * @since    1.0.0
+     * @return array
+     */
+
+     public function get_fields() {
+        $fields = array(
+            array(
+                'name' => 'name',
+                'label' => __('Name', 'event-organizer-toolkit'),
+                'attributes' => 'required',
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'post_type',
+                'label' => __('Post type', 'event-organizer-toolkit'),
+                'type' => 'select',
+                'attributes' => 'required',
+                'options' => eot_get_post_types(),
+                // 'container-classes' => '',
+            ),
+            array(
+                'name' => 'taxonomy',
+                'label' => __('Taxonomy', 'event-organizer-toolkit'),
+                'type' => 'text',
+                // 'container-classes' => '',
+            ),
+        );
+
+        return $fields;
+
+    }
+
+    /**
      * Handler for both wp-json/event-organizer-toolkit/v1/add-event-type and ../update-event-type endpoints
      * 
      * @since 1.0.0
@@ -47,65 +81,10 @@
 
     public function update( WP_REST_Request $request ) {
 
-        global $wpdb;
-        global $eot_errors;
-        $eot_errors = new WP_Error();
-
-        $params = apply_filters( 'eot_json_params', $request->get_json_params() );
-    
-        // Validate parameters
-        parent::validate_required_fields( [
-            'title',
-            'plural_title',
-            'name',
-            'plural_name',
-            'primary_title',
-            'primary_name',
-        ], $params );
-        parent::validate_texts( [
-            'title',
-            'plural_title',
-            'name',
-            'plural_name',
-            'primary_title',
-            'primary_name',
-            'description'
-        ], $params );
-        parent::validate_arrays( [
-            [
-                'key' => 'taxonomies',
-                'format' => 'string',
-            ]
-        ], $params );        
-        
-        parent::check_errors();
-        
-        // Collect data
-
-        $id = isset($params['id']) ? (int)$params['id'] : null;
-
-        // Sanitize and collect data
-        $data = array(
-            'title' => sanitize_text_field($params['title']),
-            'plural_title' => sanitize_text_field($params['plural_title']),
-            'name' => sanitize_text_field($params['name']),
-            'plural_name' => sanitize_text_field($params['plural_name']),
-            'primary_title' => sanitize_text_field($params['primary_title']),
-            'primary_name' => sanitize_text_field($params['primary_name']),
-            'description' => isset($params['description']) ? wp_kses_post($params['description']) : '',
-            'taxonomies' => isset($params['taxonomies']) ? serialize(array_map('sanitize_text_field', $params['taxonomies'])) : '',
-        );
-
-        // Update if ID exists
-        if ( $id !== null ) {
-
-            parent::update_data( $this->table, $params, $data, 'Event type' );
-
-        } else {
-
-            parent::insert_data( $this->table, $data, 'Event type' );
-
-        }
+        $fields = $this->get_fields();
+        $property_name = 'Event types';
+        $check_duplicate = 'post_type';
+        parent::updater( $fields, $request, $property_name, $check_duplicate );
 
     }
     
@@ -118,17 +97,7 @@
 
      public function list( WP_REST_Request $request ) {
 
-        wp_send_json_success( ['test'] );
-        return ['test'];
-
-        $params = apply_filters( 'eot_json_params', $request->get_json_params() );
-
-        $response = [
-            'state' => 'test list',
-        ];
-
-
-        return $response;       
+        parent::list_data( $this->table );   
 
     }
     
@@ -140,13 +109,27 @@
 
      public function get( WP_REST_Request $request ) {
 
-        $params = apply_filters( 'eot_json_params', $request->get_json_params() );
+        $allowed_params = array(
+            array(
+                'key' => 'id',
+                'placeholder' => '%d', 
+            ),
+            array(
+                'key' => 'name',
+                'placeholder' => '%s',
+            ),
+            array(
+                'key' => 'post_type',
+                'placeholder' => '%s',
+            ),
+            array(
+                'key' => 'taxonomy',
+                'placeholder' => '%s',
+            )
+        );
 
-        $response = [
-            'state' => 'test get',
-        ];
-
-        return $response;       
+        $response = parent::get_data( $this->table, $allowed_params, '', 'title' ); 
+        wp_send_json_success( $response );       
 
     }
     
@@ -158,13 +141,7 @@
 
      public function delete( WP_REST_Request $request ) {
 
-        $params = apply_filters( 'eot_json_params', $request->get_json_params() );
-
-        $response = [
-            'state' => 'test delete',
-        ];
-
-        return $response;       
+        parent::delete_item( $this->table, $_GET['id'] );      
 
     }
 

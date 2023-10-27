@@ -58,6 +58,15 @@
          'event-organizer-toolkit-accommodations',
          'event_organizer_toolkit_accommodations_page'
      );
+
+     add_submenu_page(
+        'event-organizer-toolkit',
+        'Event Types',
+        'Event Types',
+        'manage_options',
+        'event-organizer-toolkit-event-types',
+        'event_organizer_toolkit_event_types_page'
+    );
  
      add_submenu_page(
          'event-organizer-toolkit',
@@ -138,6 +147,26 @@
     );
     
  }
+
+function event_organizer_toolkit_event_types_page() {
+
+    // Display the title
+    $page_title = __('Event Types', 'event-organizer-toolkit');
+    $singular_title = __('Event Type', 'event-organizer-toolkit');
+    $page_slug = 'event-organizer-toolkit-event-types';
+    if( !class_exists('Event_Organizer_Toolkit_Event_Types_Handler') )
+        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'rest-api/models/event-types.php' );
+
+    $property_object = new Event_Organizer_Toolkit_Event_Types_Handler();
+
+    event_organizer_toolkit_admin_view( 
+        $page_title, 
+        $singular_title, 
+        $page_slug,
+        $property_object
+    );
+
+}
  
  // Callback function for the Forms sub-menu page
  function event_organizer_toolkit_forms_page() {

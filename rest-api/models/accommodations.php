@@ -84,7 +84,7 @@
         $fields = $this->get_fields();
         $property_name = 'Accommodations';
         $check_duplicate = 'title';
-        parent::update( $fields, $request, $property_name, $check_duplicate );
+        parent::updater( $fields, $request, $property_name, $check_duplicate );
         
     }
     
@@ -135,23 +135,5 @@
         parent::delete_item( $this->table, $_GET['id'] );       
 
     }
-
-    /*public function similar_exists( ) {
-        // Check if similar title exists
-        if( $check_duplicate && isset( $data[$check_duplicate] ) ) {
-            
-            if ( $this->similar_exists( $data[$check_duplicate], $table, $check_duplicate ) ) {
-                $message = sprintf(
-                    esc_html__('An %1$s with similar %2$s already exists: %3$s.', 'event-organizer-toolkit'),
-                    esc_html($property_name),
-                    esc_html($check_duplicate),
-                    esc_html($data[$check_duplicate])
-                );
-                $response['message'] = $message;
-                wp_send_json_error($response, 409);
-            }
-
-        }
-    }*/
 
 }

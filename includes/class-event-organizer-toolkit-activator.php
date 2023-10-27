@@ -78,14 +78,9 @@ class Event_Organizer_Toolkit_Activator {
 
 		$sql =  "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_EVENT_TYPES_TABLE . " (
 			id INT NOT NULL AUTO_INCREMENT,
-			title varchar(50) NOT NULL,
-			plural_title varchar(50) NOT NULL,
 			name varchar(50) NOT NULL,
-			plural_name varchar(50) NOT NULL,
-			primary_title varchar(50) NOT NULL,
-			primary_name varchar(50) NOT NULL,
-			description varchar(255),
-			taxonomies varchar(1000),
+			post_type varchar(50) NOT NULL,
+			taxonomy varchar(50) NOT NULL,
 			PRIMARY KEY (id) );";
 
 		return $sql;

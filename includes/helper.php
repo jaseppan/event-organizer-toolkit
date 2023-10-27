@@ -19,6 +19,7 @@ function is_eot_admin_page() {
 
     $eot_admin_pages = array(
         'event-organizer-toolkit',
+        'event-organizer-toolkit-event-types',
         'event-organizer-toolkit-events',
         'event-organizer-toolkit-participants',
         'event-organizer-toolkit-meals',
@@ -92,6 +93,8 @@ function eot_select_form_field( $field ) {
         return;
     }
 
+    if( !isset($field['type']) )
+        $field['type'] = 'text';
 
     switch( $field['type'] ) {
         case 'text':
@@ -131,4 +134,22 @@ function eot_select_form_field( $field ) {
             require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/forms/fields/field.php' );
             break;
     }
+ }
+
+ /**
+  * Function to create list of post types
+  */
+
+ function eot_get_post_types() {
+
+    $post_types = get_post_types( array( 'public' => true ), 'objects' );
+
+    $post_types_list = array();
+
+    foreach ( $post_types as $post_type ) {
+        $post_types_list[ $post_type->name ] = $post_type->label;
+    }
+
+    return $post_types_list;
+
  }

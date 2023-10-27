@@ -56,8 +56,17 @@ class Event_Organizer_Toolkit_Request_Handler {
 
      }
 
+     /**
+      * 
+      * Validate form fields
+      * 
+      * @param array $fields
+      * @param array $params (original data, used for validation in most cases)
+      * @param array $data (reformated data suitable for saving in database, used for validation of dates and times)
+      */
 
-     public function validate_form_fields( $fields, $params ) {
+
+     public function validate_form_fields( $fields, $params, $data ) {
 
         $required_fields = array();
         $text_fields = array();
@@ -87,19 +96,22 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         if( !empty( $required_fields ) )
             $this->validate_required_fields( $required_fields, $params );
-
+        
         if( !empty( $repeater_fields ) ) {
             $this->validate_arrays( $repeater_fields, $params );
         }
+        // wp_send_json_success( 'test' );
 
         if( !empty( $text_fields ) )
             $this->validate_texts( $text_fields, $params );
 
         if( !empty( $date_fields ) )
-            $this->validate_dates( $date_fields, $params );
+            $this->validate_dates( $date_fields, $data );
 
         if( !empty( $time_fields ) )
-            $this->validate_times( $time_fields, $params );
+            $this->validate_times( $time_fields, $data );
+
+            
         
 
         // parent::validate_required_fields( $this->get_required_fields, $params );
@@ -241,6 +253,11 @@ class Event_Organizer_Toolkit_Request_Handler {
         global $eot_errors;
 
         foreach ($arrays as $array) {
+
+            
+            if(empty($params[$array]))
+                continue;
+        
             if ( isset($params) && isset($array) && isset($params[$array]) ) {
                 if( !is_array($params[$array]) ) {
                     $error_message = sprintf(esc_html__('Parameter "%s" must be array'), esc_html($array));
@@ -260,6 +277,11 @@ class Event_Organizer_Toolkit_Request_Handler {
      */
 
      function validate_array_values( $array, $params ) {
+        
+        if( empty($array) )
+            return;
+
+        global $eot_errors;
 
         foreach ($array as $key => $field) { 
             $format = $value['format'];
@@ -378,7 +400,7 @@ class Event_Organizer_Toolkit_Request_Handler {
        
     }
 
-    public function update( $fields, $request, $property_name, $check_duplicate = false ) {
+    public function updater( $fields, $request, $property_name, $check_duplicate = false ) {
         
         global $wpdb;
         global $eot_errors;
@@ -390,7 +412,7 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         $id = isset($params['id']) ? (int)$params['id'] : null;
         $data = $this->collect_data( $fields, $params );
-        $this->validate_form_fields( $fields, $data );
+        $this->validate_form_fields( $fields, $params, $data );
         $this->check_errors();
 
         // Update if ID exists
@@ -529,7 +551,7 @@ class Event_Organizer_Toolkit_Request_Handler {
      * @author Janne Seppänen
      */
     
-    public function get_data( $table, $allowed_params, $keywords_str = '' ) {
+    public function get_data( $table, $allowed_params, $keywords_str = '', $title = 'title' ) {
 
         global $wpdb;
 
@@ -554,6 +576,9 @@ class Event_Organizer_Toolkit_Request_Handler {
         if( !empty($query_parts) ) {
             $query_tail = ' WHERE ' . implode( ' AND ', $query_parts );
             $query_values = implode( ',', $query_params );
+        } else {
+            $query_tail = '';
+            $query_values = '';
         }
 
         $sql = $wpdb->prepare( "SELECT * FROM " . $table . $query_tail . $keywords_str, $query_values );
@@ -574,12 +599,12 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         if ( ! $data ) {
             $count = 0;
-            $message = sprintf( esc_html__('No result found with given criteria.', 'event-organizer-toolkit'), esc_html($data['title']));
+            $message = __('No result found with given criteria.', 'event-organizer-toolkit');
             $response['message'] = $message;
             // wp_send_json_error( $response );
         } else {
             
-            $response['message'] = $message;
+            $response['message'] = isset($message) ? $message : '';
             
             // wp_send_json_error( $response );
             if( $method == 'get_results' ) {
@@ -646,7 +671,7 @@ class Event_Organizer_Toolkit_Request_Handler {
      * @author Janne Seppänen 
      */
 
-    public function list_data( $table, $allowed_for_search = false ) {
+    public function list_data( $table, $allowed_for_search = false, $title = "title" ) {
 
         $keywords = array();
         $keywords_str = ''; 
@@ -707,13 +732,16 @@ class Event_Organizer_Toolkit_Request_Handler {
             }
         }
 
+        if( !isset($allowed_params) )
+            $allowed_params = array();
+
         if( isset( $keywords['search'] ) && !isset($keywords['search-from']) ) {  
             $fields = array_map( function( $params ) {
                 return $params['key'];
             }, $allowed_params );  
             $this->search( $table, $keywords['search'], $fields, $keywords_str ); // Use search method if should be searched from multiple columns
         } else {
-            $response = $this->get_data( $table, $allowed_params, $keywords_str );
+            $response = $this->get_data( $table, $allowed_params, $keywords_str, $title );
             wp_send_json_success( $response );
             
         }
@@ -784,6 +812,9 @@ class Event_Organizer_Toolkit_Request_Handler {
     }
 
     public function unserialize_data($response) {
+
+        if(!isset($response['data']))
+            return;
 
         foreach( $response['data'] as  $key => $data ) {
             if( is_serialized( $data ) ) 

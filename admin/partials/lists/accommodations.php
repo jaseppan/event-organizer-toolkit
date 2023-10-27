@@ -115,9 +115,11 @@
                 data: data,
                 success: function(response) {
                     printListContent(response, true);
+                    return true;
                 },
                 error: function(xhr, status, error) {
                     console.error('Error fetching accommodations:', error);
+                    return true;
                 }
             });
         }
@@ -292,6 +294,8 @@
             } else {
                 $('.pagination-container').html('');
             }
+
+            return true;
            
         }
 
@@ -371,7 +375,7 @@
                     fetchAccommodations();
                 }
 
-                return;
+                return true;
             }
 
             // Call the searchAccommodations function with the search term
@@ -379,6 +383,7 @@
             updateUrlParameter('list-page', 1);
             // searchAccommodations(1, searchTerm);
             fetchAccommodations();
+            return true;
         });
 
         // Sort accommodations when a column header is clicked
@@ -401,6 +406,7 @@
 
             // Fetch accommodations with the new sorting criteria
             fetchAccommodations();
+            return true
         });
 
         // Items per page functionalities
@@ -435,6 +441,8 @@
                 removeUrlParameter('list-page', 1)
                 // Fetch the table data with the new items-per-page value
                 fetchAccommodations();
+                return true;
+
             }
         });
 
@@ -446,10 +454,9 @@
                 removeUrlParameter('list-page');
                 // Fetch the table data without these parameters
                 fetchAccommodations();
+                return true
             }
         });
-
-
 
         fetchAccommodations();
 

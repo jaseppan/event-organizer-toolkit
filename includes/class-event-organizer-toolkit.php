@@ -78,6 +78,7 @@ class Event_Organizer_Toolkit {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->disable_admin_notifications();
 
 	}
 
@@ -242,6 +243,14 @@ class Event_Organizer_Toolkit {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+
+	public function disable_admin_notifications() {
+		if( is_admin() && isset( $_GET['page'] ) && strpos( $_GET['page'], 'event-organizer-toolkit') ) {
+			remove_action( 'admin_notices', 'update_nag', 3 );
+
+		}
 	}
 
 }

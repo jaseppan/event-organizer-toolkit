@@ -90,6 +90,45 @@ register_activation_hook( __FILE__, 'activate_event_organizer_toolkit' );
 register_deactivation_hook( __FILE__, 'deactivate_event_organizer_toolkit' );
 
 /**
+ *  Register the script for blocks
+ */
+
+function eot_enqueue_assets() {
+    wp_register_script(
+        'eot-block',
+        plugins_url( 'blocks/build/index.js', __FILE__ ),
+        array( 'wp-blocks', 'wp-element', 'wp-editor' ),
+        filemtime( plugin_dir_path( __FILE__ ) . 'blocks/build/index.js' )
+    );
+
+    // Register styles
+    wp_register_style(
+        'eot-block-editor-style',
+        plugins_url( 'blocks/build/index.css', __FILE__ ),
+        array( 'wp-edit-blocks' ),
+        filemtime( plugin_dir_path( __FILE__ ) . 'blocks/build/index.css' )
+    );
+}
+add_action( 'init', 'eot_enqueue_assets' );
+
+/**
+ * Register the block
+ */
+
+function eot_register_block() {
+    if ( ! function_exists( 'register_block_type' ) ) {
+        return;
+    }
+
+    register_block_type( 'eot/my-block', array(
+        'editor_script' => 'eot-block',
+        'editor_style'  => 'eot-block-editor-style', 
+    ) );
+}
+
+add_action( 'init', 'eot_register_block' );
+
+/**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */

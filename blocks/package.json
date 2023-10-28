@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@formatjs/icu-messageformat-parser": "^2.7.0"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^26.15.0"
+  },
+  "scripts": {
+    "start": "wp-scripts start",
+    "build": "wp-scripts build"
+  }
+}

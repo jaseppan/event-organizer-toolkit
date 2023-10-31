@@ -1,0 +1,17 @@
+#eot-resgistration-form {
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#eot-resgistration-form .form-group {
+    margin-bottom: 10px;
+}
+
+#eot-resgistration-form .form-group label {
+    font-weight: bold;
+}
+
+#eot-resgistration-form .form-group input {
+    width: 100%;
+}

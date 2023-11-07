@@ -69,7 +69,7 @@ function eot_submit_button($submit_button_text = 'Save Changes') {
 
 function eot_spinner( $id = 'eot-submit-button-loading' ) {
     ?>
-    <div id="<?php echo $id ?>" class="loadingio-spinner-spinner-2j6pek9axc1 hidden"><div class="ldio-7s7lo9flxqe">
+    <div id="<?php echo $id ?>" class="loadingio-spinner-spinner hidden"><div class="ldio">
     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
     </div></div>
     <?php

@@ -1,6 +1,7 @@
 <?php
 
-require_once plugin_dir_path( dirname( __FILE__ ) ) . 'blocks/includes/my-block.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'blocks/includes/student-registration-form.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'blocks/includes/participant-registration-form.php';
 
 /**
  *  Register the script for blocks
@@ -26,11 +27,14 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'blocks/includes/my-block.
 add_action( 'init', 'eot_enqueue_assets' );
 
 /**
- * Register the block
+ * Register the blocks
  */
 
  function eot_register_blocks() {
-    register_block_type( 'eot/my-block', array(
+    
+    // Register student registration form
+
+    register_block_type( 'eot/eot-student-registration-form', array(
         'editor_script' => 'eot-block',
         'editor_style'  => 'eot-block-editor-style', // if you have styles
         'attributes' => array(
@@ -39,17 +43,20 @@ add_action( 'init', 'eot_enqueue_assets' );
             ),
             // ... other attributes
         ),
-        'render_callback' => 'eot_render_my_block',
+        'render_callback' => 'eot_render_student_registration_form',
     ) );
 
-    //register_block_type( 'eot/my-block', array(
-    //    'attributes' => array(
-    //        'formID' => array(
-    //            'type' => 'number',
-    //        ),
-    //        // ... other attributes
-    //    ),
-    //    'render_callback' => 'eot_render_my_block',
-    //) );
+    // Register participant registration form
+    register_block_type( 'eot/eot-participant-registration-form', array(
+        'editor_script' => 'eot-block',
+        'editor_style'  => 'eot-block-editor-style', // if you have styles
+        'attributes' => array(
+            'formID' => array(
+                'type' => 'number',
+            ),
+            // ... other attributes
+        ),
+        'render_callback' => 'eot_render_participant_registration_form',
+    ) );
 }
 add_action( 'init', 'eot_register_blocks' );

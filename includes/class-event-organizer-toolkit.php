@@ -78,6 +78,7 @@ class Event_Organizer_Toolkit {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->define_post_types();
 		$this->disable_admin_notifications();
 
 	}
@@ -117,6 +118,12 @@ class Event_Organizer_Toolkit {
 		 * of the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/helper.php';
+		
+		/**
+		 * The class responsible for defining internationalization functionality
+		 * of the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-event-organizer-toolkit-post-types.php';
 
 		/**
 		 * The class responsible for defining styles and scripts for Event Organizer Toolkit admin pages
@@ -202,6 +209,21 @@ class Event_Organizer_Toolkit {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+
+	}
+
+	/**
+	 * Register custom post types.
+	 * 
+	 * @since    1.0.0
+	 * @access   private
+	 */
+
+	private function define_post_types() {
+
+		$plugin_post_types = new Event_Organizer_Toolkit_Post_Types( $this->get_plugin_name(), $this->get_version() );
+
+		// $this->loader->add_action( 'init', $plugin_post_types, 'register_post_types' );
 
 	}
 

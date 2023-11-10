@@ -31,21 +31,13 @@ add_action( 'init', 'eot_enqueue_assets' );
  */
 
  function eot_register_blocks() {
-    
     // Register student registration form
 
     register_block_type( 'eot/eot-student-registration-form', array(
         'editor_script' => 'eot-block',
         'editor_style'  => 'eot-block-editor-style', // if you have styles
-        'attributes' => array(
-            'formID' => array(
-                'type' => 'number',
-            ),
-            // ... other attributes
-        ),
         'render_callback' => 'eot_render_student_registration_form',
     ) );
-
     // Register participant registration form
     register_block_type( 'eot/eot-participant-registration-form', array(
         'editor_script' => 'eot-block',
@@ -57,6 +49,19 @@ add_action( 'init', 'eot_enqueue_assets' );
             // ... other attributes
         ),
         'render_callback' => 'eot_render_participant_registration_form',
+    ) );
+    
+    // Register event block
+    register_block_type( 'eot/event', array(
+        'editor_script' => 'eot-block',
+        'editor_style'  => 'eot-block-editor-style', // if you have styles
+        'attributes' => array(
+            'formID' => array(
+                'type' => 'number',
+            ),
+            // ... other attributes
+        ),
+        'render_callback' => 'eot_render_event_block',
     ) );
 }
 add_action( 'init', 'eot_register_blocks' );

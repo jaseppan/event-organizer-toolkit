@@ -75,7 +75,7 @@ class Event_Organizer_Toolkit_Post_Types {
 			'capability_type' => 'post',
 			'hierarchical' => false,
 			'rewrite' => array( 'slug' => 'events', 'with_front' => false ),
-			'supports' => array( 'title', 'editor', 'thumbnail', 'author', 'revisions', 'page-attributes' ),
+			'supports' => array( 'title', 'editor', 'thumbnail', 'author', 'revisions', 'custom-fields' ),
 			'has_archive' => true,
             // Enable gutenberg
 			'show_in_rest' => true,

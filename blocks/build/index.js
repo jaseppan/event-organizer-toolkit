@@ -61,11 +61,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _partials_CourseInformation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./partials/CourseInformation */ "./src/modules/student-registration-form/partials/CourseInformation.js");
+/* harmony import */ var _partials_InvoiceInformation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./partials/InvoiceInformation */ "./src/modules/student-registration-form/partials/InvoiceInformation.js");
+/* harmony import */ var _partials_ParticipantInformation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./partials/ParticipantInformation */ "./src/modules/student-registration-form/partials/ParticipantInformation.js");
+/* harmony import */ var _partials_Catering__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./partials/Catering */ "./src/modules/student-registration-form/partials/Catering.js");
+/* harmony import */ var _partials_InstrumentRelatedInformation__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./partials/InstrumentRelatedInformation */ "./src/modules/student-registration-form/partials/InstrumentRelatedInformation.js");
+/* harmony import */ var _partials_AdditionalInformation__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./partials/AdditionalInformation */ "./src/modules/student-registration-form/partials/AdditionalInformation.js");
 
 const {
   registerBlockType
 } = wp.blocks;
 
+
+
+
+
+
+
+// Import tab contents
 
 
 
@@ -84,35 +97,13 @@ function Edit(props) {
     title,
     metaData
   } = props;
+  console.log('Edit function called');
   if (!title) {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Please add a title and save the post before editing this block.')));
   }
   const {
     courseId,
-    courseName,
-    coursePrices,
-    invoiceName,
-    invoiceAddress,
-    invoiceCity,
-    invoiceZip,
-    invoiceCountry,
-    invoicePhone,
-    invoiceEmail,
-    participantName,
-    participantDataOfBirth,
-    accommodationPrice,
-    participantSex,
-    dateOfArrival,
-    dateOfDeparture,
-    catering,
-    meals,
-    diets,
-    instrument,
-    instrumentRent,
-    instrumentRentPrice,
-    skillDescription,
-    additionalInfo,
-    courseExpectations
+    coursePrices
   } = attributes;
 
   // Get post_id of course default language version
@@ -128,103 +119,38 @@ function Edit(props) {
   const tabs = [{
     name: 'Course Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Course Information', 'event-organized-toolkit'),
-    content: function () {
-      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-        className: "eot-notification notice"
-      }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Define course prices in this tab.', 'event-organizer-toolkit'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Course Name', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: title,
-        disabled: true
-      }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Course Id', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: courseId
-        // onChange={ ( event ) => setAttributes({ courseId: event.target.value }) }
-        ,
-        disabled: true
-      }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(CoursePrices, {
-        coursePrices: coursePrices,
-        setAttributes: setAttributes
-      }));
-    }
+    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_CourseInformation__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      title: title,
+      courseId: courseId,
+      coursePrices: coursePrices,
+      setAttributes: setAttributes
+    })
   }, {
     name: 'Invoice Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Invoice Information', 'event-organized-toolkit'),
-    content: function () {
-      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-        className: "eot-notification notice"
-      }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('This tab does not require editing', 'event-manager-toolbox'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Name', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: ""
-      }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Email', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: ""
-      }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Address', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: ""
-      }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('City', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: ""
-      }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Zip', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: ""
-      }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Country', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: ""
-      }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Phone', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: ""
-      }))));
-    }
+    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_InvoiceInformation__WEBPACK_IMPORTED_MODULE_8__["default"], null)
   }, {
     name: 'Participant Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Participant Information', 'event-organized-toolkit'),
-    content: function () {
-      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Name', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: ""
-      })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Date of Birth', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "text",
-        value: ""
-      })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Reserve Accommodation', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "checkbox",
-        value: ""
-      })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Arrival Date', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "date",
-        value: ""
-      })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Departure Date', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "date",
-        value: ""
-      })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Sex:', 'event-organizer-toolkit'), ";", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Male', 'event-organizer-toolkit')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Female', 'event-organizer-toolkit')))));
-    }
+    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_ParticipantInformation__WEBPACK_IMPORTED_MODULE_9__["default"], null)
   }, {
     name: 'Catering',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Catering', 'event-organized-toolkit'),
-    content: function () {
-      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Reserve Meals', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-        type: "checkbox",
-        value: ""
-      })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-        class: "eot-info-box"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Meal Prices:', 'event-organizer-toolkit')));
-    }
+    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_Catering__WEBPACK_IMPORTED_MODULE_10__["default"], null)
   }, {
     name: 'Instrument Related Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Instrument Related Information', 'event-organized-toolkit'),
-    content: function () {
-      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Test"));
-    }
+    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_InstrumentRelatedInformation__WEBPACK_IMPORTED_MODULE_11__["default"], null)
   }, {
     name: 'Additional Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Additional Information', 'event-organized-toolkit'),
-    content: function () {
-      return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Test"));
-    }
+    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_AdditionalInformation__WEBPACK_IMPORTED_MODULE_12__["default"], null)
   }];
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TabPanel, {
     className: "student-registration-form-tabs",
     activeClass: "active-tab",
     tabs: tabs
-  }, tab => tab.content());
+  }, tab => tab.content);
 }
 
 // Wrap your block's edit function with withSelect
@@ -393,67 +319,11 @@ registerBlockType('eot/eot-student-registration-form', {
       meta: '_eot_course_expectations'
     }
   },
-  // edit: function(props) {
-  //      return null;
-  // },
   edit: EnhancedEdit,
   save: function (props) {
     return null;
   }
 });
-function CoursePrices({
-  coursePrices,
-  setAttributes
-}) {
-  const updatePrice = (index, value) => {
-    const newPrices = [...coursePrices];
-    newPrices[index].price = parseFloat(value) || 0;
-    setAttributes({
-      coursePrices: newPrices
-    });
-  };
-  const updateLabel = (index, value) => {
-    const newPrices = [...coursePrices];
-    newPrices[index].label = value;
-    setAttributes({
-      coursePrices: newPrices
-    });
-  };
-  const addPrice = () => {
-    const newPrices = [...coursePrices, {
-      label: '',
-      price: 0
-    }];
-    setAttributes({
-      coursePrices: newPrices
-    });
-  };
-  const removePrice = index => {
-    const newPrices = [...coursePrices];
-    newPrices.splice(index, 1);
-    setAttributes({
-      coursePrices: newPrices
-    });
-  };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, coursePrices.map((price, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    key: index
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Price Label', 'text-domain'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    value: price.label || '',
-    onChange: event => updateLabel(index, event.target.value)
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Course price', 'text-domain'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text" // Use text type for manual decimal handling
-    ,
-    value: price.price || '',
-    onChange: event => updatePrice(index, event.target.value)
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    type: "button",
-    onClick: () => removePrice(index)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Remove', 'text-domain')))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    type: "button",
-    onClick: addPrice
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add Price', 'text-domain')));
-}
 function getDefaultLanguagePostId(postId) {
   let defaultLanguagePostId;
   if (typeof window.wpml_get_object_id === 'function') {
@@ -468,6 +338,271 @@ function getDefaultLanguagePostId(postId) {
   }
   return defaultLanguagePostId;
 }
+
+/***/ }),
+
+/***/ "./src/modules/student-registration-form/partials/AdditionalInformation.js":
+/*!*********************************************************************************!*\
+  !*** ./src/modules/student-registration-form/partials/AdditionalInformation.js ***!
+  \*********************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+function AdditionalInformation() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Additional Information', 'event-manager-toolkit')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("textarea", {
+    name: "additional_information",
+    id: "additional_information",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Additional Information', 'event-manager-toolkit'),
+    rows: "3"
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Expectations Towards the Course', 'event-manager-toolkit')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("textarea", {
+    name: "expectations_towards_the_course",
+    id: "expectations_towards_the_course",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Expectations Towards the Course', 'event-manager-toolkit'),
+    rows: "3"
+  })))));
+}
+/* harmony default export */ __webpack_exports__["default"] = (AdditionalInformation);
+
+/***/ }),
+
+/***/ "./src/modules/student-registration-form/partials/Catering.js":
+/*!********************************************************************!*\
+  !*** ./src/modules/student-registration-form/partials/Catering.js ***!
+  \********************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+function Categing() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Reserve Meals', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    value: ""
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "eot-info-box"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Meal Prices:', 'event-organizer-toolkit'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "eot-info-box-content"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "eot-info-box-content-inner"
+  }, "TEST"))));
+}
+/* harmony default export */ __webpack_exports__["default"] = (Categing);
+
+/***/ }),
+
+/***/ "./src/modules/student-registration-form/partials/CourseInformation.js":
+/*!*****************************************************************************!*\
+  !*** ./src/modules/student-registration-form/partials/CourseInformation.js ***!
+  \*****************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+function CourseInformation({
+  title,
+  courseId,
+  coursePrices,
+  setAttributes
+}) {
+  function CoursePrices({
+    coursePrices,
+    setAttributes
+  }) {
+    const updatePrice = (index, value) => {
+      const newPrices = [...coursePrices];
+      newPrices[index].price = parseFloat(value) || 0;
+      setAttributes({
+        coursePrices: newPrices
+      });
+    };
+    const updateLabel = (index, value) => {
+      const newPrices = [...coursePrices];
+      newPrices[index].label = value;
+      setAttributes({
+        coursePrices: newPrices
+      });
+    };
+    const addPrice = () => {
+      const newPrices = [...coursePrices, {
+        label: '',
+        price: 0
+      }];
+      setAttributes({
+        coursePrices: newPrices
+      });
+    };
+    const removePrice = index => {
+      const newPrices = [...coursePrices];
+      newPrices.splice(index, 1);
+      setAttributes({
+        coursePrices: newPrices
+      });
+    };
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, coursePrices.map((price, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      key: index
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Price Label', 'text-domain'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      type: "text",
+      value: price.label || '',
+      onChange: event => updateLabel(index, event.target.value)
+    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Course price', 'text-domain'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      type: "text" // Use text type for manual decimal handling
+      ,
+      value: price.price || '',
+      onChange: event => updatePrice(index, event.target.value)
+    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      type: "button",
+      onClick: () => removePrice(index)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Remove', 'text-domain')))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      type: "button",
+      onClick: addPrice
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add Price', 'text-domain')));
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "eot-notification notice"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Define course prices in this tab.', 'event-organizer-toolkit'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Course Name', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: title,
+    disabled: true
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Course Id', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: courseId
+    // onChange={ ( event ) => setAttributes({ courseId: event.target.value }) }
+    ,
+    disabled: true
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(CoursePrices, {
+    coursePrices: coursePrices,
+    setAttributes: setAttributes
+  }));
+}
+/* harmony default export */ __webpack_exports__["default"] = (CourseInformation);
+
+/***/ }),
+
+/***/ "./src/modules/student-registration-form/partials/InstrumentRelatedInformation.js":
+/*!****************************************************************************************!*\
+  !*** ./src/modules/student-registration-form/partials/InstrumentRelatedInformation.js ***!
+  \****************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+function InstrumentRelatedInformation() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Instrument', 'event-organizer-toolbox'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    name: "instrument"
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    name: "instrument_rental"
+  }), sprintf((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('I need to rent an instrument (%d €/day)', 'event-organizer-toolbox'), '5'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Short description of playing skill')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("textarea", {
+    name: "instrument_skill",
+    rows: "3"
+  })))));
+}
+/* harmony default export */ __webpack_exports__["default"] = (InstrumentRelatedInformation);
+
+/***/ }),
+
+/***/ "./src/modules/student-registration-form/partials/InvoiceInformation.js":
+/*!******************************************************************************!*\
+  !*** ./src/modules/student-registration-form/partials/InvoiceInformation.js ***!
+  \******************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+function InvoiceInformation() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "eot-notification notice"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('This tab does not require editing', 'event-manager-toolbox'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Name', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Email', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Address', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('City', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Zip', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Country', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Phone', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: ""
+  }))));
+}
+/* harmony default export */ __webpack_exports__["default"] = (InvoiceInformation);
+
+/***/ }),
+
+/***/ "./src/modules/student-registration-form/partials/ParticipantInformation.js":
+/*!**********************************************************************************!*\
+  !*** ./src/modules/student-registration-form/partials/ParticipantInformation.js ***!
+  \**********************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+function ParticipantInformation() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Name', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Date of Birth', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Reserve Accommodation', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Arrival Date', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "date",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Departure Date', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "date",
+    value: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Sex:', 'event-organizer-toolkit'), ";", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Male', 'event-organizer-toolkit')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Female', 'event-organizer-toolkit'))))));
+}
+/* harmony default export */ __webpack_exports__["default"] = (ParticipantInformation);
 
 /***/ }),
 

@@ -6,10 +6,22 @@ import './block.scss';
 import { withSelect } from '@wordpress/data';
 import { registerBlockStylePicker } from '@wordpress/blocks';
 import { useEffect } from '@wordpress/element';
+// Import tab contents
+import CourseInformation from './partials/CourseInformation';
+import InvoiceInformation from './partials/InvoiceInformation';
+import ParticipantInformation from './partials/ParticipantInformation';
+import Catering from './partials/Catering';
+import InstrumentRelatedInformation from './partials/InstrumentRelatedInformation';
+import AdditionalInformation from './partials/AdditionalInformation';
+
 
 // Block's edit function
 function Edit(props) {
+
+    
     const { attributes, setAttributes, isSaving, isAutoSaving, isPostSaving, title, metaData } = props;
+
+    console.log('Edit function called'); 
 
     if (!title) {
         return (
@@ -21,30 +33,7 @@ function Edit(props) {
 
     const { 
         courseId, 
-        courseName, 
         coursePrices,
-        invoiceName,
-        invoiceAddress,
-        invoiceCity,
-        invoiceZip,
-        invoiceCountry,
-        invoicePhone,
-        invoiceEmail,
-        participantName,
-        participantDataOfBirth,
-        accommodationPrice,
-        participantSex,
-        dateOfArrival,
-        dateOfDeparture,
-        catering,
-        meals,
-        diets,
-        instrument,
-        instrumentRent,
-        instrumentRentPrice,
-        skillDescription,
-        additionalInfo,
-        courseExpectations,
     } = attributes;
 
     // Get post_id of course default language version
@@ -60,213 +49,32 @@ function Edit(props) {
         {
             name: 'Course Information',
             title: __('Course Information', 'event-organized-toolkit'),
-            content: function() {
-                return (
-                    <div>
-                        <div className="eot-notification notice">
-                            <p>{__('Define course prices in this tab.', 'event-organizer-toolkit' )}</p>
-                        </div>
-                        <div>
-                            <label>
-                                { __('Course Name', 'event-organizer-toolkit') }:
-                                <input
-                                    type="text"
-                                    value={ title } 
-                                    disabled
-                                />
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                { __('Course Id', 'event-organizer-toolkit') }:
-                                <input
-                                    type="text"
-                                    value={ courseId } 
-                                    // onChange={ ( event ) => setAttributes({ courseId: event.target.value }) }
-                                    disabled
-                                />
-                            </label>
-                        </div>
-                        <CoursePrices coursePrices={coursePrices} setAttributes={setAttributes} />
-                    </div>
-                );
-            },
+            content: <CourseInformation title={title} courseId={courseId} coursePrices={coursePrices} setAttributes={setAttributes} />,
         },
         {
             name: 'Invoice Information',
             title: __('Invoice Information', 'event-organized-toolkit'),
-            content: function() {
-                return (
-                    <div>
-                        <div className="eot-notification notice">
-                            <p>{__('This tab does not require editing', 'event-manager-toolbox')}</p>
-                        </div>
-                        <div>
-                            <label>
-                                { __('Name', 'event-organizer-toolkit') }:
-                                <input
-                                    type="text"
-                                    value="" 
-                                />
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                { __('Email', 'event-organizer-toolkit') }:
-                                <input
-                                    type="text"
-                                    value="" 
-                                />
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                { __('Address', 'event-organizer-toolkit') }:
-                                <input
-                                    type="text"
-                                    value="" 
-                                />
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                { __('City', 'event-organizer-toolkit') }:
-                                <input
-                                    type="text"
-                                    value="" 
-                                />
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                { __('Zip', 'event-organizer-toolkit') }:
-                                <input
-                                    type="text"
-                                    value="" 
-                                />
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                { __('Country', 'event-organizer-toolkit') }:
-                                <input
-                                    type="text"
-                                    value="" 
-                                />
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                { __('Phone', 'event-organizer-toolkit') }:
-                                <input
-                                    type="text"
-                                    value="" 
-                                />
-                            </label>
-                        </div>
-                    </div>
-                )
-            },
+            content: <InvoiceInformation />,
         },
         {
             name: 'Participant Information',
             title: __('Participant Information', 'event-organized-toolkit'),
-            content: function() {
-                return (
-                    <div>
-                        <label>
-                            { __('Name', 'event-organizer-toolkit') }:
-                            <input
-                                type="text"
-                                value="" 
-                            />
-                        </label>
-                        <label>
-                            { __('Date of Birth', 'event-organizer-toolkit') }:
-                            <input
-                                type="text"
-                                value="" 
-                            />
-                        </label>
-                        <label>
-                            { __('Reserve Accommodation', 'event-organizer-toolkit') }:
-                            <input
-                                type="checkbox"
-                                value=""
-                            />
-                        </label>
-                        <label>
-                            { __('Arrival Date', 'event-organizer-toolkit') }:
-                            <input
-                                type="date"
-                                value="" 
-                            />
-                        </label>
-                        <label>
-                            { __('Departure Date', 'event-organizer-toolkit') }:
-                            <input
-                                type="date"
-                                value="" 
-                            />
-                        </label>
-                        <label>
-                            { __('Sex:', 'event-organizer-toolkit') };
-                            <select>
-                                <option>{ __('Male', 'event-organizer-toolkit') }</option>
-                                <option>{ __('Female', 'event-organizer-toolkit') }</option>
-                            </select>
-                        </label>
-                    </div>
-                )
-            },
+            content: <ParticipantInformation />,
         },
         {
             name: 'Catering',
             title: __('Catering', 'event-organized-toolkit'),
-            content: function() {
-                return (
-                    <div>
-                        <label>
-                            { __('Reserve Meals', 'event-organizer-toolkit') }:
-                            <input
-                                type="checkbox"
-                                value=""
-                            />
-                        </label>
-                        <div class="eot-info-box">
-                            { __('Meal Prices:', 'event-organizer-toolkit') }
-                            {/* Get meal price info from database table prefix.eot_meal_types */}
-                            
-                            {/* Get data for list form database table prefix.eot_meals */}
-                            
-
-                        </div>
-
-                    </div>
-                )
-            },
+            content: <Catering/>,
         },
         {
             name: 'Instrument Related Information',
             title: __('Instrument Related Information', 'event-organized-toolkit'),
-            content: function() {
-                return (
-                    <div>
-                        <label>Test</label>
-                    </div>
-                )
-            },
+            content: <InstrumentRelatedInformation/>
         },
         {
             name: 'Additional Information',
             title: __('Additional Information', 'event-organized-toolkit'),
-            content: function() {
-                return (
-                    <div>
-                        <label>Test</label>
-                    </div>
-                )
-            },
+            content: <AdditionalInformation/>
         },
     ]
 
@@ -277,7 +85,7 @@ function Edit(props) {
             activeClass="active-tab"
             tabs={ tabs }>
             {
-                ( tab ) => tab.content()
+                ( tab ) => tab.content
             }
         </TabPanel>
 
@@ -446,71 +254,12 @@ registerBlockType( 'eot/eot-student-registration-form', {
         },
     },
    
-    
-    // edit: function(props) {
-    //      return null;
-    // },
     edit: EnhancedEdit,
     save: function(props) {
         return null;
     },
 });
 
-function CoursePrices({ coursePrices, setAttributes }) {
-    const updatePrice = (index, value) => {
-        const newPrices = [...coursePrices];
-        newPrices[index].price = parseFloat(value) || 0;
-        setAttributes({ coursePrices: newPrices });
-    };
-
-    const updateLabel = (index, value) => {
-        const newPrices = [...coursePrices];
-        newPrices[index].label = value;
-        setAttributes({ coursePrices: newPrices });
-    };
-
-    const addPrice = () => {
-        const newPrices = [...coursePrices, { label: '', price: 0 }];
-        setAttributes({ coursePrices: newPrices });
-    };
-
-    const removePrice = (index) => {
-        const newPrices = [...coursePrices];
-        newPrices.splice(index, 1);
-        setAttributes({ coursePrices: newPrices });
-    };
-
-    return (
-        <div>
-            {coursePrices.map((price, index) => (
-                <div key={index}>
-                    <label>
-                        { __('Price Label', 'text-domain') }:
-                        <input
-                            type="text"
-                            value={ price.label || '' } 
-                            onChange={ ( event ) => updateLabel(index, event.target.value) }
-                        />
-                    </label>
-                    <label>
-                        { __('Course price', 'text-domain') }:
-                        <input
-                            type="text" // Use text type for manual decimal handling
-                            value={ price.price || '' } 
-                            onChange={ ( event ) => updatePrice(index, event.target.value) }
-                        />
-                    </label>
-                    <button type="button" onClick={() => removePrice(index)}>
-                        { __('Remove', 'text-domain') }
-                    </button>
-                </div>
-            ))}
-            <button type="button" onClick={addPrice}>
-                { __('Add Price', 'text-domain') }
-            </button>
-        </div>
-    );
-}
 
 function getDefaultLanguagePostId(postId) {
     let defaultLanguagePostId;

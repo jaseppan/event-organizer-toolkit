@@ -48,6 +48,7 @@ class Event_Organizer_Toolkit_Activator {
         $sql .= self::create_eot_fields_table();
         $sql .= self::create_eot_field_values_table();
         $sql .= self::create_eot_meals_table();
+        $sql .= self::create_eot_meal_types_table();
         $sql .= self::create_eot_accommodations_table();
         $sql .= self::create_eot_participants_meals_table();
         $sql .= self::create_eot_participants_accommodation_table();
@@ -201,6 +202,23 @@ class Event_Organizer_Toolkit_Activator {
 			end_time time NOT NULL,
 			venue varchar(50) NOT NULL,
 			menu varchar(50) NOT NULL,
+			PRIMARY KEY (id)
+		);";
+
+		return $sql;
+
+	}
+	
+	public static function create_eot_meal_types_table() {
+
+		global $wpdb;
+
+		$sql = "CREATE TABLE " . $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_MEAL_TYPES_TABLE . " (
+			id INT NOT NULL AUTO_INCREMENT,
+			type varchar(255) NOT NULL,
+			start_time time NOT NULL, 
+			end_time time NOT NULL,
+			price varchar(50) NOT NULL,
 			PRIMARY KEY (id)
 		);";
 

@@ -72,6 +72,9 @@ class Event_Organizer_Toolkit_Request_Handler {
         $text_fields = array();
         $date_fields = array();
         $time_fields = array();
+        $int_fields = array();
+        $float_fields = array();
+        $numeric_fields = array();
         $repeater_fields = array();
 
         foreach( $fields as $field ) {
@@ -90,6 +93,15 @@ class Event_Organizer_Toolkit_Request_Handler {
     
                 if( $field['type'] == 'time' ) 
                     $time_fields[] = $field['name'];
+                
+                if( $field['type'] == 'int' )
+                    $int_fields[] = $field['name'];
+                
+                if( $field['type'] == 'float' )
+                    $float_fields[] = $field['name'];
+                
+                if( $field['type'] == 'numeric' )
+                    $numeric_fields[] = $field['name'];
             }
 
         } 
@@ -100,7 +112,6 @@ class Event_Organizer_Toolkit_Request_Handler {
         if( !empty( $repeater_fields ) ) {
             $this->validate_arrays( $repeater_fields, $params );
         }
-        // wp_send_json_success( 'test' );
 
         if( !empty( $text_fields ) )
             $this->validate_texts( $text_fields, $params );
@@ -110,9 +121,15 @@ class Event_Organizer_Toolkit_Request_Handler {
 
         if( !empty( $time_fields ) )
             $this->validate_times( $time_fields, $data );
-
-            
         
+        if( !empty( $float_fields ) )
+            $this->validate_floats( $float_fields, $data );
+
+        if( !empty( $int_fields ) )
+            $this->validate_integers( $int_fields, $data );
+        
+        if( !empty( $numeric_fields ) )
+            $this->validate_numerics( $numeric_fields, $data );
 
         // parent::validate_required_fields( $this->get_required_fields, $params );
 
@@ -152,6 +169,52 @@ class Event_Organizer_Toolkit_Request_Handler {
                 $error_message = sprintf(esc_html__('Parameter "%s" must be text'), esc_html($text));
                 $eot_errors->add($text, $error_message);
             }
+        }
+
+        return $eot_errors;
+
+    }
+    
+    /**
+     * Validate texts
+     * @since 1.0.0
+     */
+
+    public function validate_floats( $floats, $params ) {
+
+        global $eot_errors;
+
+        foreach ($floats as $float) {
+
+            // Validate that value $float is float
+            if ( isset($params[$float]) && !empty($params[$float]) && !is_float($params[$float]) ) {
+                $error_message = sprintf(esc_html__('Parameter "%s" must be float'), esc_html($params[$float]));
+                $eot_errors->add($float, $error_message);
+            }
+
+        }
+
+        return $eot_errors;
+
+    }
+    
+    /**
+     * Validate numerics
+     * @since 1.0.0
+     */
+
+    public function validate_numerics( $numerics, $params ) {
+
+        global $eot_errors;
+
+        foreach ($numerics as $number) {
+
+            // Validate that value $float is float
+            if ( isset($params[$number]) && !empty($params[$number]) && !is_numeric($params[$number]) ) {
+                $error_message = sprintf(esc_html__('Parameter "%s" must be numeric'), esc_html($params[$number]));
+                $eot_errors->add($number, $error_message);
+            }
+
         }
 
         return $eot_errors;
@@ -619,12 +682,18 @@ class Event_Organizer_Toolkit_Request_Handler {
                 $sql = $wpdb->prepare( "SELECT count(*) FROM " . $table . $query_tail . $query_values );
                 $total_count = (int) $wpdb->get_var( $sql );
 
-                $items_per_page = isset($_GET['items_per_page']) ? (int) $_GET['items_per_page'] : '';
+                $items_per_page = isset($_GET['items_per_page']) ? (int) $_GET['items_per_page'] : -1;
+
+                if( $items_per_page > 0 ) {
+                    // Get a order number of the first item
+                    $first_item = (int) $_GET['page'];
+                    $first_item = $first_item * $items_per_page - $items_per_page + 1;
+                    $last_item = $first_item + $count - 1;
+                } else {
+                    $first_item = 1;
+                    $last_item = $count;
+                }
     
-                // Get a order number of the first item
-                $first_item = (int) $_GET['page'];
-                $first_item = $first_item * $items_per_page - $items_per_page + 1;
-                $last_item = $first_item + $count - 1;
 
                 if( $count > 1 ) {
                     $message = sprintf( esc_html__('Showing %s (%s to %s) of %s items', 'event-organizer-toolkit'), esc_html($count), esc_html($first_item), esc_html($last_item), esc_html($total_count));

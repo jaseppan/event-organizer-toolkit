@@ -181,17 +181,41 @@ function Edit(props) {
                                 value="" 
                             />
                         </label>
-                    </div>
-                )
-            },
-        },
-        {
-            name: 'Accommodation',
-            title: __('Accommodation', 'event-organized-toolkit'),
-            content: function() {
-                return (
-                    <div>
-                        <label>Test</label>
+                        <label>
+                            { __('Date of Birth', 'event-organizer-toolkit') }:
+                            <input
+                                type="text"
+                                value="" 
+                            />
+                        </label>
+                        <label>
+                            { __('Reserve Accommodation', 'event-organizer-toolkit') }:
+                            <input
+                                type="checkbox"
+                                value=""
+                            />
+                        </label>
+                        <label>
+                            { __('Arrival Date', 'event-organizer-toolkit') }:
+                            <input
+                                type="date"
+                                value="" 
+                            />
+                        </label>
+                        <label>
+                            { __('Departure Date', 'event-organizer-toolkit') }:
+                            <input
+                                type="date"
+                                value="" 
+                            />
+                        </label>
+                        <label>
+                            { __('Sex:', 'event-organizer-toolkit') };
+                            <select>
+                                <option>{ __('Male', 'event-organizer-toolkit') }</option>
+                                <option>{ __('Female', 'event-organizer-toolkit') }</option>
+                            </select>
+                        </label>
                     </div>
                 )
             },
@@ -202,7 +226,22 @@ function Edit(props) {
             content: function() {
                 return (
                     <div>
-                        <label>Test</label>
+                        <label>
+                            { __('Reserve Meals', 'event-organizer-toolkit') }:
+                            <input
+                                type="checkbox"
+                                value=""
+                            />
+                        </label>
+                        <div class="eot-info-box">
+                            { __('Meal Prices:', 'event-organizer-toolkit') }
+                            {/* Get meal price info from database table prefix.eot_meal_types */}
+                            
+                            {/* Get data for list form database table prefix.eot_meals */}
+                            
+
+                        </div>
+
                     </div>
                 )
             },

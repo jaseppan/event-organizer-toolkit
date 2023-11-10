@@ -11,7 +11,7 @@
  * @author     Janne Seppänen <j.v.seppanen@gmail.com>
  */
 
- class Event_Organizer_Toolkit_Meals_Handler extends Event_Organizer_Toolkit_Request_Handler {
+ class Event_Organizer_Toolkit_Meal_Types_Handler extends Event_Organizer_Toolkit_Request_Handler {
 
     /**
 	 * The database table for meals.
@@ -34,7 +34,7 @@
  
          global $wpdb;
  
-         $this->table = $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_MEALS_TABLE;
+         $this->table = $wpdb->prefix . EVENT_ORGANIZER_TOOLKIT_MEAL_TYPES_TABLE;
  
      }
 
@@ -47,18 +47,11 @@
     public function get_fields() {
         $fields = array(
             array(
-                'name' => 'title',
-                'label' => __('Title', 'event-organizer-toolkit'),
+                'name' => 'type',
+                'label' => __('Type', 'event-organizer-toolkit'),
                 'type' => 'select',
                 'attributes' => 'required',
                 'options' => $this->get_meal_names(),
-                // 'container-classes' => '',
-            ),
-            array(
-                'name' => 'date',
-                'label' => __('Date', 'event-organizer-toolkit'),
-                'type' => 'date',
-                'attributes' => 'required',
                 // 'container-classes' => '',
             ),
             array(
@@ -74,19 +67,11 @@
                 // 'container-classes' => '',
             ),
             array(
-                'name' => 'venue',
-                'label' => __('Venue', 'event-organizer-toolkit'),
-                // 'type' => '',
+                'name' => 'price',
+                'label' => __('Price', 'event-organizer-toolkit'),
+                'type' => 'numeric',
                 // 'container-classes' => '',
             ),
-            array(
-                'name' => 'menu',
-                'label' => __('Menu', 'event-organizer-toolkit'),
-                // 'type' => '',
-                // 'container-classes' => '',
-            ),
-            
-            
             
         );
 
@@ -118,7 +103,7 @@
      public function update( WP_REST_Request $request ) {
  
         $fields = $this->get_fields();
-        $property_name = 'Meal';
+        $property_name = 'Meal types';
         parent::updater( $fields, $request, $property_name );
  
      }
@@ -137,7 +122,7 @@
                 'placeholder' => '%d', 
             ),
             array(
-                'key' => 'title',
+                'key' => 'type',
                 'placeholder' => '%s',
             ),
         );
@@ -160,7 +145,7 @@
                 'placeholder' => '%d', 
             ),
             array(
-                'key' => 'title',
+                'key' => 'type',
                 'placeholder' => '%s',
             )
         );

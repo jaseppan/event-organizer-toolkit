@@ -42,6 +42,14 @@ class Event_Organizer_Toolkit_Rest_Api {
         add_action('rest_api_init', array($this, 'delete_parent'));
         add_action('rest_api_init', array($this, 'delete_parent'));
         
+        // Meal types
+        add_action('rest_api_init', array($this, 'add_meal_type'));
+        add_action('rest_api_init', array($this, 'update_meal_type'));
+        add_action('rest_api_init', array($this, 'list_meal_types'));
+        add_action('rest_api_init', array($this, 'get_meal_type'));
+        add_action('rest_api_init', array($this, 'edit_meal_type'));
+        add_action('rest_api_init', array($this, 'delete_meal_type'));
+        
         // Meals
         add_action('rest_api_init', array($this, 'add_meal'));
         add_action('rest_api_init', array($this, 'update_meal'));
@@ -546,6 +554,128 @@ class Event_Organizer_Toolkit_Rest_Api {
                  'callback' => function($request) {
                      require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meals.php' );
                      $handler = NEW Event_Organizer_Toolkit_Meals_Handler();
+                     $handler->delete( $request );
+                 },
+                 'permission_callback' => function () {
+                    return $this->validate_cookie();
+                  }
+             )
+        );
+    }
+
+    /**
+     * Routes to for meal types handling
+     */
+
+    /**
+     * Endpoint to add new meal type
+     * @since 1.0.0
+     */
+
+     public function add_meal_type() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/add-meal-type',array(
+                 'methods' => 'POST',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meal-types.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Meal_types_Handler();
+                     $handler->update( $request );
+                 },
+                 'permission_callback' => function () {
+                    return $this->validate_cookie();
+                  }
+             )
+         );
+    }
+    
+    /**
+     * Endpoint to update meal type
+     * @since 1.0.0
+     */
+
+     public function update_meal_type() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/update-meal-type',array(
+                 'methods' => 'PUT',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meal-types.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Meal_Types_Handler();
+                     $handler->update( $request );
+                 },
+                 'permission_callback' => function () {
+                    return $this->validate_cookie();
+                  }
+             )
+         );
+    }
+
+    /**
+     * Endpoint to list meal types
+     * @since 1.0.0
+     */
+    
+    public function list_meal_types() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/list-meal-types',array(
+                 'methods' => 'GET',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meal-types.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Meal_Types_Handler();
+                     $handler->list( $request );
+                 },
+                 'permission_callback' => '__return_true',
+             )
+         );
+    }
+
+    /**
+     * Endpoint to get meal type
+     * @since 1.0.0
+     */
+
+     public function get_meal_type() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/get-meal-type',array(
+                 'methods' => 'GET',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meal-types.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Meal_Types_Handler();
+                     $handler->get( $request );
+                 },
+                 'permission_callback' => function () {
+                    return $this->validate_cookie();
+                  }
+             )
+         );
+    }
+
+    /**
+     * Endpoint to edit meal type
+     * @since 1.0.0
+     */
+
+    public function edit_meal_type() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/edit-meal-type',array(
+                 'methods' => 'PATCH',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meal-types.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Meal_Types_Handler();
+                     $handler->edit( $request );
+                 },
+                 'permission_callback' => function () {
+                    return $this->validate_cookie();
+                  }
+             )
+         );
+    }
+    
+    /**
+     * Endpoint to delete meal type
+     * @since 1.0.0
+     */
+
+    public function delete_meal_type() {
+        register_rest_route( 'event-organizer-toolkit/v1', '/delete-meal-type',array(
+                 'methods' => 'DELETE',
+                 'callback' => function($request) {
+                     require_once( EVENT_ORGANIZER_TOOLKIT_DIR . 'rest-api/models/meal-types.php' );
+                     $handler = NEW Event_Organizer_Toolkit_Meal_Types_Handler();
                      $handler->delete( $request );
                  },
                  'permission_callback' => function () {

@@ -216,6 +216,51 @@ class Event_Organizer_Toolkit_Admin {
 				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-meal',
 			),
+			// Add meal type
+			array(
+				'page' => 'event-organizer-toolkit-meal-types',
+				'action' => 'add',
+				'url' => rest_url('event-organizer-toolkit/v1/add-meal-type'),
+				'method' => 'POST',
+			),
+			// Edit meal
+			array(
+				'page' => 'event-organizer-toolkit-meal-types',
+				'action' => 'edit',
+				'url' => rest_url('event-organizer-toolkit/v1/update-meal-type'),
+				'method' => 'PUT',
+				'get_url' => rest_url('event-organizer-toolkit/v1/get-meal-type'),
+				'item_id' => (isset($_GET['id'])) ? (int) $_GET['id'] : '',
+			),
+			// List meal
+			array(
+				'page' => 'event-organizer-toolkit-meal-types',
+				'action' => 'list',
+				'url' => rest_url('event-organizer-toolkit/v1/list-meal-types'),
+				'method' => 'GET',
+				// Define fields in list view
+				'fields' => array(
+					array(					
+						'name' => 'type',
+						'label' => __( 'Title', 'event-organizer-toolkit' ),
+					),
+					array(					
+						'name' => 'start_time',
+						'label' => __( 'Start Time', 'event-organizer-toolkit' ),
+						'format' => 'time'
+					),
+					array(					
+						'name' => 'end_time',
+						'label' => __( 'End Time', 'event-organizer-toolkit' ),
+						'format' => 'time'
+					),
+					array(					
+						'name' => 'price',
+						'label' => __( 'Price', 'event-organizer-toolkit' ),
+					)
+				),
+				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-meal-type',
+			),
 			// Add Event type
 			array(
 				'page' => 'event-organizer-toolkit-event-types',

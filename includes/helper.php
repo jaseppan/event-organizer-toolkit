@@ -23,6 +23,7 @@ function is_eot_admin_page() {
         'event-organizer-toolkit-events',
         'event-organizer-toolkit-participants',
         'event-organizer-toolkit-meals',
+        'event-organizer-toolkit-meal-types',
         'event-organizer-toolkit-accommodations',
         'event-organizer-toolkit-forms',
     );

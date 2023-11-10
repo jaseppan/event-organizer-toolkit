@@ -49,6 +49,15 @@
          'event-organizer-toolkit-meals',
          'event_organizer_toolkit_meals_page'
      );
+
+     add_submenu_page(
+        'event-organizer-toolkit',
+        'Meal Types',
+        'Meal Types',
+        'manage_options',
+        'event-organizer-toolkit-meal-types',
+        'event_organizer_toolkit_meal_types_page'
+    );
  
      add_submenu_page(
          'event-organizer-toolkit',
@@ -119,6 +128,25 @@
         require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'rest-api/models/meals.php' );
 
     $property_object = new Event_Organizer_Toolkit_Meals_Handler();
+
+    event_organizer_toolkit_admin_view( 
+        $page_title, 
+        $singular_title, 
+        $page_slug,
+        $property_object
+    );
+ }
+ 
+ // Callback function for the Meal types sub-menu page
+ function event_organizer_toolkit_meal_types_page() {
+     // Your Meals page content goes here
+    $page_title = __('Meal types', 'event-organizer-toolkit');
+    $singular_title = __('Meal type', 'event-organizer-toolkit');
+    $page_slug = 'event-organizer-toolkit-meal-types';
+    if( !class_exists('Event_Organizer_Toolkit_Meal_Types_Handler') )
+        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'rest-api/models/meal-types.php' );
+
+    $property_object = new Event_Organizer_Toolkit_Meal_Types_Handler();
 
     event_organizer_toolkit_admin_view( 
         $page_title, 

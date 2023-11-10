@@ -41,8 +41,11 @@ class Event_Organizer_Toolkit_Post_Types {
         
         add_action( 'init', array( $this, 'add_events_post_type' ) );
         add_action( 'init', array( $this, 'add_events_taxonomies' ) );
+        add_action( 'init', array( $this, 'events_post_type_block_template' ) );
         add_action( 'init', array( $this, 'add_courses_post_type' ) );
         add_action( 'init', array( $this, 'add_courses_taxonomies' ) );
+        add_action( 'init', array( $this, 'courses_post_type_block_template' ) );
+        add_action( 'init', array( $this, 'register_course_post_meta' ) );
     
     }
 
@@ -110,6 +113,19 @@ class Event_Organizer_Toolkit_Post_Types {
         register_taxonomy( 'event-category', array( 'event' ), $args );
     }
 
+    public function events_post_type_block_template() {
+        $post_type_object = get_post_type_object('events');
+        $post_type_object->template = array(
+            array('eot/event', array(
+                
+            )),
+            // Add more blocks as needed
+        );
+        $post_type_object->template_lock = 'all'; // Optional: Lock the template to prevent users from adding or removing blocks
+    }
+    
+    
+
     /**
      * Add courses post type
      */
@@ -140,7 +156,7 @@ class Event_Organizer_Toolkit_Post_Types {
             'has_archive' => true,
             'hierarchical' => false,
             'menu_position' => null,
-            'supports' => array( 'title', 'editor', 'thumbnail' ),
+            'supports' => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
             'menu_icon' => 'dashicons-book',
             // Add support for gutenberg
             'show_in_rest' => true,
@@ -176,5 +192,64 @@ class Event_Organizer_Toolkit_Post_Types {
             // add support for rest api
             'show_in_rest' => true,
         );
+
+    }
+
+    /**
+     * Load blocks for new course posts automatically
+     * 
+     * @return void
+     */
+    
+    public function courses_post_type_block_template() {
+        $post_type_object = get_post_type_object('courses');
+        $post_type_object->template = array(
+            array('eot/eot-student-registration-form', array(
+                
+            )),
+            // Add more blocks as needed
+        );
+        $post_type_object->template_lock = 'all'; // Optional: Lock the template to prevent users from adding or removing blocks
+    }
+
+    /**
+     * Register post meta for course post type
+     * 
+     * @return void
+     */
+
+    public function register_course_post_meta() {
+        
+        register_post_meta(
+            'courses',
+            '_eot_course_prices',
+            array(
+                'show_in_rest'       => array(
+                    'schema' => array(
+                        'type'  => 'array',
+                        'items' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                'label' => array (
+                                    'type' => 'string',
+                                ),
+                                'price' => array (
+                                    'type' => 'number',
+                                )
+                            )
+                        )
+                        
+                    )
+                ),
+                'single'             => true,
+                'type'               => 'array',
+                //'sanitize_callback'  => 'wp_kses_post',
+                'auth_callback' => function() {
+                    return current_user_can( 'edit_posts' );
+                }
+            ),
+            ''
+        );
+
     }
 }

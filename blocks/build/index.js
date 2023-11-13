@@ -205,118 +205,6 @@ registerBlockType('eot/eot-student-registration-form', {
           }
         }
       }
-    },
-    // Invoice information
-    invoiceName: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_invoice_name'
-    },
-    invoiceAddress: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_invoice_address'
-    },
-    invoiceCity: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_invoice_city'
-    },
-    invoiceZip: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_invoice_zip'
-    },
-    invoiceCountry: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_invoice_country'
-    },
-    invoicePhone: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_invoice_phone'
-    },
-    invoiceEmail: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_invoice_email'
-    },
-    // Participant information
-    participantName: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_participant_name'
-    },
-    participantDataOfBirth: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_participant_data_of_birth'
-    },
-    // Accommodation
-    accommodationPrice: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_accommodation_price'
-    },
-    participantSex: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_participant_sex'
-    },
-    dateOfArrival: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_date_of_arrival'
-    },
-    dateOfDeparture: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_date_of_departure'
-    },
-    // Catering
-    catering: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_catering'
-    },
-    // select meals
-    meals: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_meals'
-    },
-    diets: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_diets'
-    },
-    // Instrument related information
-    instrument: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_instrument'
-    },
-    instrumentRent: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_instrument_rent'
-    },
-    instrumentRentPrice: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_instrument_rent_price'
-    },
-    // Additional information
-    additionalInfo: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_additional_info'
-    },
-    courseExpectations: {
-      type: 'string',
-      sourse: 'meta',
-      meta: '_eot_course_expectations'
     }
   },
   edit: EnhancedEdit,
@@ -383,6 +271,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _CateringInfo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CateringInfo */ "./src/modules/student-registration-form/partials/CateringInfo.js");
+
 
 
 
@@ -396,9 +286,56 @@ function Categing() {
     class: "eot-info-box-content"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "eot-info-box-content-inner"
-  }, "TEST"))));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CateringInfo__WEBPACK_IMPORTED_MODULE_2__["default"], null)))));
 }
 /* harmony default export */ __webpack_exports__["default"] = (Categing);
+
+/***/ }),
+
+/***/ "./src/modules/student-registration-form/partials/CateringInfo.js":
+/*!************************************************************************!*\
+  !*** ./src/modules/student-registration-form/partials/CateringInfo.js ***!
+  \************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const {
+  Component
+} = wp.element;
+const {
+  Spinner
+} = wp.components;
+class CateringInfo extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: [],
+      loading: true
+    };
+  }
+  componentDidMount() {
+    this.runApiFetch();
+  }
+  runApiFetch() {
+    wp.apiFetch({
+      path: 'event-organizer-toolkit/v1/list-meal-types'
+    }).then(data => {
+      this.setState({
+        list: data.data,
+        loading: false
+      });
+    });
+  }
+  render() {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, console.log(this.state.list.data), this.state.list.data.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+      key: item.id
+    }, "Type: ", item.type, ", Price: ", item.price))));
+  }
+}
+/* harmony default export */ __webpack_exports__["default"] = (CateringInfo);
 
 /***/ }),
 

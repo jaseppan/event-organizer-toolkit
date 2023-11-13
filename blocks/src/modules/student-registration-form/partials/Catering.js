@@ -1,7 +1,10 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import CateringInfo from './CateringInfo';
+
 
 function Categing() {
+    
     return (
         <div>
             <label>
@@ -15,7 +18,7 @@ function Categing() {
                 { __('Meal Prices:', 'event-organizer-toolkit') }
                 <div class="eot-info-box-content">
                     <div class="eot-info-box-content-inner">
-                        TEST
+                        <CateringInfo />
                     </div>
                 </div>
             </div>

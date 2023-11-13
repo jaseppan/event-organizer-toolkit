@@ -200,7 +200,7 @@ class Event_Organizer_Toolkit_Admin {
 			array(
 				'page' => 'event-organizer-toolkit-meals',
 				'action' => 'list',
-				'url' => rest_url('event-organizer-toolkit/v1/list-meals'),
+				'url' => rest_url('event-organizer-toolkit/v1/list-meals?order_by[]=start_time&order_by[]=date'),
 				'method' => 'GET',
 				// Define fields in list view
 				'fields' => array(
@@ -213,10 +213,6 @@ class Event_Organizer_Toolkit_Admin {
 						'label' => __( 'Date', 'event-organizer-toolkit' ),
 						'format' => 'date'
 					),
-					array(					
-						'name' => 'order_num',
-						'label' => __( 'Order Number', 'event-organizer-toolkit' ),
-					)
 				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-meal',
 			),
@@ -240,7 +236,7 @@ class Event_Organizer_Toolkit_Admin {
 			array(
 				'page' => 'event-organizer-toolkit-meal-types',
 				'action' => 'list',
-				'url' => rest_url('event-organizer-toolkit/v1/list-meal-types'),
+				'url' => rest_url('event-organizer-toolkit/v1/list-meal-types?order_by=start_time'),
 				'method' => 'GET',
 				// Define fields in list view
 				'fields' => array(
@@ -262,10 +258,6 @@ class Event_Organizer_Toolkit_Admin {
 						'name' => 'price',
 						'label' => __( 'Price', 'event-organizer-toolkit' ),
 					),
-					array(					
-						'name' => 'order_num',
-						'label' => __( 'Order Number', 'event-organizer-toolkit' ),
-					)
 				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-meal-type',
 			),

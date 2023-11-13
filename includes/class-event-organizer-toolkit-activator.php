@@ -202,7 +202,6 @@ class Event_Organizer_Toolkit_Activator {
 			end_time time NOT NULL,
 			venue varchar(50) NOT NULL,
 			menu varchar(50) NOT NULL,
-			order_num int NOT NULL,
 			PRIMARY KEY (id)
 		);";
 
@@ -220,7 +219,6 @@ class Event_Organizer_Toolkit_Activator {
 			start_time time NOT NULL, 
 			end_time time NOT NULL,
 			price varchar(50) NOT NULL,
-			order_num int NOT NULL,
 			PRIMARY KEY (id)
 		);";
 

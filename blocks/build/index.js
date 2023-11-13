@@ -326,7 +326,7 @@ class CateringCheckboxes extends Component {
   }
   runApiFetch() {
     wp.apiFetch({
-      path: 'event-organizer-toolkit/v1/list-meals'
+      path: 'event-organizer-toolkit/v1/list-meals?order=asc&order_by[]=start_time'
     }).then(data => {
       console.log(data.data);
       this.setState({
@@ -381,7 +381,7 @@ class CateringInfo extends Component {
   }
   runApiFetch() {
     wp.apiFetch({
-      path: 'event-organizer-toolkit/v1/list-meal-types'
+      path: 'event-organizer-toolkit/v1/list-meal-types?order=asc&order_by=start_time'
     }).then(data => {
       this.setState({
         list: data.data,

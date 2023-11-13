@@ -17,7 +17,7 @@ class CateringInfo extends Component {
  
 	runApiFetch() {
 		wp.apiFetch({
-			path: 'event-organizer-toolkit/v1/list-meal-types',
+			path: 'event-organizer-toolkit/v1/list-meal-types?order=asc&order_by=start_time',
 		}).then(data => {
             
 			this.setState({

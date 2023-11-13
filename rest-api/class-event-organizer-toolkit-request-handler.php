@@ -664,8 +664,7 @@ class Event_Organizer_Toolkit_Request_Handler {
             $data = $wpdb->get_results( $sql, ARRAY_A );
         }
 
-        
-
+        // wp_send_json_success( $wpdb->last_query ); // For debugging
         // wp_send_json_success( $data ); // For debugging
 
         if ( ! $data ) {
@@ -770,11 +769,11 @@ class Event_Organizer_Toolkit_Request_Handler {
             );
 
         if( isset( $_GET['order_by'] ) )
-            $keywords['order_by'] = sanitize_text_field( $_GET['order_by'] );
+            $keywords['order_by'] = $_GET['order_by'];
 
-        if( isset($_GET['order']) )
-            $keywords['order'] = sanitize_text_field( $_GET['order'] );
-
+        if( isset($_GET['order']) && is_string( $_GET['order'] ) )
+            $keywords['order'] = $_GET['order'];
+        
         if( isset($_GET['page']) ) 
             $keywords['page'] = (int) $_GET['page'];
 
@@ -794,11 +793,43 @@ class Event_Organizer_Toolkit_Request_Handler {
             }   
         }
         
-        if( isset($keywords['order_by']) )
-            $keywords_str .= ' ORDER BY ' . $keywords['order_by'];
+        if( isset($keywords['order_by']) ) {
+            
+            if( is_array( $keywords['order_by'] ) ) {
 
-        if( isset($keywords['order']) )
-            $keywords_str .= ' ' . $keywords['order'];
+                $order_parts = array();
+                
+                foreach( $keywords['order_by'] as $key => $order_by ) {
+                    
+                    $order_part = sanitize_text_field( $order_by ) . ' ';
+                    
+                    if( isset( $_GET['order'] ) ) {
+                        
+                        if( is_array( $_GET['order'] ) ) {
+                            $order_part  .= sanitize_text_field( $_GET['order'][$key] );
+                        } elseif ( is_string($_GET['order'] ) ) {
+                            $order_part .= sanitize_text_field( $_GET['order'] );
+                        }
+                    } else {
+                        $order_part .= 'ASC';
+                    }
+
+                    $order_parts[] = $order_part;
+
+                } 
+
+                $keywords_str .= ' ORDER BY ' . implode(', ', $order_parts);
+
+
+            } else {
+                $keywords_str .= ' ORDER BY ' . sanitize_text_field( $keywords['order_by'] );
+                if( isset($keywords['order']) )
+                    $keywords_str .= ' ' . sanitize_text_field( $keywords['order'] );
+            }
+
+        }
+
+        
 
         // Get page and post per page
         if( isset($keywords['items_per_page']) ) {

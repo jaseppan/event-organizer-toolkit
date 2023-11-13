@@ -85,14 +85,6 @@
                 // 'type' => '',
                 // 'container-classes' => '',
             ),
-            array(
-                'name' => 'order_num',
-                'label' => __('Order Number', 'event-organizer-toolkit'),
-                // 'type' => '',
-                // 'container-classes' => '',
-            ),
-            
-            
             
         );
 

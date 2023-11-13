@@ -272,6 +272,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _CateringInfo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CateringInfo */ "./src/modules/student-registration-form/partials/CateringInfo.js");
+/* harmony import */ var _CateringCheckBoxes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CateringCheckBoxes */ "./src/modules/student-registration-form/partials/CateringCheckBoxes.js");
+
 
 
 
@@ -286,9 +288,64 @@ function Categing() {
     class: "eot-info-box-content"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "eot-info-box-content-inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CateringInfo__WEBPACK_IMPORTED_MODULE_2__["default"], null)))));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CateringInfo__WEBPACK_IMPORTED_MODULE_2__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CateringCheckBoxes__WEBPACK_IMPORTED_MODULE_3__["default"], null)))));
 }
 /* harmony default export */ __webpack_exports__["default"] = (Categing);
+
+/***/ }),
+
+/***/ "./src/modules/student-registration-form/partials/CateringCheckBoxes.js":
+/*!******************************************************************************!*\
+  !*** ./src/modules/student-registration-form/partials/CateringCheckBoxes.js ***!
+  \******************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+const {
+  Component
+} = wp.element;
+const {
+  Spinner
+} = wp.components;
+
+class CateringCheckboxes extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: [],
+      loading: true
+    };
+  }
+  componentDidMount() {
+    this.runApiFetch();
+  }
+  runApiFetch() {
+    wp.apiFetch({
+      path: 'event-organizer-toolkit/v1/list-meals'
+    }).then(data => {
+      console.log(data.data);
+      this.setState({
+        list: data.data,
+        loading: false
+      });
+    });
+  }
+  render() {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.list.data.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      key: item.id
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      type: "checkbox",
+      name: "meal",
+      value: item.id
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, item.title, " ", new Date(item.date).toLocaleDateString())))));
+  }
+}
+/* harmony default export */ __webpack_exports__["default"] = (CateringCheckboxes);
 
 /***/ }),
 
@@ -301,6 +358,8 @@ function Categing() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 
 const {
   Component
@@ -308,6 +367,7 @@ const {
 const {
   Spinner
 } = wp.components;
+
 class CateringInfo extends Component {
   constructor(props) {
     super(props);
@@ -330,9 +390,9 @@ class CateringInfo extends Component {
     });
   }
   render() {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, console.log(this.state.list.data), this.state.list.data.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, this.state.list.data.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
       key: item.id
-    }, "Type: ", item.type, ", Price: ", item.price))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(item.type, 'event-organizer-toolkit'), ": ", item.price, " "))));
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (CateringInfo);

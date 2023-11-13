@@ -4,6 +4,8 @@
  * Provide a admin area view for the plugin
  *
  * This file is used to markup the admin-facing aspects of the plugin.
+ * 
+ * NOTICE: Define colums available in list view in function Event_Organizer_Toolkit_Admin::get_script_data()
  *
  * @link       https://janneseppanen.site/
  * @since      1.0.0

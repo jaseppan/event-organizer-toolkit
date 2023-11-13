@@ -1,6 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import CateringInfo from './CateringInfo';
+import CateringCheckboxes from './CateringCheckBoxes';
 
 
 function Categing() {
@@ -19,6 +20,7 @@ function Categing() {
                 <div class="eot-info-box-content">
                     <div class="eot-info-box-content-inner">
                         <CateringInfo />
+                        <CateringCheckboxes />
                     </div>
                 </div>
             </div>

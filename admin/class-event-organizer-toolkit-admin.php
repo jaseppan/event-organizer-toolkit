@@ -212,6 +212,10 @@ class Event_Organizer_Toolkit_Admin {
 						'name' => 'date',
 						'label' => __( 'Date', 'event-organizer-toolkit' ),
 						'format' => 'date'
+					),
+					array(					
+						'name' => 'order_num',
+						'label' => __( 'Order Number', 'event-organizer-toolkit' ),
 					)
 				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-meal',
@@ -223,7 +227,7 @@ class Event_Organizer_Toolkit_Admin {
 				'url' => rest_url('event-organizer-toolkit/v1/add-meal-type'),
 				'method' => 'POST',
 			),
-			// Edit meal
+			// Edit meal type
 			array(
 				'page' => 'event-organizer-toolkit-meal-types',
 				'action' => 'edit',
@@ -232,7 +236,7 @@ class Event_Organizer_Toolkit_Admin {
 				'get_url' => rest_url('event-organizer-toolkit/v1/get-meal-type'),
 				'item_id' => (isset($_GET['id'])) ? (int) $_GET['id'] : '',
 			),
-			// List meal
+			// List meal types
 			array(
 				'page' => 'event-organizer-toolkit-meal-types',
 				'action' => 'list',
@@ -257,6 +261,10 @@ class Event_Organizer_Toolkit_Admin {
 					array(					
 						'name' => 'price',
 						'label' => __( 'Price', 'event-organizer-toolkit' ),
+					),
+					array(					
+						'name' => 'order_num',
+						'label' => __( 'Order Number', 'event-organizer-toolkit' ),
 					)
 				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-meal-type',

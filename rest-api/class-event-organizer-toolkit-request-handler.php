@@ -575,7 +575,15 @@ class Event_Organizer_Toolkit_Request_Handler {
         );
 
         if( $result ) {
-            $message = sprintf( esc_html__('%1$s %2$s updated.', 'event-organizer-toolkit'), esc_html($property_name), esc_html($data['title']) );
+            if( isset($data['title']) ) {
+                $title = $data['title'];
+            } elseif (isset($data['type'])) {
+                $title = $data['type'];
+            } else {
+                $title = 'Item';
+            }
+            
+            $message = sprintf( esc_html__('%1$s %2$s updated.', 'event-organizer-toolkit'), esc_html($property_name), esc_html($title) );
             $status = 'success';
         } else {
             $message = sprintf( 

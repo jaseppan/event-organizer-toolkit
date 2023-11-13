@@ -1,5 +1,6 @@
 const { Component } = wp.element;
 const { Spinner } = wp.components;
+import { __ } from '@wordpress/i18n';
  
 class CateringInfo extends Component {
 	constructor(props) {
@@ -28,24 +29,22 @@ class CateringInfo extends Component {
  
 	render() {
 		return(
-			<div>
-                
+			<div>      
 				{ this.state.loading ? (
 					<Spinner />
                 ) : (
 					<ul>
-                        { console.log(this.state.list.data) }
                         {this.state.list.data.map(item => (
                             <li key={item.id}>
-                                Type: {item.type}, Price: {item.price}
+                                { __( item.type, 'event-organizer-toolkit' ) }: {item.price} {/* Normally esc_html__ would be used here but in Gutenberg we need to use __ */}
                             </li>
                         ))}
                     </ul>
                     
                 )}
 			</div>
-		);
- 
+		); 
 	}
 }
+
 export default CateringInfo;

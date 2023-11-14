@@ -5,7 +5,7 @@ import { registerBlockStyle } from '@wordpress/blocks';
 import './block.scss';
 import { withSelect } from '@wordpress/data';
 import { registerBlockStylePicker } from '@wordpress/blocks';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 // Import tab contents
 import CourseInformation from './partials/CourseInformation';
 import InvoiceInformation from './partials/InvoiceInformation';
@@ -78,18 +78,48 @@ function Edit(props) {
         },
     ]
 
-    return (  
-        
-        <TabPanel
-            className="student-registration-form-tabs"
-            activeClass="active-tab"
-            tabs={ tabs }>
-            {
-                ( tab ) => tab.content
-            }
-        </TabPanel>
+    // State for current tab index
+    const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
+    // Handle click on Next button
+    const handleNext = () => {
+        if (currentTabIndex < tabs.length - 1) {
+            setCurrentTabIndex(currentTabIndex + 1);
+        }
+    };
 
+    // Handle click on Previous button
+    const handlePrevious = () => {
+        if (currentTabIndex > 0) {
+            setCurrentTabIndex(currentTabIndex - 1);
+        }
+    };
+
+    // Render the tab content based on the current index
+    const renderTabContent = () => {
+        return tabs[currentTabIndex].content;
+    };
+
+    return (
+        <div>
+            <TabPanel
+                className="student-registration-form-tabs"
+                activeClass="active-tab"
+                tabs={ tabs }
+                onSelect={tabName => {
+                    const tabIndex = tabs.findIndex(tab => tab.name === tabName);
+                    setCurrentTabIndex(tabIndex);
+                }}>
+                { renderTabContent }
+            </TabPanel>
+
+            {currentTabIndex > 0 && (
+                <button onClick={handlePrevious}>Previous</button>
+            )}
+            {currentTabIndex < tabs.length - 1 && (
+                <button onClick={handleNext}>Next</button>
+            )}
+        </div>
     );
 }
 

@@ -48,8 +48,8 @@ registerBlockType('eot/event', {
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
@@ -59,14 +59,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _block_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block.scss */ "./src/modules/student-registration-form/block.scss");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _partials_CourseInformation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./partials/CourseInformation */ "./src/modules/student-registration-form/partials/CourseInformation.js");
-/* harmony import */ var _partials_InvoiceInformation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./partials/InvoiceInformation */ "./src/modules/student-registration-form/partials/InvoiceInformation.js");
-/* harmony import */ var _partials_ParticipantInformation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./partials/ParticipantInformation */ "./src/modules/student-registration-form/partials/ParticipantInformation.js");
-/* harmony import */ var _partials_Catering__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./partials/Catering */ "./src/modules/student-registration-form/partials/Catering.js");
-/* harmony import */ var _partials_InstrumentRelatedInformation__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./partials/InstrumentRelatedInformation */ "./src/modules/student-registration-form/partials/InstrumentRelatedInformation.js");
-/* harmony import */ var _partials_AdditionalInformation__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./partials/AdditionalInformation */ "./src/modules/student-registration-form/partials/AdditionalInformation.js");
+/* harmony import */ var _partials_CourseInformation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./partials/CourseInformation */ "./src/modules/student-registration-form/partials/CourseInformation.js");
+/* harmony import */ var _partials_InvoiceInformation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./partials/InvoiceInformation */ "./src/modules/student-registration-form/partials/InvoiceInformation.js");
+/* harmony import */ var _partials_ParticipantInformation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./partials/ParticipantInformation */ "./src/modules/student-registration-form/partials/ParticipantInformation.js");
+/* harmony import */ var _partials_Catering__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./partials/Catering */ "./src/modules/student-registration-form/partials/Catering.js");
+/* harmony import */ var _partials_InstrumentRelatedInformation__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./partials/InstrumentRelatedInformation */ "./src/modules/student-registration-form/partials/InstrumentRelatedInformation.js");
+/* harmony import */ var _partials_AdditionalInformation__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./partials/AdditionalInformation */ "./src/modules/student-registration-form/partials/AdditionalInformation.js");
 
 const {
   registerBlockType
@@ -99,7 +97,7 @@ function Edit(props) {
   } = props;
   console.log('Edit function called');
   if (!title) {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Please add a title and save the post before editing this block.')));
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Please add a title and save the post before editing this block.')));
   }
   const {
     courseId,
@@ -108,7 +106,7 @@ function Edit(props) {
 
   // Get post_id of course default language version
   const postId = wp.data.select('core/editor').getCurrentPostId();
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_6__.useEffect)(() => {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!courseId) {
       const defaultLanguagePostId = getDefaultLanguagePostId(postId);
       setAttributes({
@@ -119,7 +117,7 @@ function Edit(props) {
   const tabs = [{
     name: 'Course Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Course Information', 'event-organized-toolkit'),
-    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_CourseInformation__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    content: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_CourseInformation__WEBPACK_IMPORTED_MODULE_6__["default"], {
       title: title,
       courseId: courseId,
       coursePrices: coursePrices,
@@ -128,29 +126,59 @@ function Edit(props) {
   }, {
     name: 'Invoice Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Invoice Information', 'event-organized-toolkit'),
-    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_InvoiceInformation__WEBPACK_IMPORTED_MODULE_8__["default"], null)
+    content: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_InvoiceInformation__WEBPACK_IMPORTED_MODULE_7__["default"], null)
   }, {
     name: 'Participant Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Participant Information', 'event-organized-toolkit'),
-    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_ParticipantInformation__WEBPACK_IMPORTED_MODULE_9__["default"], null)
+    content: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_ParticipantInformation__WEBPACK_IMPORTED_MODULE_8__["default"], null)
   }, {
     name: 'Catering',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Catering', 'event-organized-toolkit'),
-    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_Catering__WEBPACK_IMPORTED_MODULE_10__["default"], null)
+    content: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_Catering__WEBPACK_IMPORTED_MODULE_9__["default"], null)
   }, {
     name: 'Instrument Related Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Instrument Related Information', 'event-organized-toolkit'),
-    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_InstrumentRelatedInformation__WEBPACK_IMPORTED_MODULE_11__["default"], null)
+    content: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_InstrumentRelatedInformation__WEBPACK_IMPORTED_MODULE_10__["default"], null)
   }, {
     name: 'Additional Information',
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Additional Information', 'event-organized-toolkit'),
-    content: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_AdditionalInformation__WEBPACK_IMPORTED_MODULE_12__["default"], null)
+    content: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_partials_AdditionalInformation__WEBPACK_IMPORTED_MODULE_11__["default"], null)
   }];
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TabPanel, {
+
+  // State for current tab index
+  const [currentTabIndex, setCurrentTabIndex] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+
+  // Handle click on Next button
+  const handleNext = () => {
+    if (currentTabIndex < tabs.length - 1) {
+      setCurrentTabIndex(currentTabIndex + 1);
+    }
+  };
+
+  // Handle click on Previous button
+  const handlePrevious = () => {
+    if (currentTabIndex > 0) {
+      setCurrentTabIndex(currentTabIndex - 1);
+    }
+  };
+
+  // Render the tab content based on the current index
+  const renderTabContent = () => {
+    return tabs[currentTabIndex].content;
+  };
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TabPanel, {
     className: "student-registration-form-tabs",
     activeClass: "active-tab",
-    tabs: tabs
-  }, tab => tab.content);
+    tabs: tabs,
+    onSelect: tabName => {
+      const tabIndex = tabs.findIndex(tab => tab.name === tabName);
+      setCurrentTabIndex(tabIndex);
+    }
+  }, renderTabContent), currentTabIndex > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    onClick: handlePrevious
+  }, "Previous"), currentTabIndex < tabs.length - 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    onClick: handleNext
+  }, "Next"));
 }
 
 // Wrap your block's edit function with withSelect

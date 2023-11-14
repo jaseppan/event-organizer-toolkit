@@ -326,7 +326,7 @@ class CateringCheckboxes extends Component {
   }
   runApiFetch() {
     wp.apiFetch({
-      path: 'event-organizer-toolkit/v1/list-meals?order=asc&order_by[]=start_time'
+      path: 'event-organizer-toolkit/v1/list-meals?order=asc&order_by[]=date&order_by[]=start_time'
     }).then(data => {
       console.log(data.data);
       this.setState({

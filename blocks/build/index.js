@@ -279,16 +279,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Categing() {
+  const [reserveMeals, setReserveMeals] = react__WEBPACK_IMPORTED_MODULE_0___default().useState(false);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Reserve Meals', 'event-organizer-toolkit'), ":", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "checkbox",
-    value: ""
+    value: "",
+    onChange: e => setReserveMeals(e.target.checked)
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "eot-info-box"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Meal Prices:', 'event-organizer-toolkit'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "eot-info-box-content"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "eot-info-box-content-inner"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CateringInfo__WEBPACK_IMPORTED_MODULE_2__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CateringCheckBoxes__WEBPACK_IMPORTED_MODULE_3__["default"], null)))));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CateringInfo__WEBPACK_IMPORTED_MODULE_2__["default"], null), reserveMeals && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CateringCheckBoxes__WEBPACK_IMPORTED_MODULE_3__["default"], null)))));
 }
 /* harmony default export */ __webpack_exports__["default"] = (Categing);
 
@@ -373,14 +375,16 @@ class CateringCheckboxes extends Component {
     });
   };
   render() {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Select Your Meals', 'event-organizer-toolbox')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "eot-select-all-container"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
       type: "checkbox",
       name: "select-all",
       className: "select-all",
       checked: this.state.selectAll // Add checked attribute
       ,
       onChange: this.handleSelectAllChange // Add onChange event handler
-    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Select All'))), this.state.list.data.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Select All', 'event-organizer-toolbox'))), this.state.list.data.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       key: item.id
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
       type: "checkbox",

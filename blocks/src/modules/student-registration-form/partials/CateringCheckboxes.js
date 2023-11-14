@@ -64,6 +64,7 @@ class CateringCheckboxes extends Component {
                 ) : (
                     <div>
                         {/* Select all checkbox to select all meals (class .meal) */}
+                        <h2>{__('Select Your Meals', 'event-organizer-toolbox')}</h2>
                         <div class="eot-select-all-container">
                             <input
                                 type="checkbox"
@@ -72,7 +73,7 @@ class CateringCheckboxes extends Component {
                                 checked={this.state.selectAll} // Add checked attribute
                                 onChange={this.handleSelectAllChange} // Add onChange event handler
                             />
-                            <label>{__('Select All')}</label>
+                            <label>{__('Select All', 'event-organizer-toolbox')}</label>
                         </div>
                         
                         {this.state.list.data.map(item => (

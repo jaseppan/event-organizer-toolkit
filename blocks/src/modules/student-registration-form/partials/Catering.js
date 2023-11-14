@@ -5,6 +5,8 @@ import CateringCheckboxes from './CateringCheckBoxes';
 
 
 function Categing() {
+
+    const [reserveMeals, setReserveMeals] = React.useState(false);
     
     return (
         <div>
@@ -13,6 +15,7 @@ function Categing() {
                 <input
                     type="checkbox"
                     value=""
+                    onChange={(e) => setReserveMeals(e.target.checked)}
                 />
             </label>
             <div class="eot-info-box">
@@ -20,7 +23,7 @@ function Categing() {
                 <div class="eot-info-box-content">
                     <div class="eot-info-box-content-inner">
                         <CateringInfo />
-                        <CateringCheckboxes />
+                        {reserveMeals && <CateringCheckboxes />}
                     </div>
                 </div>
             </div>

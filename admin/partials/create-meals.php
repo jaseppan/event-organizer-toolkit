@@ -1,7 +1,7 @@
 <?php 
 
 /**
- * This form is for creating meals between selected dates
+ * Form to batch add meals between specified start and end dates using predefined meal types
  * 
  * @since 1.0
  * @version 1.0

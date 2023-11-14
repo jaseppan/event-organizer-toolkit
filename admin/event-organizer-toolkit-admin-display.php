@@ -131,6 +131,17 @@
 
     $property_object = new Event_Organizer_Toolkit_Meals_Handler();
 
+    add_filter( 'event_organizer_toolkit_admin_tabs', function( $tabs ){
+
+        $tabs['create-meals'] = array(
+            'tab-name' => sprintf(esc_html__('Create Meals', 'event-organizer-toolkit')),
+            'template' => 'create-meals.php',
+        ); 
+
+        return $tabs;
+
+    }, 10, 1 );
+
     event_organizer_toolkit_admin_view( 
         $page_title, 
         $singular_title, 
@@ -208,6 +219,9 @@ function event_organizer_toolkit_event_types_page() {
 
  function event_organizer_toolkit_admin_view( $page_title, $singular_title, $page_slug, $property_object ) {
     
+    $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'list';
+    $fields = $property_object->get_fields();
+    
     printf(
         '<h1>%s</h1>',
         $page_title
@@ -216,64 +230,53 @@ function event_organizer_toolkit_event_types_page() {
     // Add tabs for navigation
     printf('<div class="nav-tab-wrapper">');
 
-    $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'list';
 
-    $list_tab_name = sprintf(__('List %s', 'event-organizer-toolkit'), $page_title);
-    $add_tab_name = sprintf(__('Add New %s', 'event-organizer-toolkit'), $singular_title);
-    $edit_tab_name = sprintf(__('Edit %s', 'event-organizer-toolkit'), $singular_title);
-    $submit_add_text = sprintf(__('Add %s', 'event-organizer-toolkit'), $singular_title);
-    $submit_edit_text = sprintf(__('Edit %s', 'event-organizer-toolkit'), $singular_title);
-    
-    $class = ($active_tab == 'list' ) ? 'active' : '';
-    printf(
-        '<a href="?page=%s&tab=list" class="nav-tab %s">%s</a>',
-        $page_slug,
-        $class,
-        $list_tab_name
+    $tabs = array(
+        'list' => array(
+            'tab-name' => sprintf(esc_html__('List %s', 'event-organizer-toolkit'), $page_title),
+            'template' => 'list.php',
+        ),
+        'add' => array(
+            'tab-name' => sprintf( esc_html__('Add New %s', 'event-organizer-toolkit'), $singular_title),
+            'submit-text' => sprintf( esc_html__('Add %s', 'event-organizer-toolkit'), $singular_title ),
+            'template' => 'form.php',
+        ),
+        'edit' => array(
+            'tab-name' => sprintf(esc_html__('Edit %s', 'event-organizer-toolkit'), $singular_title),
+            'submit-text' => sprintf( esc_html__('Edit %s', 'event-organizer-toolkit'), $singular_title ),
+            'template' => 'form.php',
+        )
     );
-    $class = ($active_tab == 'add' ) ? 'active' : '';
-    printf(
-        '<a href="?page=%s&tab=add" class="nav-tab %s">%s</a>',
-        $page_slug,
-        $class,
-        $add_tab_name
-    );
-    $class = ($active_tab == 'edit' ) ? 'active' : '';
-    if( $active_tab == 'edit' ) {
-        // $class = 'active';
+
+    $tabs = apply_filters( 'event_organizer_toolkit_admin_tabs', $tabs,
+        $page_title, $singular_title, $page_slug, $property_object );
+
+    foreach ( $tabs as $tab_key => $tab ) {
+        $class = ($active_tab == $tab_key ) ? 'active' : '';
         printf(
-            '<a href="?page=%s&tab=edit" class="nav-tab %s">%s</a>',
+            '<a href="?page=%s&tab=%s" class="nav-tab %s">%s</a>',
             $page_slug,
+            $tab_key,
             $class,
-            $edit_tab_name
+            $tab['tab-name']
         );
     }
     
     printf('</div>');
 
-    if( $active_tab == 'add' || $active_tab == 'edit' )
-        $fields = $property_object->get_fields();
+    foreach( $tabs as $tab_key => $tab) {
 
-    if ($active_tab === 'list') {
-        // Content for the "List Accommodations" tab
-        require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/list.php');
-        // Add your code to display the list of accommodations here.
-    } elseif ($active_tab === 'add') {
+        if( $active_tab == $tab_key ) {
+            if( $active_tab == 'add' || $active_tab == 'edit' )
+                $fields = $property_object->get_fields();
+    
+            $view_title = $tab['tab-name'];
+            if( isset( $tab['submit-text']) )
+                $submit_button_text = $tab['submit-text'];
+    
+            require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/' . $tab['template'] );
+        }
 
-        // Submit buttom text
-        $view_title = $add_tab_name;
-        $submit_button_text = $submit_add_text;
-        // Content for the "Add New Accommodation" tab
-        require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/form.php');
-        // Add your code to create a new accommodation here.
-    } elseif ($active_tab === 'edit') {
-
-        // Submit buttom text
-        $view_title = $edit_tab_name;
-        $submit_button_text = $submit_edit_text;
-        // Content for the "Add New Accommodation" tab
-        require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/form.php');
-        // Add your code to create a new accommodation here.
     }
     
  }

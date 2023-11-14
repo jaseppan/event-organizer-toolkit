@@ -125,7 +125,7 @@ class Event_Organizer_Toolkit_Admin {
 		$tab = (isset($_GET['tab'])) ? esc_attr($_GET['tab']) : 'list';
 		$script_data = $this->get_script_data( $page, $tab );
 		
-		if( !$script_data || empty($script_data) || !isset($script_data['url']) )
+		if( !$script_data || empty($script_data) )
 			return;
 
 		// Pass the REST API URL to the JavaScript file
@@ -215,6 +215,15 @@ class Event_Organizer_Toolkit_Admin {
 					),
 				),
 				'deletion_url' => rest_url('event-organizer-toolkit') . '/v1/delete-meal',
+			),
+			// Create meals
+			array(
+				'page' => 'event-organizer-toolkit-meals',
+				'action' =>	'create-meals',
+				'get_meal_types_url' => rest_url('event-organizer-toolkit/v1/list-meal-types'),
+				'get_meals_url' => rest_url('event-organizer-toolkit/v1/list-meals'),
+				'create_meal_url' => rest_url('event-organizer-toolkit/v1/add-meal'),
+				'delete_meal_url' => rest_url('event-organizer-toolkit/v1/delete-meal'),
 			),
 			// Add meal type
 			array(

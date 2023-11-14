@@ -8,9 +8,10 @@
 	jQuery(document).ready(function($) {
 
 		const page = eotScriptData.page;
-		const formId = '#' + page + '-form';
+		const formId = '#' + page + '-form.default-method';
 
 		$(formId).on('submit', function(e) {
+
 			e.preventDefault();
 			
 			// Get data of the current form

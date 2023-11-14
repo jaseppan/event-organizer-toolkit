@@ -62,7 +62,7 @@
             ),
             array(
                 'name' => 'end_time',
-                'label' => __('Start time', 'event-organizer-toolkit'),
+                'label' => __('End time', 'event-organizer-toolkit'),
                 'type' => 'time',
                 // 'container-classes' => '',
             ),

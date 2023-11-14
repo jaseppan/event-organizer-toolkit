@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) exit;
         <h1><?php echo $view_title ?></h1>
     <?php } ?>
     <div id="form-message"></div>
-    <form id="event-organizer-toolkit-<?php echo sanitize_title($page_title) ?>-form" method="post" action="" autocomplete="off">
+    <form id="event-organizer-toolkit-<?php echo sanitize_title($page_title) ?>-form" method="post" action="" autocomplete="off" class="default-method">
 
         <!-- Hidden fields -->
         <?php if(isset($_GET['id'])) : ?>

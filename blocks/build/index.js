@@ -318,7 +318,9 @@ class CateringCheckboxes extends Component {
     super(props);
     this.state = {
       list: [],
-      loading: true
+      loading: true,
+      selectAll: false,
+      selectedMeals: []
     };
   }
   componentDidMount() {
@@ -328,20 +330,66 @@ class CateringCheckboxes extends Component {
     wp.apiFetch({
       path: 'event-organizer-toolkit/v1/list-meals?order=asc&order_by[]=date&order_by[]=start_time'
     }).then(data => {
-      console.log(data.data);
       this.setState({
         list: data.data,
         loading: false
       });
     });
   }
+  handleSelectAllChange = event => {
+    const {
+      checked
+    } = event.target;
+    const {
+      list,
+      selectedMeals
+    } = this.state;
+    let updatedSelectedMeals;
+    if (checked) {
+      updatedSelectedMeals = list.data.map(item => item.id);
+    } else {
+      updatedSelectedMeals = [];
+    }
+    this.setState({
+      selectAll: checked,
+      selectedMeals: updatedSelectedMeals
+    });
+  };
+  handleMealChange = event => {
+    const {
+      value
+    } = event.target;
+    this.setState(prevState => {
+      const selectedMeals = [...prevState.selectedMeals];
+      const index = selectedMeals.indexOf(value);
+      if (index > -1) {
+        selectedMeals.splice(index, 1);
+      } else {
+        selectedMeals.push(value);
+      }
+      return {
+        selectedMeals
+      };
+    });
+  };
   render() {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.list.data.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, this.state.loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spinner, null) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      type: "checkbox",
+      name: "select-all",
+      className: "select-all",
+      checked: this.state.selectAll // Add checked attribute
+      ,
+      onChange: this.handleSelectAllChange // Add onChange event handler
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Select All'))), this.state.list.data.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       key: item.id
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
       type: "checkbox",
       name: "meal",
-      value: item.id
+      className: "meal",
+      value: item.id,
+      checked: this.state.selectedMeals.includes(item.id) // Add checked attribute
+      ,
+      onChange: this.handleMealChange // Add onChange event handler
     }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, item.title, " ", new Date(item.date).toLocaleDateString())))));
   }
 }
